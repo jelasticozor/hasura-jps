@@ -20,7 +20,6 @@ actions:
    - cd /tmp
    - git clone https://github.com/openfaas/faasd
    - cd faasd
-   # TODO: see if we adapt the docker-compose config for prometheus to see if we can access it
    - ./hack/install.sh
 
 description: |
