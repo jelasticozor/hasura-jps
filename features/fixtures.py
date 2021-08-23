@@ -12,8 +12,8 @@ def random_seed(context):
 @fixture
 def api_clients(context):
     userdata = context.config.userdata
-    api_url = userdata['api_url']
-    api_token = userdata['api_token']
+    api_url = userdata['api-url']
+    api_token = userdata['api-token']
     api_client_factory = JelasticClientFactory(api_url, api_token)
     context.jps_client = api_client_factory.create_jps_client()
     context.control_client = api_client_factory.create_control_client()
