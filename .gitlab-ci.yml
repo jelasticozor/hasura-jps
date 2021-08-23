@@ -6,7 +6,9 @@ acceptance-test:
   image: softozor/python-infrastructure-tests:${TOOLS_SHA}
   script:
     - |
-      behave --junit --junit-directory ./features/test-reports --tags ~wip -D api-url="${JELASTIC_API_URL}" -D api-token="${JELASTIC_ACCESS_TOKEN}"
+      behave --junit --junit-directory ./features/test-reports --tags ~wip \
+        -D api-url="${JELASTIC_API_URL}" \
+        -D api-token="${JELASTIC_ACCESS_TOKEN}"
   artifacts:
     reports:
       junit:
