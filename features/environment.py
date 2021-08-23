@@ -10,11 +10,9 @@ def before_tag(context, tag):
 
 
 def before_all(context):
-    # the api client can be injected here because it is stateless
-    # use_fixture(api_client, context)
-    # use_fixture(random_seed, context)
-    pass
+    use_fixture(api_clients, context)
+    use_fixture(random_seed, context)
 
 
 def before_scenario(context, scenario):
-    pass
+    use_fixture(clear_environment, context)

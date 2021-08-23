@@ -1,26 +1,14 @@
-# TODO: this will need to be an update manifest
-type: install
+type: update
 name: faasd
 baseUrl: https://gitlab.hidora.com/softozor/jelasticozor/infrastructure/-/raw/master/
 
-# TODO: we need to add a node, so this section will disappear
-nodes:
-  count: 1
-  cloudlets: 16
-  nodeGroup: vps
-  image: ubuntu:latest
-
 onInstall:
-- installFaasd
-
-actions:
- installFaasd:
-   cmd[vps]: 
-   - apt update && apt install -y git
-   - cd /tmp
-   - git clone https://github.com/openfaas/faasd
-   - cd faasd
-   - ./hack/install.sh
+- cmd[vps]:
+  - apt update && apt install -y git
+  - cd /tmp
+  - git clone https://github.com/openfaas/faasd
+  - cd faasd
+  - ./hack/install.sh
 
 description: |
   We install faasd, a lightweight & portable faas engine.
