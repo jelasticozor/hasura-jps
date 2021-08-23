@@ -9,9 +9,9 @@ acceptance-test:
       behave --junit --junit-directory ./features/test-reports --tags ~wip \
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}"
-    artifacts:
-      reports:
-        junit:
-          - $CI_PROJECT_DIR/features/test-reports/*.xml
-      paths:
+  artifacts:
+    reports:
+      junit:
         - $CI_PROJECT_DIR/features/test-reports/*.xml
+    paths:
+      - $CI_PROJECT_DIR/features/test-reports/*.xml
