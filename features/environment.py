@@ -12,6 +12,10 @@ def before_tag(context, tag):
 def before_all(context):
     use_fixture(api_clients, context)
     use_fixture(random_seed, context)
+    use_fixture(worker_id, context)
+    use_fixture(commit_sha, context)
+    use_fixture(project_root_folder, context)
+    use_fixture(serverless_manifest, context)
 
 
 def before_scenario(context, scenario):
