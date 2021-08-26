@@ -3,7 +3,7 @@ Feature: Install faas engine
   The faas engine will allow to bind hasura actions and
   events to functions.
 
-  Background: VPS node is available
+  Background: Docker node is available
 
     Given a jelastic environment with a docker node is available in group 'faas' with image 'ubuntu:latest'
 
