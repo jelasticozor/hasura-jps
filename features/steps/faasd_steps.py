@@ -1,3 +1,8 @@
+import os
+
+from features.utils.faas_client import FaasClient
+
+
 @given(u'the faas engine is installed')
 def step_impl(context):
     context.jps_client.install(
@@ -6,21 +11,23 @@ def step_impl(context):
 
 @when(u'a user logs on the faas engine')
 def step_impl(context):
-    faas_node_type = 'ubuntu-vps'
+    faas_node_type = 'docker'
+    faas_node_group = 'faas'
     env_info = context.control_client.get_env_info(context.current_env_name)
-    faas_node_ip = env_info.get_node_ips(node_type=faas_node_type)[0]
+    faas_node_ip = env_info.get_node_ips(
+        node_type=faas_node_type, node_group=faas_node_group)[0]
+    secrets_folder = '/var/lib/faasd/secrets'
     username = context.file_client.read(
-        context.current_env_name, '/var/lib/faasd/secrets/basic-auth-user', node_type=faas_node_type)
+        context.current_env_name, os.path.join(secrets_folder, 'basic-auth-user'), node_type=faas_node_type,
+        node_group=faas_node_group)
     password = context.file_client.read(
-        context.current_env_name, '/var/lib/faasd/secrets/basic-auth-password', node_type=faas_node_type)
-    print('username = ', username)
-    print('password = ', password)
-    # TODO:
-    # 4. call faas-cli login -g http://node-ip:8080 --username <username> --password <password>
-    # --> returns 1 if failed
+        context.current_env_name, os.path.join(secrets_folder, 'basic-auth-password'), node_type=faas_node_type,
+        node_group=faas_node_group)
+    faas_client = FaasClient(gateway_url=faas_node_ip,
+                             gateway_port=context.faas_port)
+    context.exit_code = faas_client.login(username, password)
 
 
 @then(u'she gets a success response')
 def step_impl(context):
-    # TODO: verify that the faas-cli return success
-    raise NotImplementedError(u'STEP: Then she gets a success response')
+    assert context.exit_code == 0

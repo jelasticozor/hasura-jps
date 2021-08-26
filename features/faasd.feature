@@ -5,7 +5,7 @@ Feature: Install faas engine
 
   Background: VPS node is available
 
-    Given a jelastic environment with a node of type 'ubuntu-vps' is available
+    Given a jelastic environment with a docker node is available in group 'faas' with image 'ubuntu:latest'
 
   Scenario: Log on
 

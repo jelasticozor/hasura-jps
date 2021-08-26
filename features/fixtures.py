@@ -42,6 +42,12 @@ def api_clients(context):
 
 
 @fixture
+def faas_port(context):
+    context.faas_port = 8080
+    return faas_port
+
+
+@fixture
 def clear_environment(context):
     yield
     if hasattr(context, 'current_env_name'):

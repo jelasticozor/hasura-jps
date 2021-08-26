@@ -5,9 +5,10 @@ baseUrl: https://gitlab.hidora.com/softozor/jelasticozor/infrastructure/-/raw/ma
 nodes:
 - displayName: faasd
   count: 1
-  cloudlets: 4
-  nodeGroup: vps
-  nodeType: ubuntu-vps
+  cloudlets: 16
+  nodeGroup: faas
+  nodeType: docker
+  image: ubuntu:latest
 
 onInstall:
   - installFaas

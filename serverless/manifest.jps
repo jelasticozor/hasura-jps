@@ -3,13 +3,18 @@ name: faasd
 baseUrl: https://gitlab.hidora.com/softozor/jelasticozor/infrastructure/-/raw/master
 
 onInstall:
-- cmd[ubuntu-vps]:
+- cmd[faas]:
   - apt update && apt install -y git
-  - cd ~
   - git clone https://github.com/openfaas/faasd
   - cd faasd
   - ./hack/install.sh
   # TODO: rm -Rf faasd ?
+  # TODO: run
+  #   systemctl restart faasd
+  # if
+  #   journalctl -u faasd
+  # contains
+  #   unable to dial to 10.62.0.5:8080, error: dial tcp 10.62.0.5:8080: connect: no route to host
 
 description: |
   We install faasd, a lightweight & portable faas engine.

@@ -16,6 +16,7 @@ def before_all(context):
     use_fixture(commit_sha, context)
     use_fixture(project_root_folder, context)
     use_fixture(serverless_manifest, context)
+    use_fixture(faas_port, context)
 
 
 def before_scenario(context, scenario):
