@@ -1,6 +1,6 @@
 type: install
 name: Jelasticozor infrastructure
-baseUrl: https://gitlab.hidora.com/softozor/jelasticozor/infrastructure/-/raw/master/
+baseUrl: http://gitlab.hidora.com/softozor/jelasticozor/infrastructure/-/raw/master/
 
 nodes:
 - displayName: faasd
