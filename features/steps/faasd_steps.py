@@ -25,6 +25,7 @@ def step_impl(context):
         node_group=faas_node_group)
     faas_client = FaasClient(gateway_url=faas_node_ip,
                              gateway_port=context.faas_port)
+    # TODO: put this in a wait_until loop with some timeout
     context.exit_code = faas_client.login(username, password)
 
 
