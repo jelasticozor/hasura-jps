@@ -8,7 +8,7 @@ nodes:
   cloudlets: 16
   nodeGroup: faas
   nodeType: docker
-  image: centos:latest
+  image: ubuntu:latest
 
 onInstall:
   - installFaas
