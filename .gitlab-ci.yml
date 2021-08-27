@@ -17,8 +17,6 @@ publish-faas-image:
   only:
     refs:
       - master
-    changes:
-      - $CI_PROJECT_DIR/ci/ubuntu/**/*
 
 acceptance-test:
   stage: test

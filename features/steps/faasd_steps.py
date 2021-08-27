@@ -1,6 +1,8 @@
 import os
 
 from features.utils.faas_client import FaasClient
+from features.utils.sockets import can_open_socket
+from features.utils.timing import wait_until
 
 
 @given(u'the faas engine is installed')
@@ -25,7 +27,12 @@ def step_impl(context):
         node_group=faas_node_group)
     faas_client = FaasClient(gateway_url=faas_node_ip,
                              gateway_port=context.faas_port)
-    # TODO: put this in a wait_until loop with some timeout
+    # TODO: this should part of another step responsible for waiting until the port is available
+    try:
+        wait_until(can_open_socket(faas_node_ip, context.faas_port),
+                   timeout_in_sec=120, period_in_sec=5)
+    except TimeoutError:
+        context.exit_code = 1
     context.exit_code = faas_client.login(username, password)
 
 
