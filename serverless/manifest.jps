@@ -4,7 +4,7 @@ baseUrl: http://gitlab.hidora.com/softozor/jelasticozor/infrastructure/-/raw/mas
 
 onInstall:
 - cmd[faas]:
-  - apt update && apt install -y git
+  - yum update -y && yum install -y git
   - git clone https://github.com/openfaas/faasd
   - cd faasd
   - ./hack/install.sh
