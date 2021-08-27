@@ -29,7 +29,7 @@ def step_impl(context):
                              gateway_port=context.faas_port)
     # TODO: this should part of another step responsible for waiting until the port is available
     try:
-        wait_until(can_open_socket(faas_node_ip, context.faas_port),
+        wait_until(lambda: can_open_socket(faas_node_ip, context.faas_port),
                    timeout_in_sec=120, period_in_sec=5)
     except TimeoutError:
         context.exit_code = 1
