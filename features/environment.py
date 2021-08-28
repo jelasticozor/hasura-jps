@@ -20,6 +20,5 @@ def before_all(context):
 
 
 def before_scenario(context, scenario):
-    # TODO: reactive this!
-    #use_fixture(clear_environment, context)
+    use_fixture(clear_environment, context)
     pass
