@@ -8,7 +8,7 @@ from test_utils import get_new_random_env_name
 
 @fixture
 def random_seed(context):
-    random.seed('jelasticozor-infrastructure-tests')
+    random.seed('hasura-jps-tests')
 
 
 @fixture
