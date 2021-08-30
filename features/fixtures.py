@@ -7,7 +7,7 @@ from jelastic_client import JelasticClientFactory
 
 @fixture
 def random_seed(context):
-    random.seed('jelasticozor-infrastructure-tests')
+    random.seed('hasura-jps-tests')
 
 
 @fixture
