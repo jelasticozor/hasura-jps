@@ -3,6 +3,7 @@ import random
 
 from behave import fixture
 from jelastic_client import JelasticClientFactory
+from test_utils import get_new_random_env_name
 
 
 @fixture
@@ -48,13 +49,14 @@ def faas_port(context):
 
 
 @fixture
-def clear_environment(context):
-    yield
-    if hasattr(context, 'current_env_name'):
-        env_info = context.control_client.get_env_info(
-            context.current_env_name)
-        if env_info.exists():
-            context.control_client.delete_env(context.current_env_name)
+def new_environment(context):
+    context.current_env_name = get_new_random_env_name(
+        context.control_client, context.commit_sha, context.worker_id)
+    yield context.current_env_name
+    env_info = context.control_client.get_env_info(
+        context.current_env_name)
+    if env_info.exists():
+        context.control_client.delete_env(context.current_env_name)
 
 
 @fixture
