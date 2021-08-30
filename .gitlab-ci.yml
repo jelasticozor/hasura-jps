@@ -6,7 +6,7 @@ publish-faas-image:
   stage: publish-docker
   image: docker:latest
   variables:
-    DOCKER_IMAGE: softozor/faasd
+    DOCKER_IMAGE: softozor/ubuntu-git
     DOCKERFILE_FOLDER: ./ci/ubuntu
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY

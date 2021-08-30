@@ -8,7 +8,7 @@ nodes:
   cloudlets: 16
   nodeGroup: faas
   nodeType: docker
-  image: softozor/faasd:latest
+  image: softozor/ubuntu-git:latest
 
 onInstall:
   - installFaas
