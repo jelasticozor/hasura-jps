@@ -1,4 +1,5 @@
-from features.utils.faas_client import FaasClient
+import requests
+
 from features.utils.sockets import can_open_socket
 from features.utils.timing import wait_until
 
@@ -24,12 +25,19 @@ def step_impl(context):
     faas_node_ip = context.current_env_info.get_node_ips(
         node_type=faas_node_type, node_group=faas_node_group)[0]
     assert host_has_port_open(faas_node_ip, context.faas_port)
+    context.faas_client = context.faas_client_factory.create(
+        context.faas_node_ip)
+
+
+@given(u'the \'{function_name}\' function has been deployed on the faas engine')
+def step_impl(context, function_name):
+    context.current_faas_function = function_name
+    exit_code = context.faas_client.up(function_name)
+    assert exit_code == 0
 
 
 @when(u'a user logs on the faas engine')
 def step_impl(context):
-    faas_node_ip = context.current_env_info.get_node_ips(
-        node_type=faas_node_type, node_group=faas_node_group)[0]
     username = context.file_client.read(
         context.current_env_name,
         '/var/lib/faasd/secrets/basic-auth-user',
@@ -40,12 +48,34 @@ def step_impl(context):
         '/var/lib/faasd/secrets/basic-auth-password',
         node_type=faas_node_type,
         node_group=faas_node_group)
-    faas_client = FaasClient(
-        gateway_url=faas_node_ip,
-        gateway_port=context.faas_port)
-    context.exit_code = faas_client.login(username, password)
+    context.exit_code = context.faas_client.login(username, password)
+
+
+@when(u' a user deploys the \'{function_name}\' function to the faas engine')
+def step_impl(context, function_name):
+    context.exit_code = context.faas_client.up(function_name)
+    context.current_faas_function = function_name
+
+
+@when(u'a user invokes it with payload \'{function_payload}\'')
+def step_impl(context, function_payload):
+    rq = requests.post(f'{context.faas_client.endpoint}/function/{context.current_faas_function}',
+                       data=function_payload)
+    context.current_function_http_status = rq.status_code
+    context.current_function_response_content = rq.text
 
 
 @then(u'she gets a success response')
 def step_impl(context):
     assert context.exit_code == 0
+
+
+@then(u'she gets http status {http_status}')
+def step_impl(context, http_status):
+    assert context.current_function_http_status == http_status
+
+
+@then(u'she gets content')
+def step_impl(context):
+    expected_content = context.text
+    assert context.current_function_response_content == expected_content

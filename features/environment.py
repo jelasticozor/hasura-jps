@@ -17,6 +17,9 @@ def before_all(context):
     use_fixture(project_root_folder, context)
     use_fixture(serverless_manifest, context)
     use_fixture(faas_port, context)
+    use_fixture(faas_definition_yaml, context)
+    use_fixture(path_to_serverless_functions, context)
+    use_fixture(faas_client_factory, context)
 
 
 def before_scenario(context, scenario):

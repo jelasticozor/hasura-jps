@@ -2,6 +2,9 @@ stages:
   - publish-docker
   - test
 
+.docker-login: &docker-login
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
 publish-faas-image:
   stage: publish-docker
   image: docker:latest
@@ -9,7 +12,7 @@ publish-faas-image:
     DOCKER_IMAGE: softozor/ubuntu-git
     DOCKERFILE_FOLDER: ./ci/ubuntu
   before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - *docker-login
   script:
     - docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest
     - docker push $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA
@@ -21,6 +24,8 @@ publish-faas-image:
 acceptance-test:
   stage: test
   image: softozor/python-infrastructure-tests:${TOOLS_SHA}
+  before_script:
+    - *docker-login
   script:
     - |
       behave --junit --junit-directory ./features/test-reports --tags ~wip \

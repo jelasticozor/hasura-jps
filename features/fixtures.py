@@ -5,6 +5,8 @@ from behave import fixture
 from jelastic_client import JelasticClientFactory
 from test_utils import get_new_random_env_name
 
+from features.utils.faas_client import FaasClientFactory
+
 
 @fixture
 def random_seed(context):
@@ -46,6 +48,28 @@ def api_clients(context):
 def faas_port(context):
     context.faas_port = 8080
     return faas_port
+
+
+@fixture
+def path_to_serverless_functions(context):
+    context.path_to_serverless_functions = os.path.join(
+        context.project_root_folder, 'features', 'data', 'functions')
+    return context.path_to_serverless_functions
+
+
+@fixture
+def faas_definition_yaml(context):
+    context.faas_definition_yaml = 'faas.yml'
+    return context.faas_definition_yaml
+
+
+@fixture
+def faas_client_factory(context):
+    context.faas_client_factory = FaasClientFactory(
+        context.path_to_serverless_functions,
+        context.faas_port,
+        context.faas_definition_yaml)
+    return context.faas_client_factory
 
 
 @fixture

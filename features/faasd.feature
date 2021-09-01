@@ -6,11 +6,24 @@ Feature: Install faas engine
   Background: Docker node is available
 
     Given a jelastic environment with a docker node is available in group 'faas' with image 'softozor/ubuntu-git:latest'
+    And the faas engine is installed
 
   Scenario: Log on
 
-    Given the faas engine is installed
     When a user logs on the faas engine
     Then she gets a success response
 
-# TODO: in the main manifest we need to test that the faasd comes in a node with nodetype == ubuntu-vps and nodegroup == vps
+  Scenario: Deploy new function
+
+    When a user deploys the 'hello-python' function to the faas engine
+    Then she gets a success response
+
+  Scenario: Call function
+
+    Given the 'hello-python' function has been deployed on the faas engine
+    When a user invokes it with payload 'it is me'
+    Then she gets http status 200
+    And she gets content
+      """
+      Hello! You said: it is me
+      """
