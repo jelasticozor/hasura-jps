@@ -15,4 +15,4 @@ generate() {
   mono /pickles/Pickles.exe --feature-directory=. --output-directory=${output_dir} --system-under-test-name=$app --system-under-test-version=$version --language=en --documentation-format=dhtml --exp --et 'in-preparation' --enableComments=false
 }
 
-generate "shopozor-api" $OUTPUT_DIR $VERSION
+generate "hasura-jps" $OUTPUT_DIR $VERSION
