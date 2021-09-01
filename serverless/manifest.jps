@@ -1,6 +1,6 @@
 type: update
 name: faasd
-baseUrl: http://gitlab.hidora.com/softozor/jelasticozor/infrastructure/-/raw/master
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 onInstall:
 - cmd[faas]:
