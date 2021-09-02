@@ -35,8 +35,6 @@ publish-faas-functions:
 acceptance-test:
   stage: test
   image: softozor/python-infrastructure-tests:${TOOLS_SHA}
-  before_script:
-    - *docker-login
   script:
     - |
       behave --junit --junit-directory ./features/test-reports --tags ~wip \
