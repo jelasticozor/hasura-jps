@@ -58,7 +58,7 @@ def step_impl(context):
     context.exit_code = context.faas_client.login()
 
 
-@when(u'a user deploys the \'{function_name}\' function to the faas engine')
+@when(u'she deploys the \'{function_name}\' function to the faas engine')
 def step_impl(context, function_name):
     context.exit_code = context.faas_client.deploy(function_name)
     context.current_faas_function = function_name
