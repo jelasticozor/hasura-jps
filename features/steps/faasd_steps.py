@@ -55,7 +55,7 @@ def step_impl(context, function_name):
 
 @when(u'a user invokes it with payload \'{function_payload}\'')
 def step_impl(context, function_payload):
-    rq = requests.post(f'{context.faas_client.endpoint}/function/{context.current_faas_function}',
+    rq = requests.post(f'http://{context.faas_client.endpoint}/function/{context.current_faas_function}',
                        data=function_payload)
     context.current_function_http_status = rq.status_code
     context.current_function_response_content = rq.text
