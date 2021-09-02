@@ -30,7 +30,9 @@ publish-faas-functions:
     - cd ${CI_PROJECT_DIR}/features/data/functions
     - faas-cli build -f ./faas.yml
     - faas-cli push -f ./faas.yml
-  # TODO: only call if the folder has changed sources
+  only:
+    changes:
+      -features/data/functions/**/*
 
 acceptance-test:
   stage: test
