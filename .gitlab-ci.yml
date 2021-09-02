@@ -32,7 +32,7 @@ publish-faas-functions:
     - faas-cli push -f ./faas.yml
   only:
     changes:
-      -features/data/functions/**/*
+      - features/data/functions/**/*
 
 acceptance-test:
   stage: test
