@@ -1,0 +1,117 @@
+{
+  "env": {
+    "appid": "e789335e67f6ac362bcdc7f49443de36",
+    "contexts": [],
+    "createdOn": "2021-08-19 14:51:37",
+    "creatorUid": 4784,
+    "domain": "local-sha-master-0954606.hidora.com",
+    "envName": "local-sha-master-0954606",
+    "extdomains": [],
+    "hardwareNodeGroup": "new",
+    "hostGroup": {
+      "displayName": "VD",
+      "uniqueName": "new"
+    },
+    "isFirewallEnabled": true,
+    "isTransferring": false,
+    "ishaenabled": false,
+    "shortdomain": "local-sha-master-0954606",
+    "sslstate": false,
+    "status": 1,
+    "uid": 4784
+  },
+  "envGroups": [],
+  "nodeGroups": [
+    {
+      "deployments": [],
+      "features": [
+        "FIREWALL"
+      ],
+      "isSLBAccessEnabled": true,
+      "isSequentialDeploy": false,
+      "name": "docker",
+      "redeployContainerDelay": 30,
+      "redeployContextDelay": 30,
+      "restartContainerDelay": 0,
+      "restartNodeDelay": 0,
+      "scalingMode": "STATELESS",
+      "templateType": "NATIVE",
+      "vType": "CT"
+    }
+  ],
+  "nodes": [
+    {
+      "addons": [],
+      "address": "10.102.15.248",
+      "adminUrl": "http://docker89876-local-sha-master-0954606.hidora.com",
+      "bandwidthLimit": 100000,
+      "canBeExported": false,
+      "contextValidatorRegex": "^((([a-zA-Z0-9])+(-{1}([a-zA-Z0-9])+)+)|([a-zA-Z0-9]+))$",
+      "ctid": 106205,
+      "customitem": {
+        "dockerManifest": {
+          "cmd": [
+            "/bin/sh"
+          ],
+          "created": "2021-08-06T17:19:45.183996158Z",
+          "entrypoint": null,
+          "env": [
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+          ],
+          "id": "sha256:021b3423115ff662225e83d7e2606475217de7b55fde83ce3447a54019a77aa2",
+          "imageId": "sha256:dc0d5c673ee2846463a00ec42d78344d3d5f37ac23c0723da4cd0051c16f4ef4",
+          "os": "linux",
+          "volumes": null,
+          "workdir": ""
+        },
+        "dockerName": "alpine",
+        "dockerOs": ".alpine-3.x-x86_64",
+        "dockerTag": "latest",
+        "dockerVolumes": [],
+        "dockerVolumesFrom": []
+      },
+      "diskIoLimit": 10000000,
+      "diskIopsLimit": 1000,
+      "diskLimit": 100000,
+      "endpoints": [],
+      "features": [
+        "FIREWALL"
+      ],
+      "fixedCloudlets": 0,
+      "flexibleCloudlets": 4,
+      "guestOSType": "LINUX",
+      "hasPackages": false,
+      "hostOSType": "LINUX",
+      "id": 89876,
+      "intIP": "10.102.15.248",
+      "isClusterSupport": false,
+      "isCustomSslSupport": false,
+      "isExternalIpRequired": false,
+      "isHighAvailability": false,
+      "isResetPassword": false,
+      "isVcsSupport": false,
+      "isWebAccess": true,
+      "ismaster": true,
+      "maxchanks": 4,
+      "messages": [],
+      "name": "alpine",
+      "nodeGroup": "docker",
+      "nodeType": "docker",
+      "nodemission": "docker",
+      "osType": "LINUX",
+      "packages": [],
+      "port": 22,
+      "singleContext": false,
+      "status": 1,
+      "type": "NATIVE",
+      "url": "http://node89876-local-sha-master-0954606.hidora.com",
+      "user": "root",
+      "vType": "CT",
+      "version": "latest"
+    }
+  ],
+  "nodesData": [],
+  "nodesInternalDomains": [],
+  "result": 0,
+  "right": "OWNER"
+}
