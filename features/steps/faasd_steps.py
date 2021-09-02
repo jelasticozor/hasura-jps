@@ -36,7 +36,7 @@ def step_impl(context):
         node_type=faas_node_type,
         node_group=faas_node_group)
     context.faas_client = context.faas_client_factory.create(
-        context.faas_node_ip, username, password)
+        faas_node_ip, username, password)
 
 
 @given(u'the \'{function_name}\' function has been deployed on the faas engine')
