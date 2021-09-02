@@ -1,19 +1,6 @@
 import requests
 
-from features.utils.sockets import can_open_socket
-from features.utils.timing import wait_until
-
-faas_node_type = 'docker'
-faas_node_group = 'faas'
-
-
-def host_has_port_open(host, port, timeout_in_sec=120, period_in_sec=5):
-    try:
-        wait_until(lambda: can_open_socket(host, port),
-                   timeout_in_sec=timeout_in_sec, period_in_sec=period_in_sec)
-        return True
-    except TimeoutError:
-        return False
+from features.utils.sockets import host_has_port_open
 
 
 @given(u'the faas engine is installed')
@@ -22,6 +9,8 @@ def step_impl(context):
         context.serverless_manifest, context.current_env_name)
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)
+    faas_node_type = 'docker'
+    faas_node_group = 'faas'
     faas_node_ip = context.current_env_info.get_node_ips(
         node_type=faas_node_type, node_group=faas_node_group)[0]
     assert host_has_port_open(faas_node_ip, context.faas_port)

@@ -30,6 +30,7 @@ publish-faas-functions:
     - cd ${CI_PROJECT_DIR}/features/data/functions
     - faas-cli build -f ./faas.yml
     - faas-cli push -f ./faas.yml
+  # TODO: does this really work?
   only:
     changes:
       - features/data/functions/**/*
