@@ -84,6 +84,13 @@ def new_environment(context):
 
 
 @fixture
+def main_manifest(context):
+    context.main_manifest = os.path.join(
+        context.project_root_folder, 'manifest.jps')
+    return context.main_manifest
+
+
+@fixture
 def serverless_manifest(context):
     context.serverless_manifest = os.path.join(
         context.project_root_folder, 'serverless', 'manifest.jps')
