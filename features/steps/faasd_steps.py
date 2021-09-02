@@ -59,6 +59,8 @@ def step_impl(context, function_payload):
                        data=function_payload)
     context.current_function_http_status = rq.status_code
     context.current_function_response_content = rq.text
+    print('status code = ', rq.status_code)
+    print('response = ', rq.text)
 
 
 @then(u'she gets a success response')

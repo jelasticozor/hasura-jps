@@ -20,6 +20,8 @@ publish-faas-image:
   only:
     refs:
       - master
+    changes:
+      - ci/ubuntu/Dockerfile
 
 publish-faas-functions:
   stage: publish-docker
@@ -30,8 +32,9 @@ publish-faas-functions:
     - cd ${CI_PROJECT_DIR}/features/data/functions
     - faas-cli build -f ./faas.yml
     - faas-cli push -f ./faas.yml
-  # TODO: does this really work?
   only:
+    refs:
+      - master
     changes:
       - features/data/functions/**/*
 
