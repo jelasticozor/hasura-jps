@@ -59,8 +59,6 @@ def step_impl(context, function_payload):
                        data=function_payload)
     context.current_function_http_status = rq.status_code
     context.current_function_response_content = rq.text
-    print('status code = ', rq.status_code)
-    print('response = ', rq.text)
 
 
 @then(u'she gets a success response')
@@ -68,7 +66,7 @@ def step_impl(context):
     assert context.exit_code == 0
 
 
-@then(u'she gets http status {http_status}')
+@then(u'she gets http status {http_status:d}')
 def step_impl(context, http_status):
     assert context.current_function_http_status == http_status
 
