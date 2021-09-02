@@ -15,7 +15,8 @@ Feature: Install faas engine
 
   Scenario: Deploy new function
 
-    When a user deploys the 'hello-python' function to the faas engine
+    Given a user is logged on the faas engine
+    When she deploys the 'hello-python' function to the faas engine
     Then she gets a success response
 
   Scenario: Call function

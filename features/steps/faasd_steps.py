@@ -25,19 +25,6 @@ def step_impl(context):
     faas_node_ip = context.current_env_info.get_node_ips(
         node_type=faas_node_type, node_group=faas_node_group)[0]
     assert host_has_port_open(faas_node_ip, context.faas_port)
-    context.faas_client = context.faas_client_factory.create(
-        context.faas_node_ip)
-
-
-@given(u'the \'{function_name}\' function has been deployed on the faas engine')
-def step_impl(context, function_name):
-    context.current_faas_function = function_name
-    exit_code = context.faas_client.up(function_name)
-    assert exit_code == 0
-
-
-@when(u'a user logs on the faas engine')
-def step_impl(context):
     username = context.file_client.read(
         context.current_env_name,
         '/var/lib/faasd/secrets/basic-auth-user',
@@ -48,12 +35,32 @@ def step_impl(context):
         '/var/lib/faasd/secrets/basic-auth-password',
         node_type=faas_node_type,
         node_group=faas_node_group)
-    context.exit_code = context.faas_client.login(username, password)
+    context.faas_client = context.faas_client_factory.create(
+        context.faas_node_ip, username, password)
 
 
-@when(u' a user deploys the \'{function_name}\' function to the faas engine')
+@given(u'the \'{function_name}\' function has been deployed on the faas engine')
 def step_impl(context, function_name):
-    context.exit_code = context.faas_client.up(function_name)
+    context.faas_client.login()
+    context.current_faas_function = function_name
+    exit_code = context.faas_client.deploy(function_name)
+    assert exit_code == 0
+
+
+@given(u'a user is logged on the faas engine')
+def step_impl(context):
+    exit_code = context.faas_client.login()
+    assert exit_code == 0
+
+
+@when(u'a user logs on the faas engine')
+def step_impl(context):
+    context.exit_code = context.faas_client.login()
+
+
+@when(u'a user deploys the \'{function_name}\' function to the faas engine')
+def step_impl(context, function_name):
+    context.exit_code = context.faas_client.deploy(function_name)
     context.current_faas_function = function_name
 
 
