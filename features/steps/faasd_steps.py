@@ -74,4 +74,6 @@ def step_impl(context, http_status):
 @then(u'she gets content')
 def step_impl(context):
     expected_content = context.text
+    print('expected content = ', expected_content)
+    print('actual   content = ', context.current_function_response_content)
     assert context.current_function_response_content == expected_content
