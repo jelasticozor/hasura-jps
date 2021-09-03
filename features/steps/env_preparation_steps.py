@@ -1,5 +1,7 @@
 import os
 
+from features.utils.test_manifest import TestManifest
+
 
 @given(
     u'a jelastic environment with {node_count:d} {node_type} node is available in node group \'{node_group}\' with image \'{docker_image}\'')
@@ -8,16 +10,11 @@ import os
 def step_impl(context, node_count, node_type, node_group, docker_image):
     manifest_filename = os.path.join(
         context.test_manifests_folder, f'{node_type}-node.yml')
-
-    with open(manifest_filename) as manifest_file:
-        manifest_content = manifest_file.read()
-
-        # TODO: create a test manifest class where we abstract out this logic:
-        manifest_content.replace("NODE_COUNT", str(node_count))
-        manifest_content.replace("NODE_GROUP", node_group)
-        manifest_content.replace("DOCKER_IMAGE", docker_image)
-
-        context.jps_client.install(manifest_content, context.current_env_name)
+    test_manifest = TestManifest(manifest_filename)
+    context.jps_client.install(
+        test_manifest.get_content(
+            node_count=node_count, node_group=node_group, docker_image=docker_image),
+        context.current_env_name)
 
 
 @given(u'a jelastic environment with {node_count:d} {node_type} node is available in node group \'{node_group}\'')
@@ -25,12 +22,7 @@ def step_impl(context, node_count, node_type, node_group, docker_image):
 def step_impl(context, node_count, node_type, node_group):
     manifest_filename = os.path.join(
         context.test_manifests_folder, f'{node_group}-node.yml')
-
-    with open(manifest_filename) as manifest_file:
-        manifest_content = manifest_file.read()
-
-        # TODO: create a test manifest class where we abstract out this logic:
-        manifest_content.replace("NODE_COUNT", str(node_count))
-        manifest_content.replace("NODE_TYPE", node_type)
-
-        context.jps_client.install(manifest_content, context.current_env_name)
+    test_manifest = TestManifest(manifest_filename)
+    context.jps_client.install(
+        test_manifest.get_content(node_count=node_count, node_type=node_type),
+        context.current_env_name)
