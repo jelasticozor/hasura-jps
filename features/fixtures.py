@@ -97,6 +97,13 @@ def serverless_manifest(context):
     return context.serverless_manifest
 
 
+@fixture
+def test_manifests_folder(context):
+    context.test_manifests_folder = os.path.join(
+        context.project_root_folder, 'features', 'data', 'manifests')
+    return context.test_manifests_folder
+
+
 fixtures_registry = {
 
 }

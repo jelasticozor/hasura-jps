@@ -5,7 +5,7 @@ from features.utils.sockets import host_has_port_open
 
 @given(u'the faas engine is installed')
 def step_impl(context):
-    context.jps_client.install(
+    context.jps_client.install_from_file(
         context.serverless_manifest, context.current_env_name)
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)

@@ -8,7 +8,7 @@ Feature: All together
   Scenario: The faas engine is well-defined
 
     When a user installs the main manifest
-    Then there is 1 single docker node in the faas node group
+    Then there is 1 docker node in the faas node group
 
   # TODO: check that there are two postgres nodes
 
