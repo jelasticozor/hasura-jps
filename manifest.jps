@@ -9,6 +9,15 @@ nodes:
   nodeGroup: faas
   nodeType: docker
   image: softozor/ubuntu-git:latest
+- displayName: database
+  count: 2
+  cloudlets: 32
+  nodeType: postgres13
+  scalingMode: STATELESS
+  password: ${fn.password}
+  cluster: true
+skipNodeEmails: true
+
 
 onInstall:
   - installFaas
@@ -17,3 +26,10 @@ actions:
   installFaas:
     install:
       jps: serverless/manifest.jps
+
+# TODO: add startPage -> hasura console
+success:
+  text: |
+    **Database Admin Panel**: [${nodes.sqldb.master.url}](${nodes.sqldb.master.url})
+    **Database Admin User**: webadmin
+    **Database Admin Password**: ${nodes.sqldb.password}

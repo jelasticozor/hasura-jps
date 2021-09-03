@@ -1,0 +1,16 @@
+type: install
+name: sql db node
+
+nodes:
+  count: NODE_COUNT
+  cloudlets: 32
+  nodeType: NODE_TYPE
+  scalingMode: STATELESS
+  password: ${fn.password}
+  nodeGroup: sqldb
+  cluster: true
+skipNodeEmails: true
+
+success:
+  text: |
+    **Password**: ${nodes.sqldb.password}

@@ -1,11 +1,12 @@
-Feature: Install faas engine
+# TODO: install the faas engine once and for all for the whole feature
+Feature: The faas engine
 
   The faas engine will allow to bind hasura actions and
   events to functions.
 
   Background: Docker node is available
 
-    Given a jelastic environment with a docker node is available in group 'faas' with image 'softozor/ubuntu-git:latest'
+    Given a jelastic environment with 1 docker node is available in group 'faas' with image 'softozor/ubuntu-git:latest'
     And the faas engine is installed
 
   Scenario: Log on
