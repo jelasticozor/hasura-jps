@@ -17,7 +17,7 @@ def step_impl(context, node_count, node_type, node_group, docker_image):
         manifest_content.replace("NODE_GROUP", node_group)
         manifest_content.replace("DOCKER_IMAGE", docker_image)
 
-        context.jps_client.install(manifest_content)
+        context.jps_client.install(manifest_content, context.current_env_name)
 
 
 @given(u'a jelastic environment with {node_count:d} {node_type} node is available in node group \'{node_group}\'')
@@ -33,4 +33,4 @@ def step_impl(context, node_count, node_type, node_group):
         manifest_content.replace("NODE_COUNT", str(node_count))
         manifest_content.replace("NODE_TYPE", node_type)
 
-        context.jps_client.install(manifest_content)
+        context.jps_client.install(manifest_content, context.current_env_name)
