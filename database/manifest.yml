@@ -1,0 +1,7 @@
+type: update
+name: database
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+
+onInstall:
+- cmd[sqldb]:
+  - echo "install the hasura database!"

@@ -21,11 +21,15 @@ skipNodeEmails: true
 
 onInstall:
   - installFaas
+  - installDatabase
 
 actions:
   installFaas:
     install:
-      jps: serverless/manifest.jps
+      jps: serverless/manifest.yml
+  installDatabase:
+    install:
+      jps: database/manifest.yml
 
 # TODO: add startPage -> hasura console
 success:
