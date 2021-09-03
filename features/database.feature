@@ -9,7 +9,7 @@ Feature: The database
 
   Background: sql node is available
 
-    Given a jelastic environment with 2 postgres13 nodes in node group 'sqldb' is available
+    Given a jelastic environment with 2 postgres13 nodes is available in node group 'sqldb'
     And the database is installed
 
   Scenario: Any change done on primary gets reflected on secondary

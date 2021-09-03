@@ -15,7 +15,7 @@ def step_impl(context, node_count, node_group, docker_image):
     assert created_env_info.is_running()
 
 
-@given(u'a jelastic environment with {node_count:d} {node_type} node in node group \'{node_group}\' is available')
-@given(u'a jelastic environment with {node_count:d} {node_type} nodes in node group \'{node_group}\' is available')
+@given(u'a jelastic environment with {node_count:d} {node_type} node is available in node group \'{node_group}\'')
+@given(u'a jelastic environment with {node_count:d} {node_type} nodes is available in node group \'{node_group}\'')
 def step_impl(context, node_count, node_group, docker_image):
     raise NotImplemented('step not implemented')
