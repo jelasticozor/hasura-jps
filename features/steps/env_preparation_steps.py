@@ -13,7 +13,7 @@ def step_impl(context, node_count, node_type, node_group, docker_image):
         manifest_content = manifest_file.read()
 
         # TODO: create a test manifest class where we abstract out this logic:
-        manifest_content.replace("NODE_COUNT", node_count)
+        manifest_content.replace("NODE_COUNT", str(node_count))
         manifest_content.replace("NODE_GROUP", node_group)
         manifest_content.replace("DOCKER_IMAGE", docker_image)
 
@@ -30,7 +30,7 @@ def step_impl(context, node_count, node_type, node_group):
         manifest_content = manifest_file.read()
 
         # TODO: create a test manifest class where we abstract out this logic:
-        manifest_content.replace("NODE_COUNT", node_count)
+        manifest_content.replace("NODE_COUNT", str(node_count))
         manifest_content.replace("NODE_TYPE", node_type)
 
         context.jps_client.install(manifest_content)
