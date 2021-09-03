@@ -6,7 +6,7 @@ Feature: The faas engine
 
   Background: Docker node is available
 
-    Given a jelastic environment with 1 docker node is available in group 'faas' with image 'softozor/ubuntu-git:latest'
+    Given a jelastic environment with 1 docker node is available in node group 'faas' with image 'softozor/ubuntu-git:latest'
     And the faas engine is installed
 
   Scenario: Log on
