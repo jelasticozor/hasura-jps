@@ -111,6 +111,12 @@ def test_manifests_folder(context):
     return context.test_manifests_folder
 
 
+@fixture
+def postgres_admin_username(context):
+    context.postgres_admin_username = 'webadmin'
+    return context.postgres_admin_username
+
+
 fixtures_registry = {
 
 }
