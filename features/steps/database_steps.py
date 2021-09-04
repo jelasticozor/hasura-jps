@@ -18,7 +18,7 @@ def step_impl(context):
                                                     password=postgres_admin_password)
 
 
-@given(u'the postgres version is {postgres_version:d}')
+@then(u'the postgres version is {postgres_version:d}')
 def step_impl(context, postgres_version):
     min_version = postgres_version * 10000
     max_version = (postgres_version + 1) * 10000
