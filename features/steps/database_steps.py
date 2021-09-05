@@ -12,10 +12,14 @@ def step_impl(context):
     assert secondary_node_ip is not None
     assert 'Password' in context.manifest_data
     postgres_admin_password = context.manifest_data['Password']
-    context.primary_connection = psycopg2.connect(host=primary_node_ip, user=context.postgres_admin_username,
-                                                  password=postgres_admin_password)
-    context.secondary_connection = psycopg2.connect(host=secondary_node_ip, user=context.postgres_admin_username,
-                                                    password=postgres_admin_password)
+    context.primary_connection = psycopg2.connect(host=primary_node_ip,
+                                                  user=context.postgres_admin_username,
+                                                  password=postgres_admin_password,
+                                                  database=context.postgres_default_database)
+    context.secondary_connection = psycopg2.connect(host=secondary_node_ip,
+                                                    user=context.postgres_admin_username,
+                                                    password=postgres_admin_password,
+                                                    database=context.postgres_default_database)
 
 
 @then(u'the postgres version is {postgres_version:d}')

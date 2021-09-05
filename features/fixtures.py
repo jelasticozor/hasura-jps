@@ -112,6 +112,12 @@ def test_manifests_folder(context):
 
 
 @fixture
+def postgres_default_database(context):
+    context.postgres_default_database = 'postgres'
+    return context.postgres_default_database
+
+
+@fixture
 def postgres_admin_username(context):
     context.postgres_admin_username = 'webadmin'
     return context.postgres_admin_username
