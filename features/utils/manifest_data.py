@@ -7,6 +7,6 @@ def get_manifest_data(success_text):
         key, value = key_value.split(':')
         key = key.replace('<strong>', '')
         key = key.replace('</strong>', '')
-        manifest_data[key] = value
+        manifest_data[key] = value.strip()
 
     return manifest_data
