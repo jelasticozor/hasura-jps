@@ -3,15 +3,19 @@ import psycopg2
 
 @given(u'the database is installed')
 def step_impl(context):
+    print('current env name = ', context.current_env_name)
     context.jps_client.install_from_file(
         context.database_manifest, context.current_env_name)
     env_info = context.control_client.get_env_info(context.current_env_name)
     primary_node_ip = env_info.get_node_ip_from_name('Primary')
     assert primary_node_ip is not None
+    print('primary node ip = ', primary_node_ip)
     secondary_node_ip = env_info.get_node_ip_from_name('Secondary')
     assert secondary_node_ip is not None
+    print('secondary node ip = ', secondary_node_ip)
     assert 'Password' in context.manifest_data
     postgres_admin_password = context.manifest_data['Password']
+    print(f'password = \'{postgres_admin_password}\'')
     context.primary_connection = psycopg2.connect(host=primary_node_ip,
                                                   user=context.postgres_admin_username,
                                                   password=postgres_admin_password,
