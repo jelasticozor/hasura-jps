@@ -18,6 +18,11 @@ nodes:
   cluster: true
 skipNodeEmails: true
 
+globals:
+  DB_ADMIN_USERNAME: webadmin
+  DB_NAME: hasura
+  DB_USERNAME: hasura_user
+  DB_PASSWORD: ${fn.password(20)}
 
 onInstall:
   - installFaas
@@ -30,10 +35,19 @@ actions:
   installDatabase:
     install:
       jps: database/manifest.yml
+      settings:
+        adminUsername: ${globals.DB_ADMIN_USERNAME}
+        adminPassword: ${nodes.sqldb.password}
+        databaseName: ${globals.DB_NAME}
+        username: ${globals.DB_USERNAME}
+        password: ${globals.DB_PASSWORD}
 
 # TODO: add startPage -> hasura console
 success:
   text: |
     **Database Admin Panel**: [${nodes.sqldb.master.url}](${nodes.sqldb.master.url})
-    **Database Admin User**: webadmin
+    **Database Admin User**: ${globals.DB_ADMIN_USERNAME}
     **Database Admin Password**: ${nodes.sqldb.password}
+    **Database Name**: ${globals.DB_NAME}
+    **Database Username**: ${globals.DB_USERNAME}
+    **Database Password**: ${globals.DB_PASSWORD}
