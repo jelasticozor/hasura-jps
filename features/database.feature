@@ -25,24 +25,17 @@ Feature: The database
     Then she gets an error
 
   @wip
-  Scenario Outline: The necessary extensions are installed
+  Scenario: The necessary extensions are installed
 
-    Then extension <extension> is installed
-
-    Examples:
-
+    Then the following extensions are installed
       | extension |
       | pgcrypto  |
       | citext    |
       | uuid-ossp |
 
-  @wip
-  Scenario Outline: Hasura-specific schemas are installed
+  Scenario: Hasura-specific schemas are installed
 
-    Then schema <schema> exists
-
-    Examples:
-
+    Then the following schemas exist
       | schema      |
       | hdb_catalog |
       | hdb_views   |

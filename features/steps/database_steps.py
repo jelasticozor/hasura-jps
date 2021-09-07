@@ -29,3 +29,18 @@ def step_impl(context, postgres_version):
     max_version = (postgres_version + 1) * 10000
     assert min_version <= context.primary_connection.server_version < max_version
     assert min_version <= context.secondary_connection.server_version < max_version
+
+
+@then('the following schemas exist')
+def step_impl(context):
+    for row in context.table:
+        cursor = context.primary_connection.cursor()
+        cursor.execute(
+            """
+            SELECT schema_name FROM information_schema.schemata WHERE schema_name = %s;
+            """,
+            row['schema'])
+        schema_name = cursor.fetchone()
+        print('expected schema = ', row['schema'])
+        print('fetched schema  = ', schema_name)
+        assert schema_name is not None
