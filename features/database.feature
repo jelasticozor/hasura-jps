@@ -24,7 +24,6 @@ Feature: The database
     # TODO: tell exactly what error
     Then she gets an error
 
-  @wip
   Scenario: The necessary extensions are installed
 
     Then the following extensions are installed

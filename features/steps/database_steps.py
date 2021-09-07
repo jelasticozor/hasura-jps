@@ -31,6 +31,21 @@ def step_impl(context, postgres_version):
     assert min_version <= context.secondary_connection.server_version < max_version
 
 
+@then('the following extensions are installed')
+def step_impl(context):
+    cursor = context.primary_connection.cursor()
+    cursor.execute(
+        """
+        SELECT * FROM pg_extension
+        """
+    )
+    actual_extensions = cursor.fetchall()
+    print('actual extensions = ', actual_extensions)
+    for row in context.table:
+        print('expected extension = ', row[0])
+    assert True is False
+
+
 @then('the following schemas exist')
 def step_impl(context):
     for row in context.table:
