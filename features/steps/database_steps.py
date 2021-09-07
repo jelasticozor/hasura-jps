@@ -33,15 +33,15 @@ def step_impl(context, postgres_version):
 
 @then('the following extensions are installed')
 def step_impl(context):
-    expected_extensions = set(map(lambda row: row['extension'], context.table))
+    expected_extensions = set(row['extension'] for row in context.table)
     cursor = context.primary_connection.cursor()
     cursor.execute(
         """
         SELECT extname FROM pg_extension
         """
     )
-    rows = cursor.fetchall()
-    actual_extensions = set(map(lambda row: row['extname'], rows))
+    fetched_rows = cursor.fetchall()
+    actual_extensions = set(extension[0] for extension in fetched_rows)
     print('actual   extensions = ', actual_extensions)
     print('expected extensions = ', expected_extensions)
     assert expected_extensions.intersection(
@@ -50,15 +50,15 @@ def step_impl(context):
 
 @then('the following schemas exist')
 def step_impl(context):
-    expected_schemas = set(map(lambda row: row['schema'], context.table))
+    expected_schemas = set(row['schema'] for row in context.table)
     cursor = context.primary_connection.cursor()
     cursor.execute(
         """
         SELECT schema_name FROM information_schema.schemata;
         """
     )
-    rows = cursor.fetchall()
-    actual_schemas = set(map(lambda row: row['schema_name'], rows))
+    fetched_rows = cursor.fetchall()
+    actual_schemas = set(schema[0] for schema in fetched_rows)
     print('actual   schemas = ', actual_schemas)
     print('expected schemas = ', expected_schemas)
     assert expected_schemas.intersection(actual_schemas) == expected_schemas
