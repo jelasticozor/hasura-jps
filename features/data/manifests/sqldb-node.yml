@@ -16,5 +16,5 @@ skipNodeEmails: true
 
 success:
   text: |
-    **Username**: ${globals.USERNAME}  
+    **Username**: ${globals.ADMIN_USERNAME}  
     **Password**: ${nodes.sqldb.password}
