@@ -6,8 +6,7 @@
   rev: v2.2.3
   hooks:
   - id: trailing-whitespace
-    args: [--markdown-linebreak-ext=md, --markdown-linebreak-ext=feature]
-    exclude: __snapshots__/*
+    args: [--markdown-linebreak-ext=md, --markdown-linebreak-ext=feature, --markdown-linebreak-ext=yaml, --markdown-linebreak-ext=yml, --markdown-linebreak-ext=jps]
   - id: check-json
     exclude: .vscode/*
   - id: pretty-format-json
