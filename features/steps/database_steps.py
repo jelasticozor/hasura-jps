@@ -3,23 +3,30 @@ import psycopg2
 
 @given(u'the database is installed')
 def step_impl(context):
-    print('current env name = ', context.current_env_name)
+    assert 'Username' in context.manifest_data
+    assert 'Password' in context.manifest_data
+    admin_user = context.manifest_data['Username']
+    admin_password = context.manifest_data['Password']
     context.jps_client.install_from_file(
-        context.database_manifest, context.current_env_name)
+        context.database_manifest, context.current_env_name, settings={
+            "adminUsername": admin_user,
+            "adminPassword": admin_password,
+            "databaseName": context.database_name,
+            "username": context.database_user,
+            "password": context.database_password
+        })
     env_info = context.control_client.get_env_info(context.current_env_name)
     primary_node_ip = env_info.get_node_ip_from_name('Primary')
     assert primary_node_ip is not None
     secondary_node_ip = env_info.get_node_ip_from_name('Secondary')
     assert secondary_node_ip is not None
-    assert 'Password' in context.manifest_data
-    postgres_admin_password = context.manifest_data['Password']
     context.primary_connection = psycopg2.connect(host=primary_node_ip,
-                                                  user=context.postgres_admin_username,
-                                                  password=postgres_admin_password,
+                                                  user=admin_user,
+                                                  password=admin_password,
                                                   database=context.postgres_default_database)
     context.secondary_connection = psycopg2.connect(host=secondary_node_ip,
-                                                    user=context.postgres_admin_username,
-                                                    password=postgres_admin_password,
+                                                    user=admin_user,
+                                                    password=admin_password,
                                                     database=context.postgres_default_database)
 
 

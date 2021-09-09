@@ -28,7 +28,7 @@ settings:
       required: true
 
 onInstall:
-- cmd[sqldb]:
+- cmd[${nodes.sqldb.master.id}]:
   - |
     export PGPASSWORD=${settings.adminPassword}
     psql -U ${settings.adminUsername} -d postgres -c "CREATE USER ${settings.username} PASSWORD '${settings.password}';"

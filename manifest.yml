@@ -45,9 +45,9 @@ actions:
 # TODO: add startPage -> hasura console
 success:
   text: |
-    **Database Admin Panel**: [${nodes.sqldb.master.url}](${nodes.sqldb.master.url})
-    **Database Admin User**: ${globals.DB_ADMIN_USERNAME}
-    **Database Admin Password**: ${nodes.sqldb.password}
-    **Database Name**: ${globals.DB_NAME}
-    **Database Username**: ${globals.DB_USERNAME}
+    **Database Admin Panel**: [${nodes.sqldb.master.url}](${nodes.sqldb.master.url})  
+    **Database Admin User**: ${globals.DB_ADMIN_USERNAME}  
+    **Database Admin Password**: ${nodes.sqldb.password}  
+    **Database Name**: ${globals.DB_NAME}  
+    **Database Username**: ${globals.DB_USERNAME}  
     **Database Password**: ${globals.DB_PASSWORD}

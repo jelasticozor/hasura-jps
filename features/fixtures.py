@@ -118,9 +118,21 @@ def postgres_default_database(context):
 
 
 @fixture
-def postgres_admin_username(context):
-    context.postgres_admin_username = 'webadmin'
-    return context.postgres_admin_username
+def database_name(context):
+    context.database_name = 'hasura'
+    return context.database_name
+
+
+@fixture
+def database_user(context):
+    context.database_user = 'hasura_user'
+    return context.database_user
+
+
+@fixture
+def database_password(context):
+    context.database_password = 'admin_password'
+    return context.database_password
 
 
 fixtures_registry = {

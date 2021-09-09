@@ -1,6 +1,9 @@
 type: install
 name: sql db node
 
+globals:
+  ADMIN_USERNAME: webadmin
+
 nodes:
   count: NODE_COUNT
   cloudlets: 32
@@ -13,4 +16,5 @@ skipNodeEmails: true
 
 success:
   text: |
+    **Username**: ${globals.USERNAME}  
     **Password**: ${nodes.sqldb.password}

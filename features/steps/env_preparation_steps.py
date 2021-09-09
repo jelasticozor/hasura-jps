@@ -1,6 +1,7 @@
 import os
 
-from features.utils.manifest_data import get_manifest_data
+from test_utils.manifest_data import get_manifest_data
+
 from features.utils.test_manifest import TestManifest
 
 
