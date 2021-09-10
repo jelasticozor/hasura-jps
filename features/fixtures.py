@@ -112,12 +112,6 @@ def test_manifests_folder(context):
 
 
 @fixture
-def postgres_default_database(context):
-    context.postgres_default_database = 'postgres'
-    return context.postgres_default_database
-
-
-@fixture
 def database_name(context):
     context.database_name = 'hasura'
     return context.database_name

@@ -23,7 +23,6 @@ def before_all(context):
     use_fixture(faas_definition_yaml, context)
     use_fixture(path_to_serverless_functions, context)
     use_fixture(faas_client_factory, context)
-    use_fixture(postgres_default_database, context)
     use_fixture(database_name, context)
     use_fixture(database_user, context)
     use_fixture(database_password, context)

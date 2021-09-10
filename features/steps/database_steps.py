@@ -23,11 +23,11 @@ def step_impl(context):
     context.primary_connection = psycopg2.connect(host=primary_node_ip,
                                                   user=admin_user,
                                                   password=admin_password,
-                                                  database=context.postgres_default_database)
+                                                  database=context.database_name)
     context.secondary_connection = psycopg2.connect(host=secondary_node_ip,
                                                     user=admin_user,
                                                     password=admin_password,
-                                                    database=context.postgres_default_database)
+                                                    database=context.database_name)
 
 
 @then(u'the postgres version is {postgres_version:d}')
