@@ -51,8 +51,7 @@ def step_impl(context, database):
         )
         database_connection.commit()
     except psycopg2.errors.lookup('25006') as e:
-        print('exception = ', e)
-        context.database_error = e.diag.message_detail
+        context.database_error = e
 
 
 @then(u'the postgres version is {postgres_version:d}')

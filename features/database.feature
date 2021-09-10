@@ -21,7 +21,7 @@ Feature: The database
     When a user creates a dummy table on the secondary database
     Then she gets the error
     """
-    current transaction is aborted
+    cannot execute CREATE TABLE in a read-only transaction
     """
 
   Scenario: The necessary extensions are installed
