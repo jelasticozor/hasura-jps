@@ -1,7 +1,9 @@
 import psycopg2
-
+import psycopg2.errors
 
 # TODO: we should have a fixture closing all connections after each scenario
+
+
 @given(u'the database is installed')
 def step_impl(context):
     assert 'Username' in context.manifest_data
@@ -48,8 +50,9 @@ def step_impl(context, database):
             """
         )
         database_connection.commit()
-    except Exception as e:
-        context.database_error = e.message
+    except psycopg2.errors.lookup('25006') as e:
+        print('exception = ', e)
+        context.database_error = e.diag.message_detail
 
 
 @then(u'the postgres version is {postgres_version:d}')
