@@ -21,16 +21,18 @@ def step_impl(context):
     assert primary_node_ip is not None
     secondary_node_ip = env_info.get_node_ip_from_name('Secondary')
     assert secondary_node_ip is not None
-    context.connections['primary'] = psycopg2.connect(
-        host=primary_node_ip,
-        user=admin_user,
-        password=admin_password,
-        database=context.database_name)
-    context.connections['secondary'] = psycopg2.connect(
-        host=secondary_node_ip,
-        user=admin_user,
-        password=admin_password,
-        database=context.database_name)
+    context.connections = {
+        'primary': psycopg2.connect(
+            host=primary_node_ip,
+            user=admin_user,
+            password=admin_password,
+            database=context.database_name),
+        'secondary': psycopg2.connect(
+            host=secondary_node_ip,
+            user=admin_user,
+            password=admin_password,
+            database=context.database_name)
+    }
 
 
 @when(u'a user creates a dummy table on the {database} database')
