@@ -11,18 +11,18 @@ Feature: The database
     Given a jelastic environment with 2 postgres13 nodes is available in node group 'sqldb'
     And the database is installed
 
-  @wip
   Scenario: Any change done on primary gets reflected on secondary
 
     When a user creates a dummy table on the primary database
     Then she sees the dummy table in the secondary database
 
-  @wip
   Scenario: Secondary is read-only
 
     When a user creates a dummy table on the secondary database
-    # TODO: tell exactly what error
-    Then she gets an error
+    Then she gets the error
+    """
+    current transaction is aborted
+    """
 
   Scenario: The necessary extensions are installed
 
