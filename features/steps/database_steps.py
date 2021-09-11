@@ -2,6 +2,7 @@ import psycopg2
 import psycopg2.errors
 
 # TODO: we should have a fixture closing all connections after each scenario
+from features.utils.database import database_contains_table
 
 
 @given(u'the database is installed')
@@ -51,7 +52,7 @@ def step_impl(context, database):
         )
         database_connection.commit()
     except psycopg2.errors.lookup('25006') as e:
-        context.database_error = e
+        context.database_error = str(e)
 
 
 @then(u'the postgres version is {postgres_version:d}')
@@ -100,12 +101,5 @@ def step_impl(context):
 @then('she sees the dummy table in the {database} database')
 def step_impl(context, database):
     database_connection = context.connections[database]
-    cursor = database_connection.cursor()
-    cursor.execute(
-        """
-        SELECT EXISTS (
-           SELECT FROM pg_tables
-           WHERE  tablename  = %s
-        );
-        """, ('dummy',))
-    assert cursor.fetchone()[0] is True
+    assert database_contains_table(
+        database_connection, table_name='dummy') is True
