@@ -1,6 +1,7 @@
 stages:
   - publish-docker
   - test
+  - report
 
 .docker-login: &docker-login
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -54,3 +55,21 @@ acceptance-test:
         - $CI_PROJECT_DIR/features/test-reports/*.xml
     paths:
       - $CI_PROJECT_DIR/features/test-reports/*.xml
+
+publish-pickles:
+  stage: report
+  image: softozor/pickles:${TOOLS_SHA}
+  variables:
+    APPLICATION_NAME: hasura-jps
+    OUTPUT_DIR: $CI_PROJECT_DIR/pickles
+  script:
+    - |
+      mono /pickles/Pickles.exe --feature-directory=. \
+        --output-directory=${OUTPUT_DIR} \
+        --system-under-test-name=${APPLICATION_NAME} \
+        --system-under-test-version=$CI_COMMIT_SHORT_SHA \
+        --documentation-format=dhtml \
+        --language=en --exp --et 'wip' --enableComments=false
+  artifacts:
+    paths:
+      - $OUTPUT_DIR
