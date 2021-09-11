@@ -58,7 +58,7 @@ acceptance-test:
 
 publish-pickles:
   stage: report
-  image: softozor/pickles:${TOOLS_SHA}
+  image: softozor/pickles:2.21.1
   variables:
     APPLICATION_NAME: hasura-jps
     OUTPUT_DIR: $CI_PROJECT_DIR/pickles
