@@ -14,7 +14,7 @@ RUN apt update && apt install -y gcc wget git curl \
 
 FROM hasura/graphql-engine:${HASURA_CLI_VERSION}.cli-migrations-v3 AS hasura-migrations
 
-FROM python:${PYTHON_VERSION}
+FROM python:${PYTHON_VERSION}-slim
 
 COPY --from=build /usr/local/bin/faas-cli /usr/local/bin/faas-cli
 COPY --from=build /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
