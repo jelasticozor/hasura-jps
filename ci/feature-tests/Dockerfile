@@ -1,7 +1,6 @@
-ARG PYTHON_VERSION
 ARG HASURA_CLI_VERSION
 
-FROM python:${PYTHON_VERSION}-slim AS build
+FROM python:3.9-slim AS build
 
 ARG FAAS_CLI_VERSION
 
@@ -14,10 +13,10 @@ RUN apt update && apt install -y gcc wget git curl \
 
 FROM hasura/graphql-engine:${HASURA_CLI_VERSION}.cli-migrations-v3 AS hasura-migrations
 
-FROM python:${PYTHON_VERSION}-slim
+FROM python:3.9-slim
 
 COPY --from=build /usr/local/bin/faas-cli /usr/local/bin/faas-cli
-COPY --from=build /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
+COPY --from=build /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY --from=build /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 # this copy is necessary as long as we clone behave's git repo

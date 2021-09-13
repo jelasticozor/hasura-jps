@@ -24,7 +24,6 @@ publish-feature-test-image:
   script:
     - |
       docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest \
-        --build-arg PYTHON_VERSION=${PYTHON_VERSION} \
         --build-arg FAAS_CLI_VERSION=${FAAS_CLI_VERSION} \
         --build-arg HASURA_CLI_VERSION=${HASURA_CLI_VERSION}
     - *docker-push
