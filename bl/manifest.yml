@@ -1,0 +1,21 @@
+type: update
+name: load balancer
+
+settings:
+  fields:
+    - name: serverPort
+      caption: Server port
+      type: string
+      default: 8080
+
+onInstall:
+  - replaceUpstreamServerPortWithHasuraPort
+  - restartContainers[bl]
+
+actions:
+  replaceUpstreamServerPortWithHasuraPort:
+    - cmd[bl]:
+        - cp /etc/nginx/nginx-jelastic.conf /etc/nginx/nginx-jelastic.conf.bak
+        - sed -i -E 's/([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\)\:80/\1:${settings.serverPort}/g' /etc/nginx/nginx-jelastic.conf
+        - sed -i -E 's/(server [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/\1:${settings.serverPort}/g' /etc/nginx/nginx-jelastic.conf
+      user: root

@@ -1,6 +1,5 @@
 type: update
 name: hasura
-baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master/
 
 settings:
   fields:
@@ -30,9 +29,10 @@ settings:
       caption: Unauthorized role
       type: string
       default: anonymous
-
-globals:
-  SERVER_PORT: 5000
+    - name: serverPort
+      caption: Server port
+      type: string
+      default: 8080
 
 onInstall:
   - forEach(nodes.cp):
@@ -45,8 +45,8 @@ onInstall:
               HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
               HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
               HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
-              HASURA_GRAPHQL_SERVER_PORT: ${globals.SERVER_PORT}
+              HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
   - cmd[cp]:
-      - firewall-cmd --permanent --add-port=${globals.SERVER_PORT}/tcp
+      - firewall-cmd --permanent --add-port=${settings.serverPort}/tcp
       - firewall-cmd --reload
   - restartContainers[cp]
