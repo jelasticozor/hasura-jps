@@ -26,6 +26,7 @@ def before_all(context):
     use_fixture(database_name, context)
     use_fixture(database_user, context)
     use_fixture(database_password, context)
+    use_fixture(close_database_connections, context)
 
 
 def before_scenario(context, scenario):

@@ -129,6 +129,14 @@ def database_password(context):
     return context.database_password
 
 
+@fixture
+def close_database_connections(context):
+    yield
+    if hasattr(context, 'connections'):
+        for database_connection in context.connections.values():
+            database_connection.close()
+
+
 fixtures_registry = {
 
 }

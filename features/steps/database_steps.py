@@ -1,7 +1,6 @@
 import psycopg2
 import psycopg2.errors
 
-# TODO: we should have a fixture closing all connections after each scenario
 from features.utils.database import database_contains_table
 
 
