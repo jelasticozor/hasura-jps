@@ -1,6 +1,4 @@
 version: 3
-endpoint: ENDPOINT
-admin_secret: ADMIN_SECRET
 metadata_directory: metadata
 actions:
   kind: synchronous
