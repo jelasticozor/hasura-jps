@@ -14,6 +14,10 @@ settings:
       caption: Enable console
       type: checkbox
       value: true
+    - name: hasuraUnauthorizedRole
+      caption: Unauthorized role
+      type: string
+      default: anonymous
 
 globals:
   DB_ADMIN_USERNAME: webadmin
@@ -71,6 +75,7 @@ actions:
         dbName: ${globals.DB_NAME}
         enableConsole: ${settings.enableHasuraConsole}
         adminSecret: ${globals.HASURA_ADMIN_SECRET}
+        unauthorizedRole: ${settings.hasuraUnauthorizedRole}
 
 # TODO: add startPage -> hasura console
 success:

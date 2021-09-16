@@ -26,6 +26,10 @@ settings:
       type: string
       inputType: password
       required: true
+    - name: unauthorizedRole
+      caption: Unauthorized role
+      type: string
+      default: anonymous
 
 onInstall:
   - forEach(nodes.cp):
@@ -37,6 +41,7 @@ onInstall:
               HASURA_GRAPHQL_DATABASE_URL: postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}
               HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
               HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
+              HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
   - cmd[cp]:
       - firewall-cmd --permanent --add-port=8080/tcp
       - firewall-cmd --reload
