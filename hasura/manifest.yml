@@ -33,11 +33,10 @@ onInstall:
         - method: environment.control.SetContainerEnvVars
           params:
             nodeId: ${@i.id}
-            vars: {
-              "HASURA_GRAPHQL_DATABASE_URL": "postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}",
-              "HASURA_GRAPHQL_ENABLE_CONSOLE": ${settings.enableConsole},
-              "HASURA_GRAPHQL_ADMIN_SECRET": ${settings.adminSecret}
-            }
+            vars:
+              HASURA_GRAPHQL_DATABASE_URL: postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}
+              HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
+              HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
   - cmd[cp]:
       - firewall-cmd --permanent --add-port=8080/tcp
       - firewall-cmd --reload
