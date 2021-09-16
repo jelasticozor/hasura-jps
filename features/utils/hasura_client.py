@@ -56,3 +56,11 @@ class HasuraClient:
 
     def __get_migrations_folder(self, project_folder):
         return os.path.join(project_folder, 'migrations', self.__database_name)
+
+
+class HasuraClientFactory:
+    def __init__(self, database_name):
+        self.__database_name = database_name
+
+    def create(self, endpoint):
+        return HasuraClient(endpoint, self.__database_name)

@@ -6,6 +6,7 @@ from jelastic_client import JelasticClientFactory
 from test_utils import get_new_random_env_name
 
 from features.utils.faas_client import FaasClientFactory
+from features.utils.hasura_client import HasuraClientFactory
 
 
 @fixture
@@ -135,6 +136,20 @@ def close_database_connections(context):
     if hasattr(context, 'connections'):
         for database_connection in context.connections.values():
             database_connection.close()
+
+
+@fixture
+def hasura_project_folder(context):
+    context.hasura_project_folder = os.path.join(
+        context.project_root_folder, 'features', 'data', 'database')
+    return context.hasura_project_folder
+
+
+@fixture
+def hasura_client_factory(context):
+    context.hasura_client_factory = HasuraClientFactory(
+        'default')
+    return context.hasura_client_factory
 
 
 fixtures_registry = {
