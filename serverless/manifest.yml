@@ -11,7 +11,7 @@ onInstall:
 description: |
   We install faasd, a lightweight & portable faas engine.
 
-success: ${baseUrl}/serverless/successText.md
+success: serverless/successText.md
 
 logo: https://raw.githubusercontent.com/openfaas/faasd/master/docs/media/social.png
 homepage: https://github.com/openfaas/faasd
