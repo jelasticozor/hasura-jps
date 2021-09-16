@@ -92,7 +92,7 @@ actions:
 
 success:
   text: |
-    **Hasura Console**: [${nodes.bl.master.url}](${nodes.bl.master.url})  
+    **Hasura Console**: [${env.protocol}://${env.domain}/](${env.protocol}://${env.domain}/)
     **Hasura Admin Secret**: ${globals.HASURA_ADMIN_SECRET}  
     **Database Admin Panel**: [${nodes.sqldb.master.url}](${nodes.sqldb.master.url})  
     **Database Admin User**: ${globals.DB_ADMIN_USERNAME}  
