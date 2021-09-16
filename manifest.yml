@@ -80,5 +80,5 @@ success:
     **Database Admin Password**: ${nodes.sqldb.password}  
     **Database Name**: ${globals.DB_NAME}  
     **Database Username**: ${globals.DB_USERNAME}  
-    **Database Password**: ${globals.DB_PASSWORD}
+    **Database Password**: ${globals.DB_PASSWORD}  
     **Hasura Admin Secret**: ${globals.HASURA_ADMIN_SECRET}
