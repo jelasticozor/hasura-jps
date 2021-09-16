@@ -31,6 +31,9 @@ settings:
       type: string
       default: anonymous
 
+globals:
+  SERVER_PORT: 80
+
 onInstall:
   - forEach(nodes.cp):
     - api:
@@ -42,7 +45,8 @@ onInstall:
               HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
               HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
               HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
+              HASURA_GRAPHQL_SERVER_PORT: ${globals.SERVER_PORT}
   - cmd[cp]:
-      - firewall-cmd --permanent --add-port=8080/tcp
+      - firewall-cmd --permanent --add-port=${globals.SERVER_PORT}/tcp
       - firewall-cmd --reload
   - restartContainers[cp]

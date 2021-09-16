@@ -27,6 +27,10 @@ globals:
   HASURA_ADMIN_SECRET: ${fn.password(20)}
 
 nodes:
+- count: 1
+  cloudlets: 4
+  nodeGroup: bl
+  nodeType: nginx-dockerized
 - displayName: faasd
   count: 1
   cloudlets: 16
@@ -35,6 +39,7 @@ nodes:
   image: softozor/ubuntu-git:latest
 - displayName: database
   count: 2
+  fixedCloudlets: 3
   cloudlets: 32
   nodeType: postgres13
   scalingMode: STATELESS
