@@ -32,7 +32,7 @@ settings:
       default: anonymous
 
 globals:
-  SERVER_PORT: 80
+  SERVER_PORT: 8080
 
 onInstall:
   - forEach(nodes.cp):
