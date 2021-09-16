@@ -65,7 +65,7 @@ publish-faas-functions:
 
 acceptance-test:
   stage: test
-  image: ${HASURA_TEST_IMAGE}:${CI_COMMIT_SHORT_SHA}
+  image: ${HASURA_TEST_IMAGE}:latest
   script:
     - |
       behave --junit --junit-directory ./features/test-reports --tags ~wip \
