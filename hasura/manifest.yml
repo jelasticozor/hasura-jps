@@ -1,0 +1,44 @@
+type: update
+name: hasura
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master/
+
+settings:
+  fields:
+    - name: dbUsername
+      caption: Database username
+      type: string
+      required: true
+    - name: dbPassword
+      caption: Database password
+      type: string
+      inputType: password
+      required: true
+    - name: dbName
+      caption: Database name
+      type: string
+      required: true
+    - name: enableConsole
+      caption: Enable console
+      type: checkbox
+      value: true
+    - name: adminSecret
+      caption: Admin secret
+      type: string
+      inputType: password
+      required: true
+
+onInstall:
+  - forEach(nodes.cp):
+    - api:
+        - method: environment.control.SetContainerEnvVars
+          params:
+            nodeId: ${@i.id}
+            vars: {
+              "HASURA_GRAPHQL_DATABASE_URL": "postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}",
+              "HASURA_GRAPHQL_ENABLE_CONSOLE": ${settings.enableConsole},
+              "HASURA_GRAPHQL_ADMIN_SECRET": ${settings.adminSecret}
+            }
+  - cmd[cp]:
+      - firewall-cmd --permanent --add-port=8080/tcp
+      - firewall-cmd --reload
+  - restartContainers[cp]

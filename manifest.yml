@@ -2,6 +2,26 @@ type: install
 name: Jelasticozor infrastructure
 baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master/
 
+settings:
+  fields:
+    - type: spacer
+      caption: Hasura
+    - name: hasuraVersion
+      caption: Hasura version
+      type: string
+      default: v2.0.9
+    - name: enableHasuraConsole
+      caption: Enable console
+      type: checkbox
+      value: true
+
+globals:
+  DB_ADMIN_USERNAME: webadmin
+  DB_NAME: hasura
+  DB_USERNAME: hasura_user
+  DB_PASSWORD: ${fn.password(20)}
+  HASURA_ADMIN_SECRET: ${fn.password(20)}
+
 nodes:
 - displayName: faasd
   count: 1
@@ -16,17 +36,18 @@ nodes:
   scalingMode: STATELESS
   password: ${fn.password}
   cluster: true
+- displayName: hasura
+  count: 1
+  cloudlets: 32
+  nodeGroup: cp
+  nodeType: docker
+  image: hasura/graphql-engine:${settings.hasuraVersion}.centos
 skipNodeEmails: true
-
-globals:
-  DB_ADMIN_USERNAME: webadmin
-  DB_NAME: hasura
-  DB_USERNAME: hasura_user
-  DB_PASSWORD: ${fn.password(20)}
 
 onInstall:
   - installFaas
   - installDatabase
+  - installHasura
 
 actions:
   installFaas:
@@ -41,6 +62,15 @@ actions:
         databaseName: ${globals.DB_NAME}
         username: ${globals.DB_USERNAME}
         password: ${globals.DB_PASSWORD}
+  installHasura:
+    install:
+      jps: hasura/manifest.yml
+      settings:
+        dbUsername: ${globals.DB_USERNAME}
+        dbPassword: ${globals.DB_PASSWORD}
+        dbName: ${globals.DB_NAME}
+        enableConsole: ${settings.enableHasuraConsole}
+        adminSecret: ${globals.HASURA_ADMIN_SECRET}
 
 # TODO: add startPage -> hasura console
 success:
@@ -51,3 +81,4 @@ success:
     **Database Name**: ${globals.DB_NAME}  
     **Database Username**: ${globals.DB_USERNAME}  
     **Database Password**: ${globals.DB_PASSWORD}
+    **Hasura Admin Secret**: ${globals.HASURA_ADMIN_SECRET}
