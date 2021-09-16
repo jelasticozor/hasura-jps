@@ -139,10 +139,10 @@ def close_database_connections(context):
 
 
 @fixture
-def hasura_project_folder(context):
-    context.hasura_project_folder = os.path.join(
+def hasura_projects_folder(context):
+    context.hasura_projects_folder = os.path.join(
         context.project_root_folder, 'features', 'data', 'database')
-    return context.hasura_project_folder
+    return context.hasura_projects_folder
 
 
 @fixture
