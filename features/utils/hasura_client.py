@@ -30,6 +30,7 @@ class HasuraClient:
                               '--endpoint', self.__endpoint,
                               '--project', project_folder,
                               '--database-name', self.__database_name,
+                              '--admin-secret', self.__admin_secret,
                               '--skip-update-check')
         result = 0
         for timestamp in relevant_timestamps:
