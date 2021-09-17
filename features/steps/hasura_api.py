@@ -25,7 +25,9 @@ def step_impl(context):
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     assert context.current_env_info.is_running()
-    hasura_endpoint = f'http://{context.current_env_info.domain()}'
+    cp_node_ip = context.current_env_info.get_node_ips(node_group='cp')[0]
+    # hasura_endpoint = f'http://{context.current_env_info.domain()}'
+    hasura_endpoint = f'http://{cp_node_ip}:8080'
     context.manifest_data = get_manifest_data(success_text)
     hasura_admin_secret = context.manifest_data['Hasura Admin Secret']
     context.hasura_client = context.hasura_client_factory.create(
