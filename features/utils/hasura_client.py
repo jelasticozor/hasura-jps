@@ -29,6 +29,7 @@ class HasuraClient:
         statuses = self.__cli('migrate', 'status',
                               '--endpoint', self.__endpoint,
                               '--project', project_folder,
+                              '--admin-secret', self.__admin_secret,
                               '--database-name', self.__database_name,
                               '--skip-update-check')
         result = 0
