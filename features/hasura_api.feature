@@ -21,19 +21,42 @@ Feature: Hasura API
 
     Then there is 1 docker node in the cp node group
 
-  # TODO: check that we have the nginx node installed
+  Scenario: A load balancer is served in front of the compute node
+
+    Then there is 1 nginx-dockerized node in the bl node group
 
   # TODO: check that the nginx has ssl installed
 
-  # TODO: check that we can log on hasura console as admin
-  #  - log on doesn't exist
-  #  - can I apply the migrations without the admin-secret? if not, then hasura migrate apply will be the check that it works
+  Scenario: Hasura is up and running
 
-  # TODO: test that hasura is still fine after node restart (e.g. access the /v1/version endpoint)
+    When the user applies the database migrations of the 'todo_project'
+    Then she gets success
 
-  # TODO: apply migrations that install a test API and validate
-  #  - insertion to database
-  #  - retrieval
-  #  - eventing (call api endpoint which triggers an event which sets a value in the db; assert that the value has been set)
+  @wip  
+  Scenario: Hasura is again available after container restart
+
+    Given the cp containers have been restarted
+    When the user assesses hasura's liveness
+    Then she gets 'OK'
+
+  @wip  
+  Scenario: The hasura API is working
+
+    #  hasura migrate apply --database-name default --admin-secret cYcnIpUJhdsdRskAFgp6 --endpoint http://node94933-jelasticozor.hidora.com:11106 --project todo_project
+    #  hasura metadata apply --admin-secret cYcnIpUJhdsdRskAFgp6 --endpoint http://node94933-jelasticozor.hidora.com:11106 --project todo_project
+
+    Given the user has applied the database migrations of the 'todo_project'
+    And its database metadata
+    And she has added the following todo:
+      | title       | make hasura work                              |
+      | description | we need a jelastic manifest to install hasura |
+    # TODO: rather show and run the corresponding graphql query here
+    When she retrieves the todo entitled 'make hasura work'
+    Then she gets the description
+    """
+    we need a jelastic manifest to install hasura
+    """
+
+  #  TODO: test eventing (call api endpoint which triggers an event which sets a value in the db; assert that the value has been set)
 
   # TODO: try to log on as a user with some permissions and generate a jwt

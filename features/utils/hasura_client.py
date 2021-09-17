@@ -5,16 +5,18 @@ import sh
 
 
 class HasuraClient:
-    def __init__(self, hasura_endpoint, database_name):
+    def __init__(self, hasura_endpoint, admin_secret, database_name):
         self.__cli = sh.Command('hasura')
         self.__endpoint = hasura_endpoint
         self.__database_name = database_name
+        self.__admin_secret = admin_secret
 
     def apply_migrations(self, project_folder):
         result = self.__cli('migrate', 'apply',
                             '--endpoint', self.__endpoint,
                             '--project', project_folder,
                             '--database-name', self.__database_name,
+                            '--admin-secret', self.__admin_secret,
                             '--skip-update-check')
         if result.exit_code == 0:
             return self.__get_not_present_migrations_count(project_folder) == 0
@@ -44,6 +46,7 @@ class HasuraClient:
                             '--endpoint', self.__endpoint,
                             '--project', project_folder,
                             '--database-name', self.__database_name,
+                            '--admin-secret', self.__admin_secret,
                             '--skip-update-check')
         if result.exit_code == 0:
             return self.__get_not_present_migrations_count(project_folder) == nb_migrations
@@ -62,5 +65,5 @@ class HasuraClientFactory:
     def __init__(self, database_name):
         self.__database_name = database_name
 
-    def create(self, endpoint):
-        return HasuraClient(endpoint, self.__database_name)
+    def create(self, endpoint, admin_secret):
+        return HasuraClient(endpoint, admin_secret, self.__database_name)
