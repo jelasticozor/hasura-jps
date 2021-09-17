@@ -1,6 +1,21 @@
 import os
 
+import requests
 from test_utils.manifest_data import get_manifest_data
+
+from features.utils.timing import wait_until
+
+
+def hasura_is_available(endpoint):
+    def predicate():
+        response = requests.get(f'{endpoint}/v1/version')
+        return response.status_code == 200
+
+    try:
+        wait_until(lambda: predicate(), timeout_in_sec=30, period_in_sec=0.5)
+        return True
+    except TimeoutError:
+        return False
 
 
 @given(u'the user has installed the main manifest')
@@ -15,6 +30,7 @@ def step_impl(context):
     hasura_admin_secret = context.manifest_data['Hasura Admin Secret']
     context.hasura_client = context.hasura_client_factory.create(
         hasura_endpoint, hasura_admin_secret)
+    assert hasura_is_available(hasura_endpoint) is True
 
 
 @when(u'the user applies the database migrations of the \'{project_name}\'')
