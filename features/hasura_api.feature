@@ -33,13 +33,6 @@ Feature: Hasura API
     Then she gets success
 
   @wip  
-  Scenario: Hasura is again available after container restart
-
-    Given the cp containers have been restarted
-    When the user assesses hasura's liveness
-    Then she gets 'OK'
-
-  @wip  
   Scenario: The hasura API is working
 
     #  hasura migrate apply --database-name default --admin-secret cYcnIpUJhdsdRskAFgp6 --endpoint http://node94933-jelasticozor.hidora.com:11106 --project todo_project

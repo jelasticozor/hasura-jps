@@ -152,6 +152,12 @@ def hasura_client_factory(context):
     return context.hasura_client_factory
 
 
+@fixture
+def hasura_internal_port(context):
+    context.hasura_internal_port = '8080'
+    return context.hasura_internal_port
+
+
 fixtures_registry = {
 
 }
