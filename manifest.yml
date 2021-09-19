@@ -26,6 +26,7 @@ globals:
   DB_PASSWORD: ${fn.password(20)}
   HASURA_ADMIN_SECRET: ${fn.password(20)}
   HASURA_SERVER_PORT: 8080
+  FAAS_PORT: 8080
 
 nodes:
 - count: 1
@@ -84,6 +85,8 @@ actions:
         adminSecret: ${globals.HASURA_ADMIN_SECRET}
         unauthorizedRole: ${settings.hasuraUnauthorizedRole}
         serverPort: ${globals.HASURA_SERVER_PORT}
+        faasHostname: ${nodes.faas.master.intIP}
+        faasPort: ${globals.FAAS_PORT}
   installLoadBalancer:
     install:
       jps: bl/manifest.yml

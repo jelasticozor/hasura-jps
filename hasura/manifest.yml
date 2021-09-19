@@ -3,6 +3,18 @@ name: hasura
 
 settings:
   fields:
+    - type: spacer
+      caption: Faas
+    - name: faasHostname
+      caption: Hostname
+      type: string
+      required: true
+    - name: faasPort
+      caption: Port
+      type: string
+      required: true
+    - type: spacer
+      caption: Database
     - name: dbUsername
       caption: Database username
       type: string
@@ -16,6 +28,8 @@ settings:
       caption: Database name
       type: string
       required: true
+    - type: spacer
+      caption: Hasura
     - name: enableConsole
       caption: Enable console
       type: checkbox
@@ -46,6 +60,8 @@ onInstall:
               HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
               HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
               HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
+              FAAS_HOSTNAME: ${settings.faasHostname}
+              FAAS_PORT: ${settings.faasPort}
   - cmd[cp]:
       - firewall-cmd --permanent --add-port=${settings.serverPort}/tcp
       - firewall-cmd --reload
