@@ -50,8 +50,7 @@ class HasuraClient:
         print('relevant timestamps: ', relevant_timestamps)
         print('statuses: ', statuses)
         for timestamp in relevant_timestamps:
-            matches = re.findall(f'^{timestamp}$',
-                                 str(statuses), re.MULTILINE)
+            matches = re.findall(timestamp, statuses, re.MULTILINE)
             print('timestamp = ', timestamp)
             print('matches   = ', matches)
             status = matches[0]
