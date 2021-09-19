@@ -45,9 +45,14 @@ class HasuraClient:
                               '--skip-update-check',
                               _out=sys.stdout)
         result = 0
+        print('relevant timestamps: ', relevant_timestamps)
+        print('statuses: ', statuses)
         for timestamp in relevant_timestamps:
-            status = re.findall(f'^{timestamp}$',
-                                str(statuses), re.MULTILINE)[0]
+            matches = re.findall(f'^{timestamp}$',
+                                 str(statuses), re.MULTILINE)
+            print('timestamp = ', timestamp)
+            print('matches   = ', matches)
+            status = matches[0]
             result += status.count('Not Present')
         return result
 

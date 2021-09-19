@@ -27,6 +27,7 @@ Feature: Hasura API
 
   # TODO: check that the nginx has ssl installed
 
+  @current
   Scenario: Hasura accepts database migrations
 
     When the user applies the database migrations of the 'todo_project'
