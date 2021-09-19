@@ -22,6 +22,14 @@ class HasuraClient:
             return self.__get_not_present_migrations_count(project_folder) == 0
         return False
 
+    def apply_metadata(self, project_folder):
+        result = self.__cli('metadata', 'apply',
+                            '--endpoint', self.__endpoint,
+                            '--project', project_folder,
+                            '--admin-secret', self.__admin_secret,
+                            '--skip-update-check')
+        return result.exit_code == 0
+
     def __get_not_present_migrations_count(self, project_folder):
         migrations_folder = self.__get_migrations_folder(project_folder)
         relevant_timestamps = [item.split('_')[0]

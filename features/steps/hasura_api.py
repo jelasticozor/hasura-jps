@@ -2,6 +2,8 @@ import os
 
 from test_utils.manifest_data import get_manifest_data
 
+from features.utils.graphql_client import GraphQLClient
+
 
 @given(u'the user has installed the main manifest')
 def step_impl(context):
@@ -11,20 +13,45 @@ def step_impl(context):
         context.current_env_name)
     assert context.current_env_info.is_running()
     cp_node_ip = context.current_env_info.get_node_ips(node_group='cp')[0]
-    context.hasura_external_endpoint = f'http://{context.current_env_info.domain()}'
-    context.hasura_internal_endpoint = f'http://{cp_node_ip}:{context.hasura_internal_port}'
+    external_api_endpoint = f'http://{context.current_env_info.domain()}'
+    internal_api_endpoint = f'http://{cp_node_ip}:{context.hasura_internal_port}'
     context.manifest_data = get_manifest_data(success_text)
     hasura_admin_secret = context.manifest_data['Hasura Admin Secret']
     context.hasura_client = context.hasura_client_factory.create(
-        context.hasura_internal_endpoint, hasura_admin_secret)
+        internal_api_endpoint, hasura_admin_secret)
+    context.graphql_client = GraphQLClient(
+        external_api_endpoint, hasura_admin_secret)
 
 
+@given(u'its database metadata')
+def step_impl(context):
+    context.success = context.hasura_client.apply_metadata(
+        context.path_to_hasura_project)
+
+
+@given(u'she adds a todo through the following graphql mutation')
+def step_impl(context):
+    mutation = context.text
+    response = context.graphql_client.execute(
+        query=mutation, run_as_admin=False)
+    context.new_todo_id = response['data']['insert_todos_one']['id']
+
+
+@given(u'the user has applied the database migrations of the \'{project_name}\'')
 @when(u'the user applies the database migrations of the \'{project_name}\'')
 def step_impl(context, project_name):
-    path_to_project = os.path.join(
+    context.path_to_hasura_project = os.path.join(
         context.hasura_projects_folder, project_name
     )
-    context.success = context.hasura_client.apply_migrations(path_to_project)
+    context.success = context.hasura_client.apply_migrations(
+        context.path_to_hasura_project)
+
+
+@when(u'she retrieves the new todo with the following query')
+def step_impl(context):
+    query = context.text
+    response = context.graphql_client.execute(query=query, run_as_admin=False)
+    context.actual_description = response['data']['todos_by_pk']['description']
 
 
 @then(u'there is {nb_nodes:d} {node_type} node in the {node_group} node group')
@@ -38,3 +65,9 @@ def step_impl(context, nb_nodes, node_type, node_group):
 @then(u'she gets success')
 def step_impl(context):
     assert context.success is True
+
+
+@then(u'she gets the description')
+def step_impl(context):
+    expected_description = context.text
+    assert expected_description == context.actual_description

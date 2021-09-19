@@ -27,24 +27,34 @@ Feature: Hasura API
 
   # TODO: check that the nginx has ssl installed
 
-  Scenario: Hasura is up and running
+  Scenario: Hasura accepts database migrations
 
     When the user applies the database migrations of the 'todo_project'
     Then she gets success
 
-  @wip  
-  Scenario: The hasura API is working
-
-    #  hasura migrate apply --database-name default --admin-secret cYcnIpUJhdsdRskAFgp6 --endpoint http://node94933-jelasticozor.hidora.com:11106 --project todo_project
-    #  hasura metadata apply --admin-secret cYcnIpUJhdsdRskAFgp6 --endpoint http://node94933-jelasticozor.hidora.com:11106 --project todo_project
+  Scenario: The hasura API is functional
 
     Given the user has applied the database migrations of the 'todo_project'
     And its database metadata
-    And she has added the following todo:
-      | title       | make hasura work                              |
-      | description | we need a jelastic manifest to install hasura |
-    # TODO: rather show and run the corresponding graphql query here
-    When she retrieves the todo entitled 'make hasura work'
+    And she adds a todo through the following graphql mutation
+    """
+    mutation {
+      insert_todos_one(object: {
+        title: "make hasura work"
+        description: "we need a jelastic manifest to install hasura"
+      }) {
+        id
+      }
+    }
+    """
+    When she retrieves the new todo with the following query
+    """
+    query GetTodo ($id: uuid!) {
+      todos_by_pk (id: $id) {
+        description
+      }
+    }
+    """
     Then she gets the description
     """
     we need a jelastic manifest to install hasura
