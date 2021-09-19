@@ -13,7 +13,7 @@ def step_impl(context):
         context.current_env_name)
     assert context.current_env_info.is_running()
     cp_node_ip = context.current_env_info.get_node_ips(node_group='cp')[0]
-    external_api_endpoint = f'http://{context.current_env_info.domain()}'
+    external_api_endpoint = f'http://{context.current_env_info.domain()}/v1/graphql'
     internal_api_endpoint = f'http://{cp_node_ip}:{context.hasura_internal_port}'
     context.manifest_data = get_manifest_data(success_text)
     hasura_admin_secret = context.manifest_data['Hasura Admin Secret']
