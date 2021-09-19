@@ -1,0 +1,10 @@
+type Mutation {
+  do(
+    id: uuid!
+  ): do_output
+}
+
+type do_output {
+  state: String!
+}
+
