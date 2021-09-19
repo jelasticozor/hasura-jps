@@ -78,10 +78,11 @@ def new_environment(context):
     context.current_env_name = get_new_random_env_name(
         context.control_client, context.commit_sha, context.worker_id)
     yield context.current_env_name
-    env_info = context.control_client.get_env_info(
-        context.current_env_name)
-    if env_info.exists():
-        context.control_client.delete_env(context.current_env_name)
+    # TODO: reactivate this
+    # env_info = context.control_client.get_env_info(
+    #     context.current_env_name)
+    # if env_info.exists():
+    #     context.control_client.delete_env(context.current_env_name)
 
 
 @fixture

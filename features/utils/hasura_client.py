@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 import sh
 
@@ -17,7 +18,8 @@ class HasuraClient:
                             '--project', project_folder,
                             '--database-name', self.__database_name,
                             '--admin-secret', self.__admin_secret,
-                            '--skip-update-check')
+                            '--skip-update-check',
+                            _out=sys.stdout)
         if result.exit_code == 0:
             return self.__get_not_present_migrations_count(project_folder) == 0
         return False
@@ -27,7 +29,8 @@ class HasuraClient:
                             '--endpoint', self.__endpoint,
                             '--project', project_folder,
                             '--admin-secret', self.__admin_secret,
-                            '--skip-update-check')
+                            '--skip-update-check',
+                            _out=sys.stdout)
         return result.exit_code == 0
 
     def __get_not_present_migrations_count(self, project_folder):
@@ -39,7 +42,8 @@ class HasuraClient:
                               '--project', project_folder,
                               '--database-name', self.__database_name,
                               '--admin-secret', self.__admin_secret,
-                              '--skip-update-check')
+                              '--skip-update-check',
+                              _out=sys.stdout)
         result = 0
         for timestamp in relevant_timestamps:
             status = re.findall(f'^{timestamp}.*$',
@@ -56,7 +60,8 @@ class HasuraClient:
                             '--project', project_folder,
                             '--database-name', self.__database_name,
                             '--admin-secret', self.__admin_secret,
-                            '--skip-update-check')
+                            '--skip-update-check',
+                            _out=sys.stdout)
         if result.exit_code == 0:
             return self.__get_not_present_migrations_count(project_folder) == nb_migrations
         return False

@@ -25,8 +25,9 @@ def step_impl(context):
 
 @given(u'its database metadata')
 def step_impl(context):
-    context.success = context.hasura_client.apply_metadata(
+    success = context.hasura_client.apply_metadata(
         context.path_to_hasura_project)
+    assert success is True
 
 
 @given(u'she adds a todo through the following graphql mutation')
@@ -38,6 +39,15 @@ def step_impl(context):
 
 
 @given(u'the user has applied the database migrations of the \'{project_name}\'')
+def step_impl(context, project_name):
+    context.path_to_hasura_project = os.path.join(
+        context.hasura_projects_folder, project_name
+    )
+    success = context.hasura_client.apply_migrations(
+        context.path_to_hasura_project)
+    assert success is True
+
+
 @when(u'the user applies the database migrations of the \'{project_name}\'')
 def step_impl(context, project_name):
     context.path_to_hasura_project = os.path.join(
