@@ -9,6 +9,7 @@ insert_permissions:
     - id
     - title
     - description
+    - state
   role: anonymous
 select_permissions:
 - permission:
@@ -16,6 +17,7 @@ select_permissions:
     - title
     - description
     - id
+    - state
     filter: {}
   role: anonymous
 update_permissions:
@@ -25,6 +27,7 @@ update_permissions:
     - title
     - description
     - id
+    - state
     filter: {}
   role: anonymous
 delete_permissions:
