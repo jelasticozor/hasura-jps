@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-
+from io import StringIO
 import sh
 
 
@@ -37,17 +37,18 @@ class HasuraClient:
         migrations_folder = self.__get_migrations_folder(project_folder)
         relevant_timestamps = [item.split('_')[0]
                                for item in os.listdir(migrations_folder)]
-        statuses = self.__cli('migrate', 'status',
+        statuses_io = StringIO()
+        self.__cli('migrate', 'status',
                               '--endpoint', self.__endpoint,
                               '--project', project_folder,
                               '--database-name', self.__database_name,
                               '--admin-secret', self.__admin_secret,
                               '--skip-update-check',
-                              _out=sys.stdout)
+                              _out=statuses_io)
         result = 0
+        statuses = statuses_io.getvalue()
         for timestamp in relevant_timestamps:
-            status = re.findall(f'^{timestamp}$',
-                                str(statuses), re.MULTILINE)[0]
+            status = re.findall(timestamp, statuses, re.MULTILINE)[0]
             result += status.count('Not Present')
         return result
 
