@@ -35,6 +35,7 @@ def step_impl(context):
     mutation = context.text
     response = context.graphql_client.execute(
         query=mutation, run_as_admin=False)
+    print('response = ', response)
     context.new_todo_id = response['data']['insert_todos_one']['id']
 
 
