@@ -35,7 +35,6 @@ def step_impl(context):
     mutation = context.text
     response, _ = context.graphql_client.execute(
         query=mutation, run_as_admin=False)
-    print('response = ', response)
     context.new_todo_id = response['data']['insert_todos_one']['id']
 
 
@@ -61,7 +60,12 @@ def step_impl(context, project_name):
 @when(u'she retrieves the new todo with the following query')
 def step_impl(context):
     query = context.text
-    response, _ = context.graphql_client.execute(query=query, run_as_admin=False)
+    variables = {
+        'id': context.new_todo_id
+    }
+    response, _ = context.graphql_client.execute(
+        query=query, variables=variables, run_as_admin=False)
+    print('response = ', response)
     context.actual_description = response['data']['todos_by_pk']['description']
 
 
