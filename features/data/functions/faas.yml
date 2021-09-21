@@ -7,7 +7,7 @@ functions:
     handler: ./hello-python
     image: softozor/hello-python:latest
   eventing:
-    lang: python3-debian
+    lang: python
     handler: ./eventing
     image: softozor/eventing:latest
     environment:
