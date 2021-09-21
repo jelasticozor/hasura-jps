@@ -17,11 +17,12 @@ class FaasClient:
                             '--password', self.__password)
         return result.exit_code
 
-    def deploy(self, function_name):
+    def deploy(self, function_name, env=None):
         result = self.__cli('deploy',
                             '--image', f'softozor/{function_name}',
                             '--name', function_name,
-                            '-g', self.endpoint)
+                            '-g', self.endpoint,
+                            _env=env)
         return result.exit_code
 
 
