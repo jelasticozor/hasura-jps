@@ -18,11 +18,12 @@ class FaasClient:
         return result.exit_code
 
     def deploy(self, function_name, env=None):
+        env_options = [f'-e {key}={value}' for (key, value) in env.items()]
         result = self.__cli('deploy',
                             '--image', f'softozor/{function_name}',
                             '--name', function_name,
                             '-g', self.endpoint,
-                            _env=env)
+                            ' '.join(env_options))
         return result.exit_code
 
 

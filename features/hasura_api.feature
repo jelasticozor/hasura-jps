@@ -36,7 +36,7 @@ Feature: Hasura API
 
     Given the user has applied the database migrations of the 'todo_project'
     And its database metadata
-    And she adds a todo through the following graphql mutation
+    And she has added a todo through the following graphql mutation
     """
     mutation {
       insert_todos_one(object: {
@@ -52,6 +52,7 @@ Feature: Hasura API
     query GetTodo ($id: uuid!) {
       todos_by_pk (id: $id) {
         description
+        state
       }
     }
     """
@@ -59,7 +60,40 @@ Feature: Hasura API
     """
     we need a jelastic manifest to install hasura
     """
+    And state 'NEW'
 
-  #  TODO: test eventing (call api endpoint which triggers an event which sets a value in the db; assert that the value has been set)
+  Scenario: The faas engine integrates with hasura API
 
-  # TODO: try to log on as a user with some permissions and generate a jwt
+    Given the 'hasura-action' function has been deployed on the faas engine
+    And the user has applied the database migrations of the 'todo_project'
+    And its database metadata
+    And she has added a todo through the following graphql mutation
+    """
+    mutation {
+      insert_todos_one(object: {
+        title: "make hasura work"
+        description: "we need a jelastic manifest to install hasura"
+      }) {
+        id
+      }
+    }
+    """
+    And the user has started the todo with the hasura action
+    """
+    mutation Do ($id: uuid!) {
+      do(id: $id) {
+        state
+      }
+    }
+    """
+    When she retrieves the new todo with the following query
+    """
+    query GetTodo ($id: uuid!) {
+      todos_by_pk (id: $id) {
+        state
+      }
+    }
+    """
+    Then she gets state 'DOING'
+
+  # TODO: try to log on as a user with some permissions and call a mutation requiring that permission (e.g. delete todo)

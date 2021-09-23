@@ -1,7 +1,8 @@
 {
   "author": "softozor",
   "dependencies": {
-    "pg": "^8.7.1"
+    "graphql": "^15.6.0",
+    "graphql-request": "^3.5.0"
   },
   "description": "OpenFaaS function test hasura actions are working",
   "keywords": [],

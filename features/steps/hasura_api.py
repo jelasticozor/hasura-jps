@@ -30,12 +30,12 @@ def step_impl(context):
     assert success is True
 
 
-@given(u'she adds a todo through the following graphql mutation')
+@given(u'she has added a todo through the following graphql mutation')
 def step_impl(context):
     mutation = context.text
     response, _ = context.graphql_client.execute(
         query=mutation, run_as_admin=False)
-    context.new_todo_id = response['data']['insert_todos_one']['id']
+    context.current_todo_id = response['data']['insert_todos_one']['id']
 
 
 @given(u'the user has applied the database migrations of the \'{project_name}\'')
@@ -46,6 +46,28 @@ def step_impl(context, project_name):
     success = context.hasura_client.apply_migrations(
         context.path_to_hasura_project)
     assert success is True
+
+
+@given(u'the user has started the todo with the hasura action')
+def step_impl(context):
+    mutation = context.text
+    response, _ = context.graphql_client.execute(
+        query=mutation, run_as_admin=False)
+    assert 'errors' not in response
+
+
+@given(u'the \'hasura-action\' function has been deployed on the faas engine')
+def step_impl(context):
+    function_name = 'hasura-action'
+    context.faas_client.login()
+    context.current_faas_function = function_name
+    hasura_node_ip = context.current_env_info.get_node_ips(node_group='cp')
+    exit_code = context.faas_client.deploy(
+        function_name,
+        env={
+            'GRAPHQL_ENDPOINT': f'http://{hasura_node_ip}/v1/graphql'
+        })
+    assert exit_code == 0
 
 
 @when(u'the user applies the database migrations of the \'{project_name}\'')
@@ -61,12 +83,12 @@ def step_impl(context, project_name):
 def step_impl(context):
     query = context.text
     variables = {
-        'id': context.new_todo_id
+        'id': context.current_todo_id
     }
     response, _ = context.graphql_client.execute(
         query=query, variables=variables, run_as_admin=False)
     print('response = ', response)
-    context.actual_description = response['data']['todos_by_pk']['description']
+    context.actual_todo = response['data']['todos_by_pk']
 
 
 @then(u'there is {nb_nodes:d} {node_type} node in the {node_group} node group')
@@ -85,4 +107,12 @@ def step_impl(context):
 @then(u'she gets the description')
 def step_impl(context):
     expected_description = context.text
-    assert expected_description == context.actual_description
+    actual_description = context.actual_todo['description']
+    assert expected_description == actual_description
+
+
+@then(u'she gets state \'{expected_state}\'')
+@then(u'state \'{expected_state}\'')
+def step_impl(context, expected_state):
+    actual_state = context.actual_todo['state']
+    assert expected_state == actual_state

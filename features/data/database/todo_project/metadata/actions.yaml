@@ -2,7 +2,7 @@ actions:
 - name: do
   definition:
     kind: synchronous
-    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/do
+    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/hasura-action
   permissions:
   - role: anonymous
 custom_types:

@@ -28,8 +28,9 @@ def step_impl(context):
         faas_node_ip, username, password)
 
 
-@given(u'the \'{function_name}\' function has been deployed on the faas engine')
-def step_impl(context, function_name):
+@given(u'the \'hello-python\' function has been deployed on the faas engine')
+def step_impl(context):
+    function_name = 'hello-python'
     context.faas_client.login()
     context.current_faas_function = function_name
     exit_code = context.faas_client.deploy(function_name)

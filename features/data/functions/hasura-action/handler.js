@@ -1,16 +1,41 @@
 'use strict'
 
+const { request, gql } = require('graphql-request')
+
 module.exports = async (event, context) => {
-  const result = {
-    'body': JSON.stringify(event.body),
-    'content-type': event.headers["content-type"]
+  const id = event.body.input.id
+  const endpoint = process.env.GRAPHQL_ENDPOINT
+
+  const mutation = gql`
+    mutation UpdateTodo($id: uuid!) {
+      update_todos_by_pk(_set:{
+        state: DOING
+      }, pk_columns: {
+        id: $id
+      }) {
+        id
+      }
+    }
+  `
+
+  try
+  {
+    const data = await request(endpoint, mutation, { id })
+
+    const result = {
+      state: 'DOING'
+    }
+
+    return context
+      .status(200)
+      .succeed(result)
   }
-
-  console.log('event = ', event)
-
-  console.log('context = ', context)
-
-  return context
-    .status(200)
-    .succeed(result)
+  catch
+  {
+    return context
+      .status(400)
+      .succeed({
+        "message": "failed to send graphql request"
+      })
+  }
 }
