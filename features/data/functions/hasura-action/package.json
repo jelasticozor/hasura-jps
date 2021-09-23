@@ -1,0 +1,15 @@
+{
+  "author": "softozor",
+  "dependencies": {
+    "pg": "^8.7.1"
+  },
+  "description": "OpenFaaS function test hasura actions are working",
+  "keywords": [],
+  "license": "MIT",
+  "main": "handler.js",
+  "name": "hasura-action",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "version": "1.0.0"
+}
