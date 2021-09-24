@@ -17,7 +17,7 @@ class FaasClient:
                             '--password', self.__password)
         return result.exit_code
 
-    def deploy(self, function_name, env=None):
+    def deploy(self, function_name, env={}):
         env_options = [f'-e {key}={value}' for (key, value) in env.items()]
         result = self.__cli('deploy',
                             '--image', f'softozor/{function_name}',

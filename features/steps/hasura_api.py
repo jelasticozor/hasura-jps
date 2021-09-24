@@ -3,6 +3,7 @@ import os
 from test_utils.manifest_data import get_manifest_data
 
 from features.utils.graphql_client import GraphQLClient
+from features.utils.sockets import host_has_port_open
 
 
 @given(u'the user has installed the main manifest')
@@ -21,6 +22,24 @@ def step_impl(context):
         internal_api_endpoint, hasura_admin_secret)
     context.graphql_client = GraphQLClient(
         external_api_endpoint, hasura_admin_secret)
+    # TODO: refactor --> this is duplicated from faas_steps
+    faas_node_type = 'docker'
+    faas_node_group = 'faas'
+    faas_node_ip = context.current_env_info.get_node_ips(
+        node_type=faas_node_type, node_group=faas_node_group)[0]
+    assert host_has_port_open(faas_node_ip, context.faas_port)
+    username = context.file_client.read(
+        context.current_env_name,
+        '/var/lib/faasd/secrets/basic-auth-user',
+        node_type=faas_node_type,
+        node_group=faas_node_group)
+    password = context.file_client.read(
+        context.current_env_name,
+        '/var/lib/faasd/secrets/basic-auth-password',
+        node_type=faas_node_type,
+        node_group=faas_node_group)
+    context.faas_client = context.faas_client_factory.create(
+        faas_node_ip, username, password)
 
 
 @given(u'its database metadata')
