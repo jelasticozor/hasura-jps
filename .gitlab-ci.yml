@@ -58,8 +58,6 @@ publish-faas-functions:
     - faas-cli build -f ./faas.yml
     - faas-cli push -f ./faas.yml
   only:
-    refs:
-      - master
     changes:
       - features/data/functions/**/*
 
