@@ -70,8 +70,11 @@ def step_impl(context, project_name):
 @given(u'the user has started the todo with the hasura action')
 def step_impl(context):
     mutation = context.text
+    variables = {
+        'id': context.current_todo_id
+    }
     response, _ = context.graphql_client.execute(
-        query=mutation, run_as_admin=False)
+        query=mutation, variables=variables, run_as_admin=False)
     print('response = ', response)
     assert 'errors' not in response
 
