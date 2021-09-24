@@ -73,6 +73,10 @@ def step_impl(context):
     variables = {
         'id': context.current_todo_id
     }
+
+    print('mutation  = ', mutation)
+    print('variables = ', variables)
+
     response, _ = context.graphql_client.execute(
         query=mutation, variables=variables, run_as_admin=False)
     print('response = ', response)

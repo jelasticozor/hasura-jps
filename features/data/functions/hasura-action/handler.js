@@ -6,6 +6,9 @@ module.exports = async (event, context) => {
   const id = event.body.input.id
   const endpoint = process.env.GRAPHQL_ENDPOINT
 
+  console.log('todo id  = ', id)
+  console.log('endpoint = ', endpoint)
+
   const mutation = gql`
     mutation UpdateTodo($id: uuid!) {
       update_todos_by_pk(_set:{
@@ -17,6 +20,8 @@ module.exports = async (event, context) => {
       }
     }
   `
+
+  console.log('mutation = ', mutation)
 
   try
   {
@@ -30,12 +35,12 @@ module.exports = async (event, context) => {
       .status(200)
       .succeed(result)
   }
-  catch
+  catch(err)
   {
     return context
       .status(400)
       .succeed({
-        "message": "failed to send graphql request"
+        "message": err
       })
   }
 }

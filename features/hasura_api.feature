@@ -62,6 +62,7 @@ Feature: Hasura API
     """
     And state 'NEW'
 
+  @current  
   Scenario: The faas engine integrates with hasura API
 
     Given the 'hasura-action' function has been deployed on the faas engine
