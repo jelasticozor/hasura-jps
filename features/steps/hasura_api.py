@@ -72,6 +72,7 @@ def step_impl(context):
     mutation = context.text
     response, _ = context.graphql_client.execute(
         query=mutation, run_as_admin=False)
+    print('response = ', response)
     assert 'errors' not in response
 
 
