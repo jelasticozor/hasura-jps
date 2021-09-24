@@ -15,11 +15,12 @@ def step_impl(context):
     assert context.current_env_info.is_running()
     cp_node_ip = context.current_env_info.get_node_ips(node_group='cp')[0]
     external_api_endpoint = f'http://{context.current_env_info.domain()}/v1/graphql'
-    internal_api_endpoint = f'http://{cp_node_ip}:{context.hasura_internal_port}'
+    internal_hasura_endpoint = f'http://{cp_node_ip}:{context.hasura_internal_port}'
+    context.internal_graphql_endpoint = f'{internal_hasura_endpoint}/v1/graphql'
     context.manifest_data = get_manifest_data(success_text)
     hasura_admin_secret = context.manifest_data['Hasura Admin Secret']
     context.hasura_client = context.hasura_client_factory.create(
-        internal_api_endpoint, hasura_admin_secret)
+        internal_hasura_endpoint, hasura_admin_secret)
     context.graphql_client = GraphQLClient(
         external_api_endpoint, hasura_admin_secret)
     # TODO: refactor --> this is duplicated from faas_steps
@@ -84,11 +85,10 @@ def step_impl(context):
     function_name = 'hasura-action'
     context.faas_client.login()
     context.current_faas_function = function_name
-    hasura_node_ip = context.current_env_info.get_node_ips(node_group='cp')
     exit_code = context.faas_client.deploy(
         function_name,
         env={
-            'GRAPHQL_ENDPOINT': f'http://{hasura_node_ip}/v1/graphql'
+            'GRAPHQL_ENDPOINT': context.internal_graphql_endpoint
         })
     assert exit_code == 0
 

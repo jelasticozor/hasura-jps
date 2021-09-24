@@ -30,12 +30,12 @@ module.exports = async (event, context) => {
       .status(200)
       .succeed(result)
   }
-  catch
+  catch(err)
   {
     return context
       .status(400)
       .succeed({
-        "message": "failed to send graphql request"
+        "message": err
       })
   }
 }
