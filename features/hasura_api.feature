@@ -1,9 +1,9 @@
 # TODO: install the main manifest before the whole feature
 Feature: Hasura API
 
-  As a user,
-  I want to use the hasura API,
-  in order to build my system.
+  As a manifest user,  
+  I want to base on hasura  
+  to build my software.
 
   Background: The main manifest is installed
 
