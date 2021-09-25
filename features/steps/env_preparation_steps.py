@@ -18,6 +18,8 @@ def step_impl(context, node_count, node_type, node_group, docker_image):
             node_count=node_count, node_group=node_group, docker_image=docker_image),
         context.current_env_name)
     context.manifest_data = get_manifest_data(success_text)
+    context.current_env_info = context.control_client.get_env_info(
+        context.current_env_name)
 
 
 @given(u'a jelastic environment with {node_count:d} {node_type} node is available in node group \'{node_group}\'')
@@ -30,3 +32,5 @@ def step_impl(context, node_count, node_type, node_group):
         test_manifest.get_content(node_count=node_count, node_type=node_type),
         context.current_env_name)
     context.manifest_data = get_manifest_data(success_text)
+    context.current_env_info = context.control_client.get_env_info(
+        context.current_env_name)

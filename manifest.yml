@@ -72,7 +72,6 @@ skipNodeEmails: true
 
 onInstall:
   - installFaas
-  - installDatabase
   - installHasura
   - installLoadBalancer
   - installFusionAuth
