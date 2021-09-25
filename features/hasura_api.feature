@@ -5,6 +5,8 @@ Feature: Hasura API
   I want to base on hasura  
   to build my software.
 
+  The requirements for hasura are documented [here](https://hasura.io/docs/latest/graphql/core/deployment/postgres-requirements.html).
+
   Background: The main manifest is installed
 
     Given the user has installed the main manifest
@@ -26,6 +28,21 @@ Feature: Hasura API
     Then there is 1 nginx-dockerized node in the bl node group
 
   # TODO: check that the nginx has ssl installed
+
+  Scenario: The necessary extensions are installed on the hasura database
+
+    Then the following extensions are installed on the hasura database
+      | extension |
+      | pgcrypto  |
+      | citext    |
+      | uuid-ossp |
+
+  Scenario: Hasura-specific schemas are installed on the hasura database
+
+    Then the following schemas exist on the hasura database
+      | schema      |
+      | hdb_catalog |
+      | hdb_views   |
 
   Scenario: Hasura accepts database migrations
 

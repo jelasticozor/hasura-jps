@@ -18,12 +18,21 @@ settings:
       caption: Unauthorized role
       type: string
       default: anonymous
+    - type: spacer
+      caption: Auth
+    - name: fusionauthVersion
+      caption: Fusionauth version
+      type: string
+      default: 1.30.1
 
 globals:
   DB_ADMIN_USERNAME: webadmin
   DB_NAME: hasura
   DB_USERNAME: hasura_user
   DB_PASSWORD: ${fn.password(20)}
+  DB_AUTH_NAME: fusionauth
+  DB_AUTH_USERNAME: auth
+  DB_AUTH_PASSWORD: ${fn.password(20)}
   HASURA_ADMIN_SECRET: ${fn.password(20)}
   HASURA_SERVER_PORT: 8080
   FAAS_PORT: 8080
@@ -47,12 +56,18 @@ nodes:
   scalingMode: STATELESS
   password: ${fn.password}
   cluster: true
-- displayName: hasura
+- displayName: api
   count: 1
   cloudlets: 32
   nodeGroup: cp
   nodeType: docker
   image: hasura/graphql-engine:${settings.hasuraVersion}.centos
+- displayName: auth
+  count: 1
+  cloudlets: 32
+  nodeGroup: auth
+  nodeType: docker
+  image: fusionauth/fusionauth-app:${settings.fusionauthVersion}
 skipNodeEmails: true
 
 onInstall:
@@ -60,24 +75,18 @@ onInstall:
   - installDatabase
   - installHasura
   - installLoadBalancer
+  - installFusionAuth
 
 actions:
   installFaas:
     install:
       jps: serverless/manifest.yml
-  installDatabase:
-    install:
-      jps: database/manifest.yml
-      settings:
-        adminUsername: ${globals.DB_ADMIN_USERNAME}
-        adminPassword: ${nodes.sqldb.password}
-        databaseName: ${globals.DB_NAME}
-        username: ${globals.DB_USERNAME}
-        password: ${globals.DB_PASSWORD}
   installHasura:
     install:
       jps: hasura/manifest.yml
       settings:
+        dbAdminUsername: ${globals.DB_ADMIN_USERNAME}
+        dbAdminPassword: ${nodes.sqldb.password}
         dbUsername: ${globals.DB_USERNAME}
         dbPassword: ${globals.DB_PASSWORD}
         dbName: ${globals.DB_NAME}
@@ -92,6 +101,17 @@ actions:
       jps: bl/manifest.yml
       settings:
         serverPort: ${globals.HASURA_SERVER_PORT}
+  installFusionAuth:
+    install:
+      jps: fusionauth/manifest.yml
+      settings:
+        databaseName: ${globals.DB_AUTH_NAME}
+        databaseRootUsername: ${globals.DB_ADMIN_USERNAME}
+        databaseRootPassword: ${nodes.sqldb.password}
+        databaseUsername: ${globals.DB_AUTH_USERNAME}
+        databasePassword: ${globals.DB_AUTH_PASSWORD}
+        appRunTime: production
+        searchType: database
 
 success:
   text: |
@@ -100,6 +120,9 @@ success:
     **Database Admin Panel**: [${nodes.sqldb.master.url}](${nodes.sqldb.master.url})  
     **Database Admin User**: ${globals.DB_ADMIN_USERNAME}  
     **Database Admin Password**: ${nodes.sqldb.password}  
-    **Database Name**: ${globals.DB_NAME}  
-    **Database Username**: ${globals.DB_USERNAME}  
-    **Database Password**: ${globals.DB_PASSWORD}
+    **Hasura Database Name**: ${globals.DB_NAME}  
+    **Hasura Database Username**: ${globals.DB_USERNAME}  
+    **Hasura Database Password**: ${globals.DB_PASSWORD}  
+    **Auth Database Name**: ${globals.DB_AUTH_NAME}  
+    **Auth Database Username**: ${globals.DB_AUTH_USERNAME}  
+    **Auth Database Password**: ${globals.DB_AUTH_PASSWORD}

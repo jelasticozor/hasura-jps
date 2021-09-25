@@ -28,5 +28,4 @@ Feature: The faas engine
     And she gets content
       """
       Hello! You said: it is me
-
       """

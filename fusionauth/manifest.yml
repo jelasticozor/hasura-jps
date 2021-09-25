@@ -1,0 +1,66 @@
+type: update
+name: fusionauth
+
+settings:
+  fields:
+    - type: spacer
+      caption: Fusionauth
+    - name: appRunTime
+      caption: App runtime
+      type: string
+      default: production
+    - name: searchType
+      caption: Search type
+      type: string
+      default: database
+    - type: spacer
+      caption: Database
+    - name: databaseName
+      caption: Name
+      type: string
+      default: fusionauth
+    - name: databaseRootUsername
+      caption: Root username
+      type: string
+      required: true
+    - name: databaseRootPassword
+      caption: Root password
+      type: string
+      inputType: password
+      required: true
+    - name: databaseUsername
+      caption: Username
+      type: string
+      required: true
+    - name: databasePassword
+      caption: Password
+      type: string
+      inputType: password
+      required: true
+
+globals:
+  APP_MEMORY: 512
+
+onInstall:
+  - cmd[${nodes.sqldb.master.id}]:
+      - |
+        export PGPASSWORD=${settings.databaseRootPassword}
+        psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE ROLE ${settings.databaseUsername} WITH LOGIN PASSWORD '${settings.databasePassword}';"
+        psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE DATABASE ${settings.databaseName} ENCODING 'UTF-8' TEMPLATE template0;"
+        psql -U ${settings.databaseRootUsername} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE $DATABASE_NAME TO ${settings.databaseUsername}; ALTER DATABASE $DATABASE_NAME OWNER TO ${settings.databaseUsername};"
+  - forEach(nodes.auth):
+    - api:
+        - method: environment.control.SetContainerEnvVars
+          params:
+            nodeId: ${@i.id}
+            vars:
+              DATABASE_URL: jdbc:postgresql://${nodes.sqldb.master.intIP}:5432/${settings.databaseName}
+              DATABASE_ROOT_USERNAME: ${settings.databaseRootUsername}
+              DATABASE_ROOT_PASSWORD: ${settings.databaseRootPassword}
+              DATABASE_USERNAME: ${settings.databaseUsername}
+              DATABASE_PASSWORD: ${settings.databasePassword}
+              FUSIONAUTH_APP_MEMORY: ${globals.APP_MEMORY}M
+              FUSIONAUTH_APP_RUNTIME_MODE: ${settings.appRunTime}
+              SEARCH_TYPE: ${settings.searchType}
+              ES_JAVA_OPTS: -Xms${globals.APP_MEMORY}m -Xmx${globals.APP_MEMORY}m
+  - restartContainers[auth]

@@ -1,5 +1,6 @@
 import os
 
+import psycopg2
 from test_utils.manifest_data import get_manifest_data
 
 from features.utils.graphql_client import GraphQLClient
@@ -23,6 +24,23 @@ def step_impl(context):
         internal_hasura_endpoint, hasura_admin_secret)
     context.graphql_client = GraphQLClient(
         external_api_endpoint, hasura_admin_secret)
+    database_node_ip = context.current_env_info.get_node_ip_from_name(
+        'Primary')
+    assert database_node_ip is not None
+    admin_user = context.manifest_data['Database Admin User']
+    admin_password = context.manifest_data['Database Admin Password']
+    context.connections = {
+        'hasura': psycopg2.connect(
+            host=database_node_ip,
+            user=admin_user,
+            password=admin_password,
+            database=context.hasura_database_name),
+        'auth': psycopg2.connect(
+            host=database_node_ip,
+            user=admin_user,
+            password=admin_password,
+            database=context.auth_database_name)
+    }
     # TODO: refactor --> this is duplicated from faas_steps
     faas_node_type = 'docker'
     faas_node_group = 'faas'
@@ -112,6 +130,35 @@ def step_impl(context):
         query=query, variables=variables, run_as_admin=False)
     print('response = ', response)
     context.actual_todo = response['data']['todos_by_pk']
+
+
+@then('the following extensions are installed on the {database_name} database')
+def step_impl(context, database_name):
+    expected_extensions = set(row['extension'] for row in context.table)
+    cursor = context.connections[database_name].cursor()
+    cursor.execute(
+        """
+        SELECT extname FROM pg_extension;
+        """
+    )
+    fetched_rows = cursor.fetchall()
+    actual_extensions = set(extension[0] for extension in fetched_rows)
+    assert expected_extensions.intersection(
+        actual_extensions) == expected_extensions
+
+
+@then('the following schemas exist on the {database_name} database')
+def step_impl(context, database_name):
+    expected_schemas = set(row['schema'] for row in context.table)
+    cursor = context.connections[database_name].cursor()
+    cursor.execute(
+        """
+        SELECT schema_name FROM information_schema.schemata;
+        """
+    )
+    fetched_rows = cursor.fetchall()
+    actual_schemas = set(schema[0] for schema in fetched_rows)
+    assert expected_schemas.intersection(actual_schemas) == expected_schemas
 
 
 @then(u'there is {nb_nodes:d} {node_type} node in the {node_group} node group')

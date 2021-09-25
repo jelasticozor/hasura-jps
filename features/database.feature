@@ -4,12 +4,10 @@ Feature: The database
   The database holds the application state. Hasura bases on it
   to generate the graphql API.
 
-  The requirements for hasura are documented [here](https://hasura.io/docs/latest/graphql/core/deployment/postgres-requirements.html).
-
   Background: sql node is available
 
     Given a jelastic environment with 2 postgres13 nodes is available in node group 'sqldb'
-    And the database is installed
+    And connections are established to the primary and secondary database nodes
 
   Scenario: Any change done on primary gets reflected on secondary
 
@@ -24,21 +22,6 @@ Feature: The database
     cannot execute CREATE TABLE in a read-only transaction
     """
 
-  Scenario: The necessary extensions are installed
-
-    Then the following extensions are installed
-      | extension |
-      | pgcrypto  |
-      | citext    |
-      | uuid-ossp |
-
-  Scenario: Hasura-specific schemas are installed
-
-    Then the following schemas exist
-      | schema      |
-      | hdb_catalog |
-      | hdb_views   |
-
-  Scenario: At least version 10 is installed
+  Scenario: Postgres at least version 10 is installed
 
     Then the postgres version is 13

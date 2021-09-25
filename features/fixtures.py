@@ -99,13 +99,6 @@ def serverless_manifest(context):
 
 
 @fixture
-def database_manifest(context):
-    context.database_manifest = os.path.join(
-        context.project_root_folder, 'database', 'manifest.yml')
-    return context.database_manifest
-
-
-@fixture
 def test_manifests_folder(context):
     context.test_manifests_folder = os.path.join(
         context.project_root_folder, 'features', 'data', 'manifests')
@@ -113,9 +106,15 @@ def test_manifests_folder(context):
 
 
 @fixture
-def database_name(context):
-    context.database_name = 'hasura'
-    return context.database_name
+def hasura_database_name(context):
+    context.hasura_database_name = 'hasura'
+    return context.hasura_database_name
+
+
+@fixture
+def auth_database_name(context):
+    context.auth_database_name = 'auth'
+    return context.auth_database_name
 
 
 @fixture
