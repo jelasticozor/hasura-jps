@@ -1,7 +1,7 @@
 type: update
 name: hasura
 
-baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master/
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
@@ -61,13 +61,12 @@ settings:
 
 onInstall:
   - cmd[${nodes.sqldb.master.id}]:
-      - |
-        export PGPASSWORD=${settings.dbAdminPassword}
-        psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE USER ${settings.dbUsername} PASSWORD '${settings.dbPassword}';"
-        psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE DATABASE ${settings.dbName} OWNER ${settings.dbUsername} ENCODING 'utf-8' TEMPLATE template0;"
-        wget --quiet ${baseUrl}/hasura/setup.sql -O setup.sql
-        sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
-        psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
+      - export PGPASSWORD=${settings.dbAdminPassword}
+      - psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE USER ${settings.dbUsername} PASSWORD '${settings.dbPassword}';"
+      - psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE DATABASE ${settings.dbName} OWNER ${settings.dbUsername} ENCODING 'utf-8' TEMPLATE template0;"
+      - wget --quiet ${baseUrl}/hasura/setup.sql -O setup.sql
+      - sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
+      - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
   - forEach(nodes.cp):
     - api:
         - method: environment.control.SetContainerEnvVars
