@@ -43,11 +43,10 @@ globals:
 
 onInstall:
   - cmd[${nodes.sqldb.master.id}]:
-      - |
-        export PGPASSWORD=${settings.databaseRootPassword}
-        psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE ROLE ${settings.databaseUsername} WITH LOGIN PASSWORD '${settings.databasePassword}';"
-        psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE DATABASE ${settings.databaseName} ENCODING 'UTF-8' TEMPLATE template0;"
-        psql -U ${settings.databaseRootUsername} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE $DATABASE_NAME TO ${settings.databaseUsername}; ALTER DATABASE $DATABASE_NAME OWNER TO ${settings.databaseUsername};"
+      - export PGPASSWORD=${settings.databaseRootPassword}
+      - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE ROLE ${settings.databaseUsername} WITH LOGIN PASSWORD '${settings.databasePassword}';"
+      - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE DATABASE ${settings.databaseName} ENCODING 'UTF-8' TEMPLATE template0;"
+      - psql -U ${settings.databaseRootUsername} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${settings.databaseName} TO ${settings.databaseUsername}; ALTER DATABASE ${settings.databaseName} OWNER TO ${settings.databaseUsername};"
   - forEach(nodes.auth):
     - api:
         - method: environment.control.SetContainerEnvVars
