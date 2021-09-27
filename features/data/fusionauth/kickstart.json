@@ -1,0 +1,125 @@
+{
+  "apiKeys": [
+    {
+      "description": "Core API Key",
+      "key": "#{UUID()}"
+    },
+    {
+      "description": "API Key",
+      "key": "#{UUID()}",
+      "permissions": {
+        "endpoints": {
+          "/api/jwt/validate": [
+            "POST"
+          ],
+          "/api/login": [
+            "POST"
+          ],
+          "/api/user": [
+            "POST",
+            "DELETE"
+          ],
+          "/api/user/registration": [
+            "POST"
+          ]
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "body": {
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        },
+        "user": {
+          "email": "#{adminEmail}",
+          "password": "#{adminPassword}"
+        }
+      },
+      "method": "POST",
+      "url": "/api/user/registration"
+    },
+    {
+      "body": {
+        "tenant": {
+          "issuer": "#{issuer}",
+          "name": "Default"
+        }
+      },
+      "method": "PATCH",
+      "url": "/api/tenant/#{defaultTenantId}"
+    },
+    {
+      "body": {
+        "key": {
+          "algorithm": "RS256",
+          "length": 2048,
+          "name": "RS256 Access token signing key"
+        }
+      },
+      "method": "POST",
+      "url": "/api/key/generate/#{accessTokenSigningKeyId}"
+    },
+    {
+      "body": {
+        "lambda": {
+          "body": "function populate(jwt, user, registration) { jwt['#{hasuraClaimsNamespace}'] = { 'x-hasura-allowed-roles': jwt.roles, 'x-hasura-default-role': jwt.roles[0], 'x-hasura-user-id': user.id }; }",
+          "debug": true,
+          "enabled": true,
+          "name": "hasura",
+          "type": "JWTPopulate"
+        }
+      },
+      "method": "POST",
+      "url": "/api/lambda/#{hasuraLambdaId}"
+    },
+    {
+      "body": {
+        "application": {
+          "jwtConfiguration": {
+            "accessTokenKeyId": "#{accessTokenSigningKeyId}",
+            "enabled": true,
+            "refreshTokenTimeToLiveInMinutes": 1440,
+            "timeToLiveInSeconds": 3600
+          },
+          "lambdaConfiguration": {
+            "accessTokenPopulateId": "#{hasuraLambdaId}"
+          },
+          "loginConfiguration": {
+            "allowTokenRefresh": true,
+            "generateRefreshTokens": true,
+            "requireAuthentication": true
+          },
+          "name": "test-application",
+          "roles": [
+            {
+              "isDefault": true,
+              "isSuperRole": false,
+              "name": "user"
+            },
+            {
+              "isDefault": false,
+              "isSuperRole": false,
+              "name": "manager"
+            }
+          ]
+        }
+      },
+      "method": "POST",
+      "url": "/api/application"
+    }
+  ],
+  "variables": {
+    "accessTokenSigningKeyId": "#{UUID()}",
+    "adminEmail": "admin@softozor.ch",
+    "adminPassword": "password",
+    "defaultTenantId": "9d72d134-464e-4542-a42f-6b0ac602f0d2",
+    "hasuraClaimsNamespace": "https://hasura.io/jwt/claims",
+    "hasuraLambdaId": "#{UUID()}",
+    "issuer": "softozor.ch"
+  }
+}

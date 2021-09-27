@@ -1,4 +1,5 @@
 import os
+import re
 
 import psycopg2
 from test_utils.manifest_data import get_manifest_data
@@ -6,11 +7,19 @@ from test_utils.manifest_data import get_manifest_data
 from features.utils.graphql_client import GraphQLClient
 from features.utils.sockets import host_has_port_open
 
+base_url_regex = re.compile(r'baseUrl: (.*)\n')
+
 
 @given(u'the user has installed the main manifest')
 def step_impl(context):
-    success_text = context.jps_client.install_from_file(
-        context.main_manifest, context.current_env_name)
+    with open(context.main_manifest) as file:
+        manifest_content = file.read()
+        match_object = base_url_regex.search(manifest_content)
+        base_url = match_object.group(1)
+        success_text = context.jps_client.install(
+            manifest_content, context.current_env_name, settings={
+                'kickstartJson': f'{base_url}/features/data/fusionauth/kickstart.json'
+            })
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     assert context.current_env_info.is_running()

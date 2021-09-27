@@ -13,6 +13,9 @@ settings:
       caption: Search type
       type: string
       default: database
+    - name: kickstartJson
+      caption: Kickstart
+      type: string
     - type: spacer
       caption: Database
     - name: databaseName
@@ -40,8 +43,14 @@ settings:
 
 globals:
   APP_MEMORY: 512
+  PATH_TO_KICKSTART_JSON: /usr/local/fusionauth/kickstart.json
 
 onInstall:
+  - cmd[auth]:
+      - |
+        if [ ! -z "${settings.kickstartJson}" ] ; then
+          wget --quiet ${settings.kickstartJson} -O ${globals.PATH_TO_KICKSTART_JSON}
+        fi
   - cmd[${nodes.sqldb.master.id}]:
       - export PGPASSWORD=${settings.databaseRootPassword}
       - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE ROLE ${settings.databaseUsername} WITH LOGIN PASSWORD '${settings.databasePassword}';"
@@ -60,6 +69,7 @@ onInstall:
               DATABASE_PASSWORD: ${settings.databasePassword}
               FUSIONAUTH_APP_MEMORY: ${globals.APP_MEMORY}M
               FUSIONAUTH_APP_RUNTIME_MODE: ${settings.appRunTime}
+              FUSIONAUTH_APP_KICKSTART_FILE: ${globals.PATH_TO_KICKSTART_JSON}
               SEARCH_TYPE: ${settings.searchType}
               ES_JAVA_OPTS: -Xms${globals.APP_MEMORY}m -Xmx${globals.APP_MEMORY}m
   - restartContainers[auth]
