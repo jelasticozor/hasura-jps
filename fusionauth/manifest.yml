@@ -47,10 +47,7 @@ globals:
 
 onInstall:
   - cmd[auth]:
-      - |
-        if [ ! -z "${settings.kickstartJson}" ] ; then
-          wget --quiet ${settings.kickstartJson} -O ${globals.PATH_TO_KICKSTART_JSON}
-        fi
+      - [[ ! -z "${settings.kickstartJson}" ]] && wget --quiet ${settings.kickstartJson} -O ${globals.PATH_TO_KICKSTART_JSON}
   - cmd[${nodes.sqldb.master.id}]:
       - export PGPASSWORD=${settings.databaseRootPassword}
       - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE ROLE ${settings.databaseUsername} WITH LOGIN PASSWORD '${settings.databasePassword}';"

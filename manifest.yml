@@ -114,6 +114,7 @@ actions:
         databasePassword: ${globals.DB_AUTH_PASSWORD}
         appRunTime: production
         searchType: database
+        kickstartJson: ${settings.kickstartJson}
 
 success:
   text: |
