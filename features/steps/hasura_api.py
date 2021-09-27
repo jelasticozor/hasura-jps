@@ -39,7 +39,7 @@ def step_impl(context):
             host=database_node_ip,
             user=admin_user,
             password=admin_password,
-            database=context.auth_database_name)
+            database=context.fusionauth_database_name)
     }
     # TODO: refactor --> this is duplicated from faas_steps
     faas_node_type = 'docker'

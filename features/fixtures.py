@@ -112,9 +112,9 @@ def hasura_database_name(context):
 
 
 @fixture
-def auth_database_name(context):
-    context.auth_database_name = 'auth'
-    return context.auth_database_name
+def fusionauth_database_name(context):
+    context.fusionauth_database_name = 'fusionauth'
+    return context.fusionauth_database_name
 
 
 @fixture
