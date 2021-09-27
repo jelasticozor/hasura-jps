@@ -60,27 +60,35 @@ settings:
       default: 8080
 
 onInstall:
-  - cmd[${nodes.sqldb.master.id}]:
-      - export PGPASSWORD=${settings.dbAdminPassword}
-      - psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE USER ${settings.dbUsername} PASSWORD '${settings.dbPassword}';"
-      - psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE DATABASE ${settings.dbName} OWNER ${settings.dbUsername} ENCODING 'utf-8' TEMPLATE template0;"
-      - wget --quiet ${baseUrl}/hasura/setup.sql -O setup.sql
-      - sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
-      - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
-  - forEach(nodes.cp):
-    - api:
-        - method: environment.control.SetContainerEnvVars
-          params:
-            nodeId: ${@i.id}
-            vars:
-              HASURA_GRAPHQL_DATABASE_URL: postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}
-              HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
-              HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
-              HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
-              HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
-              FAAS_HOSTNAME: ${settings.faasHostname}
-              FAAS_PORT: ${settings.faasPort}
-  - cmd[cp]:
-      - firewall-cmd --permanent --add-port=${settings.serverPort}/tcp
-      - firewall-cmd --reload
+  - setupDatabase
+  - setupAppContainer
+  - redirectAppPort
   - restartContainers[cp]
+
+actions:
+  setupDatabase:
+    - cmd[${nodes.sqldb.master.id}]:
+        - export PGPASSWORD=${settings.dbAdminPassword}
+        - psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE USER ${settings.dbUsername} PASSWORD '${settings.dbPassword}';"
+        - psql -U ${settings.dbAdminUsername} -d postgres -c "CREATE DATABASE ${settings.dbName} OWNER ${settings.dbUsername} ENCODING 'utf-8' TEMPLATE template0;"
+        - wget --quiet ${baseUrl}/hasura/setup.sql -O setup.sql
+        - sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
+        - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
+  setupAppContainer:
+    - forEach(nodes.cp):
+        - api:
+            - method: environment.control.SetContainerEnvVars
+              params:
+                nodeId: ${@i.id}
+                vars:
+                  HASURA_GRAPHQL_DATABASE_URL: postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}
+                  HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
+                  HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
+                  HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
+                  HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
+                  FAAS_HOSTNAME: ${settings.faasHostname}
+                  FAAS_PORT: ${settings.faasPort}
+  redirectAppPort:
+    - cmd[cp]:
+        - firewall-cmd --permanent --add-port=${settings.serverPort}/tcp
+        - firewall-cmd --reload

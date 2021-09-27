@@ -46,27 +46,35 @@ globals:
   PATH_TO_KICKSTART_JSON: /usr/local/fusionauth/kickstart.json
 
 onInstall:
-  - cmd[auth]:
-      - if [ ! -z "${settings.kickstartJson}" ] ; then wget --quiet ${settings.kickstartJson} -O ${globals.PATH_TO_KICKSTART_JSON}; fi
-  - cmd[${nodes.sqldb.master.id}]:
-      - export PGPASSWORD=${settings.databaseRootPassword}
-      - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE ROLE ${settings.databaseUsername} WITH LOGIN PASSWORD '${settings.databasePassword}';"
-      - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE DATABASE ${settings.databaseName} ENCODING 'UTF-8' TEMPLATE template0;"
-      - psql -U ${settings.databaseRootUsername} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${settings.databaseName} TO ${settings.databaseUsername}; ALTER DATABASE ${settings.databaseName} OWNER TO ${settings.databaseUsername};"
-  - forEach(nodes.auth):
-    - api:
-        - method: environment.control.SetContainerEnvVars
-          params:
-            nodeId: ${@i.id}
-            vars:
-              DATABASE_URL: jdbc:postgresql://${nodes.sqldb.master.intIP}:5432/${settings.databaseName}
-              DATABASE_ROOT_USERNAME: ${settings.databaseRootUsername}
-              DATABASE_ROOT_PASSWORD: ${settings.databaseRootPassword}
-              DATABASE_USERNAME: ${settings.databaseUsername}
-              DATABASE_PASSWORD: ${settings.databasePassword}
-              FUSIONAUTH_APP_MEMORY: ${globals.APP_MEMORY}M
-              FUSIONAUTH_APP_RUNTIME_MODE: ${settings.appRunTime}
-              FUSIONAUTH_APP_KICKSTART_FILE: ${globals.PATH_TO_KICKSTART_JSON}
-              SEARCH_TYPE: ${settings.searchType}
-              ES_JAVA_OPTS: -Xms${globals.APP_MEMORY}m -Xmx${globals.APP_MEMORY}m
+  - setupKickstart
+  - setupDatabase
+  - setupAppContainer
   - restartContainers[auth]
+
+actions:
+  setupKickstart:
+    - cmd[auth]:
+        - if [ ! -z "${settings.kickstartJson}" ] ; then wget --quiet ${settings.kickstartJson} -O ${globals.PATH_TO_KICKSTART_JSON}; fi
+  setupDatabase:
+    - cmd[${nodes.sqldb.master.id}]:
+        - export PGPASSWORD=${settings.databaseRootPassword}
+        - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE ROLE ${settings.databaseUsername} WITH LOGIN PASSWORD '${settings.databasePassword}';"
+        - psql -U ${settings.databaseRootUsername} -d postgres -c "CREATE DATABASE ${settings.databaseName} ENCODING 'UTF-8' TEMPLATE template0;"
+        - psql -U ${settings.databaseRootUsername} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${settings.databaseName} TO ${settings.databaseUsername}; ALTER DATABASE ${settings.databaseName} OWNER TO ${settings.databaseUsername};"
+  setupAppContainer:
+    - forEach(nodes.auth):
+        - api:
+            - method: environment.control.SetContainerEnvVars
+              params:
+                nodeId: ${@i.id}
+                vars:
+                  DATABASE_URL: jdbc:postgresql://${nodes.sqldb.master.intIP}:5432/${settings.databaseName}
+                  DATABASE_ROOT_USERNAME: ${settings.databaseRootUsername}
+                  DATABASE_ROOT_PASSWORD: ${settings.databaseRootPassword}
+                  DATABASE_USERNAME: ${settings.databaseUsername}
+                  DATABASE_PASSWORD: ${settings.databasePassword}
+                  FUSIONAUTH_APP_MEMORY: ${globals.APP_MEMORY}M
+                  FUSIONAUTH_APP_RUNTIME_MODE: ${settings.appRunTime}
+                  FUSIONAUTH_APP_KICKSTART_FILE: ${globals.PATH_TO_KICKSTART_JSON}
+                  SEARCH_TYPE: ${settings.searchType}
+                  ES_JAVA_OPTS: -Xms${globals.APP_MEMORY}m -Xmx${globals.APP_MEMORY}m
