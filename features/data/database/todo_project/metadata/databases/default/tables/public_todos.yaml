@@ -33,4 +33,4 @@ update_permissions:
 delete_permissions:
 - permission:
     filter: {}
-  role: anonymous
+  role: manager
