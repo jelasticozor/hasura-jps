@@ -1,13 +1,13 @@
 type: install
-name: sql db node
+name: Postgres cluster test
 
 globals:
   ADMIN_USERNAME: webadmin
 
 nodes:
-  count: NODE_COUNT
+  count: 2
   cloudlets: 32
-  nodeType: NODE_TYPE
+  nodeType: postgres13
   scalingMode: STATELESS
   password: ${fn.password}
   nodeGroup: sqldb

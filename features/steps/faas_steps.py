@@ -1,6 +1,23 @@
+import os
+
 import requests
+from test_utils.manifest_data import get_manifest_data
 
 from features.utils.sockets import host_has_port_open
+
+
+@given(
+    u'a jelastic environment with an ubuntu-git docker node')
+def step_impl(context):
+    path_to_manifest = os.path.join(
+        context.test_manifests_folder, f'faas.yml')
+    success_text = context.jps_client.install_from_file(
+        path_to_manifest,
+        context.current_env_name)
+    context.manifest_data = get_manifest_data(success_text)
+    context.current_env_info = context.control_client.get_env_info(
+        context.current_env_name)
+    assert context.current_env_info.is_running()
 
 
 @given(u'the faas engine is installed')

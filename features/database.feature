@@ -1,4 +1,3 @@
-# TODO: install the database once and for all for the whole feature
 Feature: The database
 
   The database holds the application state. Hasura bases on it
@@ -6,7 +5,7 @@ Feature: The database
 
   Background: sql node is available
 
-    Given a jelastic environment with 2 postgres13 nodes is available in node group 'sqldb'
+    Given a jelastic environment with a postgres cluster
     And connections are established to the primary and secondary database nodes
 
   Scenario: Any change done on primary gets reflected on secondary

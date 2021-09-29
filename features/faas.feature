@@ -1,4 +1,3 @@
-# TODO: install the faas engine once and for all for the whole feature
 Feature: The faas engine
 
   The faas engine will allow to bind hasura actions and
@@ -6,7 +5,7 @@ Feature: The faas engine
 
   Background: Docker node is available
 
-    Given a jelastic environment with 1 docker node is available in node group 'faas' with image 'softozor/ubuntu-git:latest'
+    Given a jelastic environment with an ubuntu-git docker node
     And the faas engine is installed
 
   Scenario: Log on

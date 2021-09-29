@@ -1,4 +1,3 @@
-# TODO: install the main manifest before the whole feature
 Feature: Hasura API
 
   As a manifest user,  
@@ -114,3 +113,6 @@ Feature: Hasura API
     Then she gets state 'DOING'
 
   # TODO: try to log on as a user with some permissions and call a mutation requiring that permission (e.g. delete todo)
+  # --> should work
+
+  # TODO: try to call the mutation requiring permission without permission
