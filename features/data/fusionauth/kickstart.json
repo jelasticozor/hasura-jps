@@ -2,11 +2,11 @@
   "apiKeys": [
     {
       "description": "Core API Key",
-      "key": "#{UUID()}"
+      "key": "#{coreApiKey}"
     },
     {
       "description": "API Key",
-      "key": "#{UUID()}",
+      "key": "#{apiKey}",
       "permissions": {
         "endpoints": {
           "/api/jwt/validate": [
@@ -110,16 +110,37 @@
         }
       },
       "method": "POST",
-      "url": "/api/application"
+      "url": "/api/application/#{testAppId}"
+    },
+    {
+      "body": {
+        "registration": {
+          "applicationId": "#{testAppId}",
+          "roles": [
+            "manager"
+          ]
+        },
+        "user": {
+          "email": "#{managerEmail}",
+          "password": "#{managerPassword}"
+        }
+      },
+      "method": "POST",
+      "url": "/api/user/registration"
     }
   ],
   "variables": {
     "accessTokenSigningKeyId": "#{UUID()}",
     "adminEmail": "admin@softozor.ch",
     "adminPassword": "password",
+    "apiKey": "e22148d7-0f65-4483-872c-cb3c9fb0d478",
+    "coreApiKey": "65e45694-ae1a-4efd-887d-7c944e5c38b6",
     "defaultTenantId": "9d72d134-464e-4542-a42f-6b0ac602f0d2",
     "hasuraClaimsNamespace": "https://hasura.io/jwt/claims",
     "hasuraLambdaId": "#{UUID()}",
-    "issuer": "softozor.ch"
+    "issuer": "softozor.ch",
+    "managerEmail": "manager@softozor.ch",
+    "managerPassword": "manager-password",
+    "testAppId": "f8e09a60-1660-4f95-8b07-72f1d196258b"
   }
 }
