@@ -99,6 +99,20 @@ def serverless_manifest(context):
 
 
 @fixture
+def fusionauth_manifest(context):
+    context.fusionauth_manifest = os.path.join(
+        context.project_root_folder, 'fusionauth', 'manifest.yml')
+    return context.fusionauth_manifest
+
+
+@fixture
+def fusionauth_kickstart(context):
+    context.fusionauth_kickstart = os.path.join(
+        context.project_root_folder, 'features', 'data', 'fusionauth', 'kickstart.json')
+    return context.fusionauth_kickstart
+
+
+@fixture
 def test_manifests_folder(context):
     context.test_manifests_folder = os.path.join(
         context.project_root_folder, 'features', 'data', 'manifests')

@@ -1,0 +1,47 @@
+type: install
+name: Fusionauth test
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+
+settings:
+  fields:
+    - name: fusionauthVersion
+      caption: Fusionauth version
+      type: string
+      default: 1.30.1
+    - name: kickstartJson
+      caption: Kickstart
+      type: string
+
+globals:
+  DB_ADMIN_USERNAME: webadmin
+  DB_NAME: hasura
+  DB_USERNAME: hasura_user
+  DB_PASSWORD: ${fn.password(20)}
+  DB_AUTH_NAME: fusionauth
+  DB_AUTH_USERNAME: auth
+  DB_AUTH_PASSWORD: ${fn.password(20)}
+
+nodes:
+- displayName: database
+  count: 1
+  fixedCloudlets: 3
+  cloudlets: 32
+  nodeType: postgres13
+  scalingMode: STATELESS
+  password: ${fn.password}
+  cluster: true
+- displayName: auth
+  count: 1
+  cloudlets: 32
+  nodeGroup: auth
+  nodeType: docker
+  image: fusionauth/fusionauth-app:${settings.fusionauthVersion}
+skipNodeEmails: true
+
+success:
+  text: |
+    **Database Admin User**: ${globals.DB_ADMIN_USERNAME}  
+    **Database Admin Password**: ${nodes.sqldb.password}  
+    **Auth Database Name**: ${globals.DB_AUTH_NAME}  
+    **Auth Database Username**: ${globals.DB_AUTH_USERNAME}  
+    **Auth Database Password**: ${globals.DB_AUTH_PASSWORD}

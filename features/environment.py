@@ -1,7 +1,7 @@
-from fixtures import *
-
 from behave import use_fixture
 from behave.fixture import use_fixture_by_tag
+
+from fixtures import *
 
 
 def before_tag(context, tag):
@@ -18,6 +18,8 @@ def before_all(context):
     use_fixture(test_manifests_folder, context)
     use_fixture(main_manifest, context)
     use_fixture(serverless_manifest, context)
+    use_fixture(fusionauth_manifest, context)
+    use_fixture(fusionauth_kickstart, context)
     use_fixture(faas_port, context)
     use_fixture(faas_definition_yaml, context)
     use_fixture(path_to_serverless_functions, context)
@@ -34,4 +36,3 @@ def before_all(context):
 
 def before_scenario(context, scenario):
     use_fixture(new_environment, context)
-    pass

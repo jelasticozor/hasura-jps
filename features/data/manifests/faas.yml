@@ -1,0 +1,10 @@
+type: install
+name: Faas test
+
+nodes:
+  count: 1
+  cloudlets: 16
+  nodeGroup: faas
+  nodeType: docker
+  image: softozor/ubuntu-git:latest
+skipNodeEmails: true
