@@ -58,8 +58,9 @@ def step_impl(context):
     context.current_fusionauth_url = fusionauth_node.url
 
 
-def fusionauth_is_up(fusionauth_url, timeout_in_sec=300, period_in_sec=5):
+def fusionauth_is_up(fusionauth_url, timeout_in_sec=300, period_in_sec=30):
     def test_is_up():
+        print(f'getting \'{fusionauth_url}/api/status\'')
         response = requests.get(f'{fusionauth_url}/api/status')
         return response.status_code == 200
 
