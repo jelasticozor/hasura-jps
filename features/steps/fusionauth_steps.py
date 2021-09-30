@@ -35,6 +35,7 @@ def step_impl(context):
     fusionauth_node = current_env_info.get_nodes(
         node_group='auth', node_type='docker')[0]
     context.current_fusionauth_url = fusionauth_node.url
+    print('fusionauth url = ', context.current_fusionauth_url)
 
 
 @when(u'a user installs the fusionauth manifest with kick-starting')

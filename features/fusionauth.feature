@@ -9,6 +9,7 @@ Feature: Fusionauth auth module
 
     Given a jelastic environment with a database and fusionauth
 
+  @current  
   Scenario: Fusionauth works without kick-starting
 
     When a user installs the fusionauth manifest without kick-starting
