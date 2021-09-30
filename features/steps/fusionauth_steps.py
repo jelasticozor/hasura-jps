@@ -55,11 +55,14 @@ def step_impl(context):
 
 def fusionauth_is_up(fusionauth_ip, fusionauth_port, timeout_in_sec=300, period_in_sec=30):
     def test_is_up():
-        print(
-            f'getting \'http://{fusionauth_ip}:{fusionauth_port}/api/status\'')
-        response = requests.get(
-            f'http://{fusionauth_ip}:{fusionauth_port}/api/status')
-        return response.status_code == 200
+        try:
+            print(
+                f'getting \'http://{fusionauth_ip}:{fusionauth_port}/api/status\'')
+            response = requests.get(
+                f'http://{fusionauth_ip}:{fusionauth_port}/api/status')
+            return response.status_code == 200
+        except ConnectionError:
+            return False
 
     try:
         wait_until(lambda: test_is_up(),
