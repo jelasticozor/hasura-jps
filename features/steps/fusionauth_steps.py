@@ -31,11 +31,8 @@ def step_impl(context):
     current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     assert current_env_info.is_running()
-    # TODO: cannot call get_node_url_from_name
-    fusionauth_node = current_env_info.get_nodes(
+    context.current_fusionauth_ip = current_env_info.get_node_ips(
         node_group='auth', node_type='docker')[0]
-    context.current_fusionauth_url = fusionauth_node.url
-    print('fusionauth url = ', context.current_fusionauth_url)
 
 
 @when(u'a user installs the fusionauth manifest with kick-starting')
@@ -52,16 +49,16 @@ def step_impl(context):
     current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     assert current_env_info.is_running()
-    # TODO: cannot call get_node_url_from_name
-    fusionauth_node = current_env_info.get_nodes(
+    context.current_fusionauth_ip = current_env_info.get_node_ips(
         node_group='auth', node_type='docker')[0]
-    context.current_fusionauth_url = fusionauth_node.url
 
 
-def fusionauth_is_up(fusionauth_url, timeout_in_sec=300, period_in_sec=30):
+def fusionauth_is_up(fusionauth_ip, fusionauth_port, timeout_in_sec=300, period_in_sec=30):
     def test_is_up():
-        print(f'getting \'{fusionauth_url}/api/status\'')
-        response = requests.get(f'{fusionauth_url}/api/status')
+        print(
+            f'getting \'http://{fusionauth_ip}:{fusionauth_port}/api/status\'')
+        response = requests.get(
+            f'http://{fusionauth_ip}:{fusionauth_port}/api/status')
         return response.status_code == 200
 
     try:
@@ -74,4 +71,5 @@ def fusionauth_is_up(fusionauth_url, timeout_in_sec=300, period_in_sec=30):
 
 @then(u'fusionauth is up and running')
 def step_impl(context):
-    assert fusionauth_is_up(context.current_fusionauth_url) is True
+    assert fusionauth_is_up(
+        context.current_fusionauth_ip, context.fusionauth_port) is True
