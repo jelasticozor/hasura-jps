@@ -81,6 +81,12 @@ def faas_client_factory(context):
 
 
 @fixture
+def fusionauth_port(context):
+    context.fusionauth_port = 9011
+    return fusionauth_port
+
+
+@fixture
 def new_environment(context):
     context.current_env_name = get_new_random_env_name(
         context.control_client, context.commit_sha, context.worker_id)
