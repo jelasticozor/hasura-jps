@@ -68,6 +68,7 @@ acceptance-test:
   image: ${HASURA_TEST_IMAGE}:latest
   script:
     - |
+      echo "baseUrl: http://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/raw/${CI_COMMIT_REF_NAME}"
       behave --junit --junit-directory ./features/test-reports --tags current \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
