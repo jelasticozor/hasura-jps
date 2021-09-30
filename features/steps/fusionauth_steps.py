@@ -28,6 +28,13 @@ def step_impl(context):
             'databaseUsername': context.manifest_data['Auth Database Username'],
             'databasePassword': context.manifest_data['Auth Database Password']
         })
+    current_env_info = context.control_client.get_env_info(
+        context.current_env_name)
+    assert current_env_info.is_running()
+    # TODO: cannot call get_node_url_from_name
+    fusionauth_node = current_env_info.get_nodes(
+        node_group='auth', node_type='docker')[0]
+    context.current_fusionauth_url = fusionauth_node.url
 
 
 @when(u'a user installs the fusionauth manifest with kick-starting')
@@ -44,8 +51,10 @@ def step_impl(context):
     current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     assert current_env_info.is_running()
-    context.current_fusionauth_url = current_env_info.get_node_url_from_name(
-        'auth')
+    # TODO: cannot call get_node_url_from_name
+    fusionauth_node = current_env_info.get_nodes(
+        node_group='auth', node_type='docker')[0]
+    context.current_fusionauth_url = fusionauth_node.url
 
 
 def fusionauth_is_up(fusionauth_url, timeout_in_sec=300, period_in_sec=5):
