@@ -23,7 +23,7 @@ globals:
 
 nodes:
 - displayName: database
-  count: 1
+  count: 2
   fixedCloudlets: 3
   cloudlets: 32
   nodeType: postgres13
