@@ -3,7 +3,6 @@ import os
 import requests
 from test_utils.manifest_data import get_manifest_data
 
-from features.utils.manifest import get_base_url_from_manifest_content
 from features.utils.timing import wait_until
 
 
@@ -22,18 +21,26 @@ def step_impl(context):
 @when(u'a user installs the fusionauth manifest without kick-starting')
 def step_impl(context):
     context.jps_client.install_from_file(
-        context.fusionauth_manifest, context.current_env_name)
+        context.fusionauth_manifest, context.current_env_name, settings={
+            'databaseName': context.manifest_data['Auth Database Name'],
+            'databaseRootUsername': context.manifest_data['Database Admin User'],
+            'databaseRootPassword': context.manifest_data['Database Admin Password'],
+            'databaseUsername': context.manifest_data['Auth Database Username'],
+            'databasePassword': context.manifest_data['Auth Database Password']
+        })
 
 
 @when(u'a user installs the fusionauth manifest with kick-starting')
 def step_impl(context):
-    with open(context.fusionauth_manifest) as file:
-        manifest_content = file.read()
-        base_url = get_base_url_from_manifest_content(manifest_content)
-        context.jps_client.install(
-            manifest_content, context.current_env_name, settings={
-                'kickstartJson': f'{base_url}/features/data/fusionauth/kickstart.json'
-            })
+    context.jps_client.install_from_file(
+        context.fusionauth_manifest, context.current_env_name, settings={
+            'databaseName': context.manifest_data['Auth Database Name'],
+            'databaseRootUsername': context.manifest_data['Database Admin User'],
+            'databaseRootPassword': context.manifest_data['Database Admin Password'],
+            'databaseUsername': context.manifest_data['Auth Database Username'],
+            'databasePassword': context.manifest_data['Auth Database Password'],
+            'kickstartJson': f'{context.base_url}/features/data/fusionauth/kickstart.json'
+        })
     current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     assert current_env_info.is_running()
@@ -45,6 +52,7 @@ def fusionauth_is_up(fusionauth_url, timeout_in_sec=300, period_in_sec=5):
     def test_is_up():
         response = requests.get(f'{fusionauth_url}/api/status')
         return response.status_code == 200
+
     try:
         wait_until(lambda: test_is_up(),
                    timeout_in_sec=timeout_in_sec, period_in_sec=period_in_sec)

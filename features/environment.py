@@ -13,6 +13,7 @@ def before_all(context):
     use_fixture(api_clients, context)
     use_fixture(random_seed, context)
     use_fixture(worker_id, context)
+    use_fixture(base_url, context)
     use_fixture(commit_sha, context)
     use_fixture(project_root_folder, context)
     use_fixture(test_manifests_folder, context)

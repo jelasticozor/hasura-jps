@@ -21,6 +21,13 @@ def worker_id(context):
 
 
 @fixture
+def base_url(context):
+    userdata = context.config.userdata
+    context.base_url = userdata['base-url']
+    return context.base_url
+
+
+@fixture
 def commit_sha(context):
     userdata = context.config.userdata
     context.commit_sha = userdata['commit-sha']
