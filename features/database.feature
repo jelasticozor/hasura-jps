@@ -1,9 +1,11 @@
 Feature: The database
 
-  The database holds the application state. Hasura bases on it
-  to generate the graphql API.
+  The database holds the application state.  
+  Hasura bases on it to generate the graphql API.  
+  Jelastic makes clusters of master-slave postgres  
+  nodes available out-of-the-box.
 
-  Background: sql node is available
+  Background: Postgres cluster is available
 
     Given a jelastic environment with a postgres cluster
     And connections are established to the primary and secondary database nodes

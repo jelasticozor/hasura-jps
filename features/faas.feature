@@ -1,6 +1,6 @@
 Feature: The faas engine
 
-  The faas engine will allow to bind hasura actions and
+  The faas engine allows to bind hasura actions and  
   events to functions.
 
   Background: Docker node is available
@@ -9,6 +9,9 @@ Feature: The faas engine
     And the faas engine is installed
 
   Scenario: Log on
+
+    The log-on credentials are located under  
+    `/var/lib/faasd/secrets/`.
 
     When a user logs on the faas engine
     Then she gets a success response
