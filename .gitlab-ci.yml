@@ -25,7 +25,10 @@ publish-feature-test-image:
     - |
       docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest \
         --build-arg FAAS_CLI_VERSION=${FAAS_CLI_VERSION} \
-        --build-arg HASURA_CLI_VERSION=${HASURA_CLI_VERSION}
+        --build-arg HASURA_CLI_VERSION=${HASURA_CLI_VERSION} \
+        --build-arg PERSONAL_ACCESS_TOKEN=${PRIVATE_ACCESS_TOKEN} \
+        --build-arg CI_API_V4_URL=${CI_API_V4_URL} \
+        --build-arg FAAS_CLIENT_PYPI_PROJECT_ID=${FAAS_CLIENT_PYPI_PROJECT_ID}
     - *docker-push
   only:
     changes:
