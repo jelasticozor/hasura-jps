@@ -13,7 +13,7 @@ RUN apt update && apt install -y gcc wget git curl \
   && curl -sSL https://github.com/openfaas/faas-cli/releases/download/${FAAS_CLI_VERSION}/faas-cli --output /usr/local/bin/faas-cli \
   && chmod u+x /usr/local/bin/faas-cli \
   && pip install --no-cache-dir -r requirements.txt \
-  && pip install faas-client==1.0.1 --extra-index-url http://__token__:${PERSONAL_ACCESS_TOKEN}@${CI_API_V4_URL#http*://}/projects/${FAAS_CLIENT_PYPI_PROJECT_ID}/packages/pypi/simple --trusted-host gitlab.hidora.com
+  && pip install faas-client==1.1.0 --extra-index-url http://__token__:${PERSONAL_ACCESS_TOKEN}@${CI_API_V4_URL#http*://}/projects/${FAAS_CLIENT_PYPI_PROJECT_ID}/packages/pypi/simple --trusted-host gitlab.hidora.com
 
 FROM hasura/graphql-engine:${HASURA_CLI_VERSION}.cli-migrations-v3 AS hasura-migrations
 
