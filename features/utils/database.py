@@ -1,4 +1,4 @@
-from features.utils.timing import wait_until
+from softozor_test_utils.timing import wait_until
 
 
 def database_contains_table(database_connection, table_name, timeout_in_sec=120, period_in_sec=0.1):

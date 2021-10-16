@@ -3,10 +3,9 @@ import random
 
 from behave import fixture
 from faas_client import FaasClientFactory
+from hasura_client import HasuraClientFactory
 from jelastic_client import JelasticClientFactory
 from test_utils import get_new_random_env_name
-
-from features.utils.hasura_client import HasuraClientFactory
 
 
 @fixture
