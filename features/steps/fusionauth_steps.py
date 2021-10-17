@@ -1,9 +1,9 @@
 import os
 
 import requests
-from test_utils.manifest_data import get_manifest_data
-
+from behave import *
 from softozor_test_utils.timing import wait_until
+from test_utils.manifest_data import get_manifest_data
 
 
 @given(u'a jelastic environment with a database and fusionauth')

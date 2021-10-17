@@ -2,6 +2,7 @@ import os
 
 import psycopg2
 import psycopg2.errors
+from behave import *
 from test_utils.manifest_data import get_manifest_data
 
 from features.utils.database import database_contains_table

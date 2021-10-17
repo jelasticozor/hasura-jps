@@ -1,10 +1,10 @@
 import os
 
 import psycopg2
-from test_utils.manifest_data import get_manifest_data
-
+from behave import *
 from softozor_graphql_client import GraphQLClient
 from softozor_test_utils.sockets import host_has_port_open
+from test_utils.manifest_data import get_manifest_data
 
 
 @given(u'the user has installed the main manifest')

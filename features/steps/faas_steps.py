@@ -1,9 +1,9 @@
 import os
 
 import requests
-from test_utils.manifest_data import get_manifest_data
-
+from behave import *
 from softozor_test_utils.sockets import host_has_port_open
+from test_utils.manifest_data import get_manifest_data
 
 
 @given(
