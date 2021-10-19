@@ -67,7 +67,6 @@ def path_to_serverless_functions(context):
 @fixture
 def faas_client_factory(context):
     context.faas_client_factory = FaasClientFactory(
-        context.path_to_serverless_functions,
         context.faas_port)
     return context.faas_client_factory
 
