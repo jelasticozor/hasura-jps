@@ -7,8 +7,12 @@ functions:
     handler: ./hello-python
     image: softozor/hello-python:latest
   hasura-action:
-    lang: node14
+    lang: node-hasura
     handler: ./hasura-action
     image: softozor/hasura-action:latest
     environment:
       GRAPHQL_ENDPOINT: ${GRAPHQL_ENDPOINT}
+configuration:
+  templates:
+    - name: node-hasura
+      source: http://gitlab.hidora.com/softozor/faas-templates.git
