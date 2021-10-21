@@ -50,7 +50,8 @@ def step_impl(context):
     function_name = 'hello-python'
     context.faas_client.login()
     context.current_faas_function = function_name
-    exit_code = context.faas_client.deploy(function_name)
+    exit_code = context.faas_client.deploy(
+        context.path_to_serverless_configuration, function_name)
     assert exit_code == 0
 
 
@@ -67,7 +68,8 @@ def step_impl(context):
 
 @when(u'she deploys the \'{function_name}\' function to the faas engine')
 def step_impl(context, function_name):
-    context.exit_code = context.faas_client.deploy(function_name)
+    context.exit_code = context.faas_client.deploy(
+        context.path_to_serverless_configuration, function_name)
     context.current_faas_function = function_name
 
 

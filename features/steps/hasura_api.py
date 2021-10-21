@@ -106,6 +106,7 @@ def step_impl(context):
     context.faas_client.login()
     context.current_faas_function = function_name
     exit_code = context.faas_client.deploy(
+        context.path_to_serverless_configuration,
         function_name,
         env={
             'GRAPHQL_ENDPOINT': context.internal_graphql_endpoint

@@ -58,10 +58,10 @@ def faas_port(context):
 
 
 @fixture
-def path_to_serverless_functions(context):
-    context.path_to_serverless_functions = os.path.join(
-        context.project_root_folder, 'features', 'data', 'functions')
-    return context.path_to_serverless_functions
+def path_to_serverless_configuration(context):
+    context.path_to_serverless_configuration = os.path.join(
+        context.project_root_folder, 'features', 'data', 'functions', 'faas.yml')
+    return context.path_to_serverless_configuration
 
 
 @fixture
