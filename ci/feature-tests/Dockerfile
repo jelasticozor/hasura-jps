@@ -7,7 +7,7 @@ ARG FAAS_CLI_VERSION
 COPY ./requirements.txt .
 
 # git is necessary as long as we clone behave's git repo
-RUN apk add --update gcc curl git \
+RUN apk add --update postgresql-dev gcc python3-dev musl-dev curl git \
   && curl -sSL https://github.com/openfaas/faas-cli/releases/download/${FAAS_CLI_VERSION}/faas-cli --output /usr/local/bin/faas-cli \
   && chmod u+x /usr/local/bin/faas-cli \
   && pip install --no-cache-dir -r requirements.txt
