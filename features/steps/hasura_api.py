@@ -6,6 +6,8 @@ from softozor_graphql_client import GraphQLClient
 from softozor_test_utils.sockets import host_has_port_open
 from test_utils.manifest_data import get_manifest_data
 
+from features.utils.faas import deploy
+
 
 @given(u'the user has installed the main manifest')
 def step_impl(context):
@@ -105,13 +107,14 @@ def step_impl(context):
     function_name = 'hasura-action'
     context.faas_client.login()
     context.current_faas_function = function_name
-    exit_code = context.faas_client.deploy(
+    deployment_success = deploy(
+        context.faas_client,
         context.path_to_serverless_configuration,
         function_name,
         env={
             'GRAPHQL_ENDPOINT': context.internal_graphql_endpoint
         })
-    assert exit_code == 0
+    assert deployment_success is True
 
 
 @when(u'the user applies the database migrations of the \'{project_name}\'')

@@ -48,24 +48,11 @@ publish-faas-image:
     changes:
       - ci/ubuntu/Dockerfile
 
-publish-faas-functions:
-  stage: publish-docker
-  image: softozor/faas-cli:${TOOLS_SHA}
-  before_script:
-    - *docker-login
-  script:
-    - cd ${CI_PROJECT_DIR}/features/data/functions
-    - faas-cli build -f ./faas.yml
-    - faas-cli push -f ./faas.yml
-  only:
-    refs:
-      - master
-    changes:
-      - features/data/functions/**/*
-
 acceptance-test:
   stage: test
   image: ${TEST_IMAGE_NAME}:latest
+  before_script:
+    - *docker-login
   script:
     - |
       behave --junit --junit-directory ./features/test-reports --tags ~wip \

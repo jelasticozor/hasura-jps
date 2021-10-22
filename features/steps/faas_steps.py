@@ -5,6 +5,8 @@ from behave import *
 from softozor_test_utils.sockets import host_has_port_open
 from test_utils.manifest_data import get_manifest_data
 
+from features.utils.faas import deploy
+
 
 @given(
     u'a jelastic environment with an ubuntu-git docker node')
@@ -50,9 +52,9 @@ def step_impl(context):
     function_name = 'hello-python'
     context.faas_client.login()
     context.current_faas_function = function_name
-    exit_code = context.faas_client.deploy(
-        context.path_to_serverless_configuration, function_name)
-    assert exit_code == 0
+    deployment_success = deploy(
+        context.faas_client, context.path_to_serverless_configuration, function_name)
+    assert deployment_success is True
 
 
 @given(u'a user is logged on the faas engine')
@@ -68,8 +70,8 @@ def step_impl(context):
 
 @when(u'she deploys the \'{function_name}\' function to the faas engine')
 def step_impl(context, function_name):
-    context.exit_code = context.faas_client.deploy(
-        context.path_to_serverless_configuration, function_name)
+    context.exit_code = not deploy(
+        context.faas_client, context.path_to_serverless_configuration, function_name)
     context.current_faas_function = function_name
 
 
