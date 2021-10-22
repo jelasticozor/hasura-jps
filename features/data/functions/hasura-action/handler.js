@@ -1,9 +1,15 @@
 'use strict'
 
+const bodyParser = require('body-parser')
 const { request, gql } = require('graphql-request')
 
-module.exports = async (event, context) => {
-  const id = event.body.input.id
+module.exports = ({ app }, wrap) => {
+  app.use(bodyParser.json())
+  app.post('/', wrap(handler))
+}
+
+const handler = async input => {
+  const id = input.id
   const endpoint = process.env.GRAPHQL_ENDPOINT
 
   const mutation = gql`
@@ -18,24 +24,11 @@ module.exports = async (event, context) => {
     }
   `
 
-  try
-  {
-    const data = await request(endpoint, mutation, { id })
+  await request(endpoint, mutation, { id })
 
-    const result = {
-      state: 'DOING'
-    }
+  const result = {
+    state: 'DOING'
+  }
 
-    return context
-      .status(200)
-      .succeed(result)
-  }
-  catch(err)
-  {
-    return context
-      .status(400)
-      .succeed({
-        "message": err
-      })
-  }
+  return result
 }
