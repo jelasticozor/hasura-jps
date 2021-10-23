@@ -53,6 +53,11 @@ acceptance-test:
   image: ${TEST_IMAGE_NAME}:latest
   before_script:
     - *docker-login
+    # this hack is necessary to allow for a call to faas-cli deploy later in the test that
+    # is not done from within the features/data/functions folder but from the project root
+    # instead
+    - faas-cli template pull
+    - faas-cli template pull http://${CI_SERVER_HOST}/softozor/faas-templates.git
   script:
     - |
       behave --junit --junit-directory ./features/test-reports --tags ~wip \
