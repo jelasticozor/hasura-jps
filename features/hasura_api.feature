@@ -77,7 +77,6 @@ Feature: Hasura API
     """
     And state 'NEW'
 
-  @current  
   Scenario: The faas engine integrates with hasura API
 
     The faas engine makes serverless functions available for  

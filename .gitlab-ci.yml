@@ -74,7 +74,7 @@ acceptance-test:
     - faas-cli template pull http://${CI_SERVER_HOST}/softozor/faas-templates.git
   script:
     - |
-      behave --junit --junit-directory ./features/test-reports --tags current \
+      behave --junit --junit-directory ./features/test-reports --tags ~wip \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
