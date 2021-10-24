@@ -16,13 +16,6 @@ def can_invoke_function(url, timeout_in_sec=120, period_in_sec=5):
 
 
 def deploy(faas_client, path_to_serverless_config, function_name, env={}):
-    exit_code = faas_client.build(
-        path_to_serverless_config, function_name)
-    assert exit_code == 0
-    exit_code = faas_client.push(
-        path_to_serverless_config, function_name)
-    assert exit_code == 0
-
     exit_code = faas_client.deploy(
         path_to_serverless_config, function_name, env)
 

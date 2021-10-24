@@ -48,11 +48,25 @@ publish-faas-image:
     changes:
       - ci/ubuntu/Dockerfile
 
+publish-faas-functions:
+  stage: publish-docker
+  image: softozor/faas-cli:${TOOLS_SHA}
+  before_script:
+    - *docker-login
+  script:
+    - cd ${CI_PROJECT_DIR}/features/data/functions
+    - faas-cli build -f ./faas.yml
+    - faas-cli push -f ./faas.yml
+  only:
+    refs:
+      - master
+    changes:
+      - features/data/functions/**/*
+
 acceptance-test:
   stage: test
   image: ${TEST_IMAGE_NAME}:latest
   before_script:
-    - *docker-login
     # this hack is necessary to allow for a call to faas-cli deploy later in the test that
     # is not done from within the features/data/functions folder but from the project root
     # instead
@@ -60,7 +74,7 @@ acceptance-test:
     - faas-cli template pull http://${CI_SERVER_HOST}/softozor/faas-templates.git
   script:
     - |
-      behave --junit --junit-directory ./features/test-reports --tags ~wip \
+      behave --junit --junit-directory ./features/test-reports --tags current \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
