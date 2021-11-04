@@ -79,9 +79,9 @@ dotnet-tests:
   artifacts:
     reports:
       junit:
-        - ./test-reports/*.xml
+        - serverless/functions/*.Tests/test-reports/*.xml
     paths:
-      - ./test-reports/*.xml
+      - serverless/functions/*.Tests/test-reports/*.xml
   only:
     changes:
       - serverless/functions/**/*
