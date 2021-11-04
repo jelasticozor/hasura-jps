@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors>softozor</Authors>
+        <Product>Softozor FusionAuth Test Fixtures</Product>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+        <DebugType>full</DebugType>
+        <CodeAnalysisRuleSet>..\..\..\code-analysis\stylecop\rules\CodeAnalysisTestProjectDebug.ruleset</CodeAnalysisRuleSet>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+        <DebugType>pdbonly</DebugType>
+        <CodeAnalysisRuleSet>..\..\..\code-analysis\stylecop\rules\CodeAnalysisTestProject.ruleset</CodeAnalysisRuleSet>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Softozor.FusionAuth.TokenValidation\Softozor.FusionAuth.TokenValidation.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="FluentAssertions" Version="6.2.0" />
+	  <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
+	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+	  <PackageReference Include="Moq" Version="4.16.1" />
+	  <PackageReference Include="xunit" Version="2.4.1" />
+	</ItemGroup>
+
+</Project>

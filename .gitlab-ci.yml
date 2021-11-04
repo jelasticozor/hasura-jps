@@ -73,7 +73,7 @@ dotnet-tests:
   before_script:
     - dotnet restore ./HasuraJps.sln
   script:
-    - dotnet test --no-build -c ${CONFIGURATION} --logger:"junit;LogFilePath=.\test-reports\test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" ./HasuraJps.sln
+    - dotnet test -c ${CONFIGURATION} --logger:"junit;LogFilePath=.\test-reports\test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" ./HasuraJps.sln
   artifacts:
     reports:
       junit:

@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Authors>softozor</Authors>
-        <Product>Softozor FusionAuth Login</Product>
+        <Product>Softozor FusionAuth Token Validation</Product>
         <Nullable>enable</Nullable>
         <AssemblyName>HasuraFunction</AssemblyName>
         <RootNamespace>HasuraFunction</RootNamespace>

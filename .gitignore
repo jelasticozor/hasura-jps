@@ -6,3 +6,6 @@ specification/
 
 # JetBrains Rider
 *.sln.iml
+
+# local config
+behave.ini
