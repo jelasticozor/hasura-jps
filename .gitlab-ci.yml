@@ -1,9 +1,11 @@
 stages:
   - publish-docker
   - test
+  - review
   - report
 
 variables:
+  DOTNET_VERSION: "6.0"
   TEST_IMAGE_NAME: softozor/hasura-jps-test
 
 .docker-login: &docker-login
@@ -63,8 +65,27 @@ publish-faas-functions:
     changes:
       - features/data/functions/**/*
 
-acceptance-test:
+dotnet-tests:
   stage: test
+  image: mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64
+  variables:
+    CONFIGURATION: Release
+  before_script:
+    - dotnet restore ./HasuraJps.sln
+  script:
+    - dotnet test --no-build -c ${CONFIGURATION} --logger:"junit;LogFilePath=.\test-reports\test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" ./HasuraJps.sln
+  artifacts:
+    reports:
+      junit:
+        - ./test-reports/*.xml
+    paths:
+      - ./test-reports/*.xml
+  only:
+    changes:
+      - serverless/functions/**/*
+
+acceptance-test:
+  stage: review
   image: ${TEST_IMAGE_NAME}:latest
   before_script:
     # this hack is necessary to allow for a call to faas-cli deploy later in the test that
@@ -83,16 +104,16 @@ acceptance-test:
   artifacts:
     reports:
       junit:
-        - $CI_PROJECT_DIR/features/test-reports/*.xml
+        - ./features/test-reports/*.xml
     paths:
-      - $CI_PROJECT_DIR/features/test-reports/*.xml
+      - ./features/test-reports/*.xml
 
 publish-pickles:
   stage: report
   image: softozor/pickles:2.21.1
   variables:
     APPLICATION_NAME: hasura-jps
-    OUTPUT_DIR: $CI_PROJECT_DIR/pickles
+    OUTPUT_DIR: ./pickles
   script:
     - |
       mono /pickles/Pickles.exe --feature-directory=. \

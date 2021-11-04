@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors>softozor</Authors>
+        <Product>Softozor FusionAuth Login</Product>
+        <Nullable>enable</Nullable>
+        <AssemblyName>HasuraFunction</AssemblyName>
+        <RootNamespace>HasuraFunction</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+        <DebugType>full</DebugType>
+        <CodeAnalysisRuleSet>..\..\..\code-analysis\stylecop\rules\CodeAnalysisNormalProjectDebug.ruleset</CodeAnalysisRuleSet>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+        <DebugType>pdbonly</DebugType>
+        <CodeAnalysisRuleSet>..\..\..\code-analysis\stylecop\rules\CodeAnalysisNormalProject.ruleset</CodeAnalysisRuleSet>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="FusionAuth.Client" Version="1.30.2" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.0-rc.2.21480.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0-rc.2.21480.10" />
+        <PackageReference Include="NullGuard.Fody" Version="3.0.0" />
+        <PackageReference Include="Softozor.HasuraHandling" Version="1.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\FodyWeavers.xml">
+        <Link>FodyWeavers.xml</Link>
+      </Content>
+    </ItemGroup>
+
+</Project>
