@@ -12,8 +12,8 @@ functions:
       AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
       HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
     secrets:
-    - auth-secret
-    - data-protection-secret
+      - auth-secret
+      - data-protection-secret
   test-fixtures:
     lang: dotnet-hasura
     handler: ./Softozor.FusionAuth.TestFixtures

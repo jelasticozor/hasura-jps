@@ -6,6 +6,7 @@ stages:
 
 variables:
   DOTNET_VERSION: "6.0"
+  PACKAGE_SOURCE_NAME: softozor-packages-gitlab
   TEST_IMAGE_NAME: softozor/hasura-jps-test
 
 .docker-login: &docker-login
@@ -71,6 +72,7 @@ dotnet-tests:
   variables:
     CONFIGURATION: Release
   before_script:
+    - dotnet nuget add source "${CI_API_V4_URL}/projects/198/packages/nuget/index.json" --name ${PACKAGE_SOURCE_NAME}
     - dotnet restore ./HasuraJps.sln
   script:
     - dotnet test -c ${CONFIGURATION} --logger:"junit;LogFilePath=.\test-reports\test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" ./HasuraJps.sln
