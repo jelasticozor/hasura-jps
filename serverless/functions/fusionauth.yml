@@ -1,0 +1,44 @@
+version: 1.0
+provider:
+  name: openfaas
+functions:
+  login:
+    lang: dotnet-hasura
+    handler: ./Softozor.FusionAuth.Login
+    image: softozor/fusionauth-login:${IMG_TAG:-latest}
+    build_args:
+      FUNCTION_NAME: Softozor.FusionAuth.Login
+    environment:
+      AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
+    secrets:
+    - auth-secret
+    - data-protection-secret
+  test-fixtures:
+    lang: dotnet-hasura
+    handler: ./Softozor.FusionAuth.TestFixtures
+    image: softozor/fusionauth-test-fixtures:${IMG_TAG:-latest}
+    build_args:
+      FUNCTION_NAME: Softozor.FusionAuth.TestFixtures
+    environment:
+      AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
+    secrets:
+      - auth-secret
+      - data-protection-secret
+  validate-token:
+    lang: dotnet-hasura
+    handler: ./Softozor.FusionAuth.TokenValidation
+    image: softozor/fusionauth-validate-token:${IMG_TAG:-latest}
+    build_args:
+      FUNCTION_NAME: Softozor.FusionAuth.TokenValidation
+    environment:
+      AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
+    secrets:
+      - auth-secret
+      - data-protection-secret
+configuration:
+  templates:
+    - name: dotnet-hasura
+      source: http://gitlab.hidora.com/softozor/faas-templates.git

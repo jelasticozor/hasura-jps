@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/pg/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/pg-protocol/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/pg-types/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/pgpass/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/readable-stream/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/string_decoder/lib" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.9 (hasura-jps)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
