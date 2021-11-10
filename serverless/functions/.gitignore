@@ -382,3 +382,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# faas
+build
+template
