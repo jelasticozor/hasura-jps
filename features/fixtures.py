@@ -71,6 +71,13 @@ def faas_client_factory(context):
 
 
 @fixture
+def fusionauth_version(context):
+    userdata = context.config.userdata
+    context.fusionauth_version = userdata['fusionauth-version']
+    return context.fusionauth_version
+
+
+@fixture
 def fusionauth_port(context):
     context.fusionauth_port = 9011
     return fusionauth_port

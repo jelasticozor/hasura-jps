@@ -25,6 +25,7 @@ def before_all(context):
     use_fixture(fusionauth_admin_email, context)
     use_fixture(fusionauth_issuer, context)
     use_fixture(path_to_serverless_configuration, context)
+    use_fixture(fusionauth_version, context)
     use_fixture(faas_client_factory, context)
     use_fixture(hasura_database_name, context)
     use_fixture(fusionauth_database_name, context)

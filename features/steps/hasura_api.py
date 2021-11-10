@@ -14,6 +14,7 @@ def step_impl(context):
     success_text = context.jps_client.install_from_file(
         context.main_manifest, context.current_env_name, settings={
             'hasuraVersion': context.hasura_version,
+            'fusionauthVersion': context.fusionauth_version,
             'authAdminEmail': context.fusionauth_admin_email,
             'authIssuer': context.fusionauth_issuer
         })
