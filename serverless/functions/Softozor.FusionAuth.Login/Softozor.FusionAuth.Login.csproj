@@ -34,8 +34,8 @@
         <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="FusionAuth.Client" Version="1.30.2" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.0-rc.2.21480.10" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0-rc.2.21480.10" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
         <PackageReference Include="NullGuard.Fody" Version="3.0.0" />
         <PackageReference Include="Softozor.FusionAuth" Version="1.0.1" />
         <PackageReference Include="Softozor.HasuraHandling" Version="1.2.1" />
