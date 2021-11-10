@@ -1,5 +1,6 @@
 type: update
 name: fusionauth
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
@@ -13,9 +14,27 @@ settings:
       caption: Search type
       type: string
       default: database
-    - name: kickstartJson
-      caption: Kickstart
+    - name: adminEmail
+      caption: Admin email
       type: string
+      required: true
+    - name: adminPassword
+      caption: Admin password
+      type: string
+      inputType: password
+      required: true
+    - name: issuer
+      caption: JWT Issuer
+      type: string
+      required: true
+    - name: almightyApiKey
+      caption: API Key (almighty)
+      type: string
+      required: true
+    - name: serverlessApiKey
+      caption: API Key (serverless)
+      type: string
+      required: true
     - type: spacer
       caption: Database
     - name: databaseName
@@ -44,6 +63,7 @@ settings:
 globals:
   APP_MEMORY: 512
   PATH_TO_KICKSTART_JSON: /usr/local/fusionauth/kickstart.json
+  PATH_TO_SETUP_KICKSTART: /usr/local/fusionauth/setup_kickstart.py
 
 onInstall:
   - setupKickstart
@@ -54,7 +74,17 @@ onInstall:
 actions:
   setupKickstart:
     - cmd[auth]:
-        - if [ ! -z "${settings.kickstartJson}" ] ; then wget --quiet ${settings.kickstartJson} -O ${globals.PATH_TO_KICKSTART_JSON}; fi
+        - wget --quiet ${baseUrl}/fusionauth/kickstart.json -O ${globals.PATH_TO_KICKSTART_JSON}
+        - wget --quiet ${baseUrl}/fusionauth/setup_kickstart.py -O ${globals.PATH_TO_SETUP_KICKSTART}
+        # TODO: set CORS allowed origins!
+        -|
+          python3 ${globals.PATH_TO_SETUP_KICKSTART} --admin-email ${settings.adminEmail} \
+            --admin-password ${settings.adminPassword} \
+            --almighty-api-key ${settings.almightyApiKey} \
+            --serverless-api-key ${settings.serverlessApiKey} \
+            --issuer ${settings.issuer} \
+            --input-kickstart ${globals.PATH_TO_KICKSTART_JSON} \
+            --output-kickstart ${globals.PATH_TO_KICKSTART_JSON}
   setupDatabase:
     - cmd[${nodes.sqldb.master.id}]:
         - export PGPASSWORD=${settings.databaseRootPassword}

@@ -13,7 +13,9 @@ from features.utils.faas import deploy
 def step_impl(context):
     success_text = context.jps_client.install_from_file(
         context.main_manifest, context.current_env_name, settings={
-            'kickstartJson': f'{context.base_url}/features/data/fusionauth/kickstart.json'
+            'hasuraVersion': context.hasura_version,
+            'authAdminEmail': context.fusionauth_admin_email,
+            'authIssuer': context.fusionauth_issuer
         })
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)

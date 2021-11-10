@@ -18,24 +18,7 @@ def step_impl(context):
         context.current_env_name)
 
 
-@when(u'a user installs the fusionauth manifest without kick-starting')
-def step_impl(context):
-    context.jps_client.install_from_file(
-        context.fusionauth_manifest, context.current_env_name, settings={
-            'databaseName': context.manifest_data['Auth Database Name'],
-            'databaseRootUsername': context.manifest_data['Database Admin User'],
-            'databaseRootPassword': context.manifest_data['Database Admin Password'],
-            'databaseUsername': context.manifest_data['Auth Database Username'],
-            'databasePassword': context.manifest_data['Auth Database Password']
-        })
-    current_env_info = context.control_client.get_env_info(
-        context.current_env_name)
-    assert current_env_info.is_running()
-    context.current_fusionauth_ip = current_env_info.get_node_ips(
-        node_group='auth', node_type='docker')[0]
-
-
-@when(u'a user installs the fusionauth manifest with kick-starting')
+@when(u'a user installs the fusionauth manifest')
 def step_impl(context):
     context.jps_client.install_from_file(
         context.fusionauth_manifest, context.current_env_name, settings={
@@ -44,7 +27,11 @@ def step_impl(context):
             'databaseRootPassword': context.manifest_data['Database Admin Password'],
             'databaseUsername': context.manifest_data['Auth Database Username'],
             'databasePassword': context.manifest_data['Auth Database Password'],
-            'kickstartJson': f'{context.base_url}/features/data/fusionauth/kickstart.json'
+            'adminEmail': context.fusionauth_admin_email,
+            'adminPassword': 'the-admin-password',
+            'issuer': context.fusionauth_issuer,
+            'almightyApiKey': 'the-fake-almighty-api-key',
+            'serverlessApiKey': 'the-fake-serverless-api-key'
         })
     current_env_info = context.control_client.get_env_info(
         context.current_env_name)
@@ -72,5 +59,5 @@ def fusionauth_is_up(fusionauth_ip, fusionauth_port, timeout_in_sec=300, period_
 
 @then(u'fusionauth is up and running')
 def step_impl(context):
-    assert fusionauth_is_up(context.current_fusionauth_ip,
-                            context.fusionauth_port) is True
+    assert fusionauth_is_up(
+        context.current_fusionauth_ip, context.fusionauth_port) is True

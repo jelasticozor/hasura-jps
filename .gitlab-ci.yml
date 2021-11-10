@@ -119,7 +119,8 @@ acceptance-test:
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
-        -D base-url="http://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/raw/${CI_COMMIT_REF_NAME}"
+        -D base-url="http://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/raw/${CI_COMMIT_REF_NAME}" \
+        -D hasura-version="${HASURA_CLI_VERSION}"
   artifacts:
     reports:
       junit:

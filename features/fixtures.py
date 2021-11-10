@@ -77,6 +77,18 @@ def fusionauth_port(context):
 
 
 @fixture
+def fusionauth_admin_email(context):
+    context.fusionauth_admin_email = 'admin@company.com'
+    return context.fusionauth_admin_email
+
+
+@fixture
+def fusionauth_issuer(context):
+    context.fusionauth_issuer = 'company.com'
+    return context.fusionauth_issuer
+
+
+@fixture
 def new_environment(context):
     context.current_env_name = get_new_random_env_name(
         context.control_client, context.commit_sha, context.worker_id)
@@ -106,13 +118,6 @@ def fusionauth_manifest(context):
     context.fusionauth_manifest = os.path.join(
         context.project_root_folder, 'fusionauth', 'manifest.yml')
     return context.fusionauth_manifest
-
-
-@fixture
-def fusionauth_kickstart(context):
-    context.fusionauth_kickstart = os.path.join(
-        context.project_root_folder, 'features', 'data', 'fusionauth', 'kickstart.json')
-    return context.fusionauth_kickstart
 
 
 @fixture
@@ -159,6 +164,13 @@ def hasura_projects_folder(context):
     context.hasura_projects_folder = os.path.join(
         context.project_root_folder, 'features', 'data', 'database')
     return context.hasura_projects_folder
+
+
+@fixture
+def hasura_version(context):
+    userdata = context.config.userdata
+    context.hasura_version = userdata['hasura-version']
+    return context.hasura_version
 
 
 @fixture

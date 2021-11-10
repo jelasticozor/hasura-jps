@@ -25,7 +25,10 @@ def step_impl(context):
 @given(u'the faas engine is installed')
 def step_impl(context):
     context.jps_client.install_from_file(
-        context.serverless_manifest, context.current_env_name)
+        context.serverless_manifest, context.current_env_name, settings={
+            'authApiKey': 'the-fake-api-key',
+            'authUrl': 'the-fake-auth-url'
+        })
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     faas_node_type = 'docker'
@@ -96,6 +99,5 @@ def step_impl(context, http_status):
 @then(u'she gets content')
 def step_impl(context):
     expected_content = context.text
-    print('expected content = ', expected_content)
-    print('actual   content = ', context.current_function_response_content)
-    assert context.current_function_response_content == expected_content
+    assert context.current_function_response_content == expected_content, \
+        f'expected {expected_content}, got {context.current_function_response_content}'

@@ -8,7 +8,7 @@ Feature: The faas engine
     Given a jelastic environment with an ubuntu-git docker node
     And the faas engine is installed
 
-  Scenario: Log on
+  Scenario: Log on faas engine
 
     The log-on credentials are located under  
     `/var/lib/faasd/secrets/`.
@@ -32,3 +32,7 @@ Feature: The faas engine
       Hello! You said: it is me
 
       """
+
+  # TODO: test that the login and token-validation functions are READY
+
+  # TODO: test that we get the right Auth API Key + Auth URL out of the functions  
