@@ -29,10 +29,12 @@ settings:
       required: true
     - name: almightyApiKey
       caption: API Key (almighty)
+      inputType: password
       type: string
       required: true
     - name: serverlessApiKey
       caption: API Key (serverless)
+      inputType: password
       type: string
       required: true
     - type: spacer
@@ -76,8 +78,8 @@ actions:
     - cmd[auth]:
         - wget --quiet ${baseUrl}/fusionauth/kickstart.json -O ${globals.PATH_TO_KICKSTART_JSON}
         - wget --quiet ${baseUrl}/fusionauth/setup_kickstart.py -O ${globals.PATH_TO_SETUP_KICKSTART}
-        # TODO: set CORS allowed origins!
-        -|
+    # TODO: set CORS allowed origins!
+    - cmd[auth]: |-
           python3 ${globals.PATH_TO_SETUP_KICKSTART} --admin-email ${settings.adminEmail} \
             --admin-password ${settings.adminPassword} \
             --almighty-api-key ${settings.almightyApiKey} \
