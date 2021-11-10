@@ -10,7 +10,7 @@
       <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/readable-stream/lib" />
       <excludeFolder url="file://$MODULE_DIR$/features/data/functions/hasura-action/node_modules/string_decoder/lib" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (hasura-jps)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="3.9 @ Ubuntu-20.04" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

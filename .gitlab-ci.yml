@@ -1,6 +1,6 @@
 stages:
-  - publish-docker
   - test
+  - publish-docker
   - review
   - report
 
@@ -16,6 +16,35 @@ variables:
 .docker-push: &docker-push
   - docker push $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA
   - docker push $DOCKER_IMAGE:latest
+
+.publish-faas-functions: &publish-faas-functions
+  stage: publish-docker
+  image: softozor/faas-cli:${TOOLS_SHA}
+  before_script:
+    - *docker-login
+  script:
+    - cd $PATH_TO_FUNCTIONS
+    - faas-cli build -f ./${FAAS_CONFIG}.yml
+    - faas-cli push -f ./${FAAS_CONFIG}.yml
+
+dotnet-tests:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64
+  variables:
+    CONFIGURATION: Release
+  before_script:
+    - dotnet nuget add source "${CI_API_V4_URL}/projects/198/packages/nuget/index.json" --name ${PACKAGE_SOURCE_NAME}
+  script:
+    - dotnet test -c ${CONFIGURATION} --logger:"junit;LogFilePath=.\test-reports\test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" ./HasuraJps.sln
+  artifacts:
+    reports:
+      junit:
+        - serverless/functions/*.Tests/test-reports/*.xml
+    paths:
+      - serverless/functions/*.Tests/test-reports/*.xml
+  only:
+    changes:
+      - serverless/functions/**/*
 
 publish-feature-test-image:
   stage: publish-docker
@@ -52,37 +81,25 @@ publish-faas-image:
     changes:
       - ci/ubuntu/Dockerfile
 
-publish-faas-functions:
-  stage: publish-docker
-  image: softozor/faas-cli:${TOOLS_SHA}
-  before_script:
-    - *docker-login
-  script:
-    - cd ${CI_PROJECT_DIR}/features/data/functions
-    - faas-cli build -f ./faas.yml
-    - faas-cli push -f ./faas.yml
+publish-test-faas-functions:
+  <<: *publish-faas-functions
+  variables:
+    FAAS_CONFIG: faas
+    PATH_TO_FUNCTIONS: features/data/functions
   only:
     refs:
       - master
     changes:
       - features/data/functions/**/*
 
-dotnet-tests:
-  stage: test
-  image: mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64
+publish-fusionauth-functions:
+  <<: *publish-faas-functions
   variables:
-    CONFIGURATION: Release
-  before_script:
-    - dotnet nuget add source "${CI_API_V4_URL}/projects/198/packages/nuget/index.json" --name ${PACKAGE_SOURCE_NAME}
-  script:
-    - dotnet test -c ${CONFIGURATION} --logger:"junit;LogFilePath=.\test-reports\test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" ./HasuraJps.sln
-  artifacts:
-    reports:
-      junit:
-        - serverless/functions/*.Tests/test-reports/*.xml
-    paths:
-      - serverless/functions/*.Tests/test-reports/*.xml
+    FAAS_CONFIG: fusionauth
+    PATH_TO_FUNCTIONS: serverless/functions
   only:
+    refs:
+      - master
     changes:
       - serverless/functions/**/*
 

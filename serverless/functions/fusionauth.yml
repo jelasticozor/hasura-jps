@@ -14,18 +14,6 @@ functions:
     secrets:
       - auth-secret
       - data-protection-secret
-  test-fixtures:
-    lang: dotnet-hasura
-    handler: ./Softozor.FusionAuth.TestFixtures
-    image: softozor/fusionauth-test-fixtures:${IMG_TAG:-latest}
-    build_args:
-      FUNCTION_NAME: Softozor.FusionAuth.TestFixtures
-    environment:
-      AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
-      HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
-    secrets:
-      - auth-secret
-      - data-protection-secret
   validate-token:
     lang: dotnet-hasura
     handler: ./Softozor.FusionAuth.TokenValidation
@@ -37,7 +25,6 @@ functions:
       HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
     secrets:
       - auth-secret
-      - data-protection-secret
 configuration:
   templates:
     - name: dotnet-hasura

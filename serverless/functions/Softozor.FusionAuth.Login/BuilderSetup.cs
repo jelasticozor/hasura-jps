@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
+using Softozor.FusionAuth;
 using Softozor.HasuraHandling.Interfaces;
 
 public static class BuilderSetup
@@ -12,6 +13,8 @@ public static class BuilderSetup
         builder.Services.AddDataProtection();
 
         builder.Services.AddAutoMapper(typeof(BuilderSetup));
+
+        builder.Services.AddFusionAuthClient();
 
         builder.Services.AddTransient(
                 srvProvider =>
