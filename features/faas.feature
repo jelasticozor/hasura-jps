@@ -16,6 +16,7 @@ Feature: The faas engine
     When a user logs on the faas engine
     Then she gets a success response
 
+  # TODO: the following two scenarios are probably useless  
   Scenario: Deploy new function
 
     Given a user is logged on the faas engine
@@ -33,6 +34,4 @@ Feature: The faas engine
 
       """
 
-  # TODO: test that the login and token-validation functions are READY
-
-  # TODO: test that we get the right Auth API Key + Auth URL out of the functions  
+  # TODO: test that we get the right Auth API Key + Auth URL + data protection secret key out of the functions  

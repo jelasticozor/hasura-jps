@@ -118,6 +118,8 @@ Feature: Hasura API
     """
     Then she gets state 'DOING'
 
+  # TODO: test that the login and token-validation functions are READY
+
   # TODO: try to log on as a user with some permissions and call a mutation requiring that permission (e.g. delete todo)
   # --> should work
 

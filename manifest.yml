@@ -87,10 +87,13 @@ nodes:
 skipNodeEmails: true
 
 onInstall:
-  - installFaas
-  - installHasura
-  - installLoadBalancer
   - installFusionAuth
+  # the faas engine uses fusionauth
+  - installFaas
+  # hasura uses the faas engine
+  - installHasura
+  # the load balancer uses hasura
+  - installLoadBalancer
 
 actions:
   installFaas:
