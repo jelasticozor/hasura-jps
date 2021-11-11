@@ -155,7 +155,7 @@ success:
     **Auth Database Username**: ${globals.DB_AUTH_USERNAME}  
     **Auth Database Password**: ${globals.DB_AUTH_PASSWORD}  
     **Auth Admin Email**: ${settings.authAdminEmail}  
-    **Auth Admin Password**: ${settings.authAdminPassword}  
+    **Auth Admin Password**: ${globals.AUTH_ADMIN_PASSWORD}  
     **Auth Almighty API Key**: ${globals.ALMIGHTY_API_KEY}  
     **Auth Serverless API Key**: ${globals.SERVERLESS_API_KEY}  
     **Data Protection Secret Key**: ${globals.DATA_PROTECTION_SECRET_KEY}
