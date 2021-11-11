@@ -32,16 +32,16 @@ actions:
         - apt install -y netcat
   installEngine:
     - cmd[faas]:
-    - git clone https://github.com/openfaas/faasd
-    - cd faasd
+        - git clone https://github.com/openfaas/faasd
+        - cd faasd
         - ./hack/install.sh
   waitUntilEngineIsUp:
     - cmd[faas]:
         - while ! nc -z localhost 8080 ; do sleep 1 ; done
   pullTemplatesForFunctionDeployment:
     - cmd[faas]:
-      - faas-cli template pull
-      - faas-cli template pull http://gitlab.hidora.com/softozor/faas-templates.git
+        - faas-cli template pull
+        - faas-cli template pull http://gitlab.hidora.com/softozor/faas-templates.git
   deployAuthFunctions:
     - forEach(nodes.faas):
         - api:
