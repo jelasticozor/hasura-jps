@@ -20,16 +20,12 @@ settings:
       required: true
 
 onInstall:
-  - installDiagnosticTools
   - installEngine
   - waitUntilEngineIsUp
   - pullTemplatesForFunctionDeployment
   - deployAuthFunctions
 
 actions:
-  installDiagnosticTools:
-    - cmd[faas]:
-        - apt update -y && apt install -y netcat
   installEngine:
     - cmd[faas]:
         - git clone https://github.com/openfaas/faasd
