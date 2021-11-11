@@ -29,7 +29,7 @@ onInstall:
 actions:
   installDiagnosticTools:
     - cmd[faas]:
-        - apt install -y netcat
+        - apt update -y && apt install -y netcat
   installEngine:
     - cmd[faas]:
         - git clone https://github.com/openfaas/faasd
