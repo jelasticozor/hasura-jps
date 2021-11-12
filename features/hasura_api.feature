@@ -8,20 +8,11 @@ Feature: Hasura API
 
   Background: The main manifest is installed
 
-    Given the user has installed the main manifest
-
-  Scenario: The Jelastic environment is well-defined
-
   Fusionauth is available <==> its `/api/status` endpoint returns status code `200`  
   Faas is available       <==> it is possible to log on it  
   Hasura is available     <==> its `/healthz` endpoint returns status code `200`  
 
-  The Auth Serverless API Key and Data Protection Secret Key are provided by the manifest's success text.
-
-    Then there is 1 docker node in the faas node group
-    And there are 2 postgres13 nodes in the sqldb node group
-    And there is 1 docker node in the cp node group
-    And there is 1 nginx-dockerized node in the bl node group
+    Given the user has installed the main manifest
     And fusionauth is available
     And the faas engine is available
     And hasura is available
@@ -29,6 +20,13 @@ Feature: Hasura API
     And the validate-token function is ready
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
     And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'
+
+  Scenario: The Jelastic environment is well-defined
+
+    Then there is 1 docker node in the faas node group
+    And there are 2 postgres13 nodes in the sqldb node group
+    And there is 1 docker node in the cp node group
+    And there is 1 nginx-dockerized node in the bl node group
 
   # TODO: check that the nginx has ssl installed
 
