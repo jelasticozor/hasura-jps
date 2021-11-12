@@ -6,7 +6,9 @@ from softozor_graphql_client import GraphQLClient
 from softozor_test_utils.sockets import host_has_port_open
 from test_utils.manifest_data import get_manifest_data
 
-from features.utils.faas import deploy
+from features.utils.faas import deploy, is_function_ready, faas_is_up
+from features.utils.fusionauth import fusionauth_is_up
+from features.utils.hasura import hasura_is_up
 
 
 @given(u'the user has installed the main manifest')
@@ -22,12 +24,15 @@ def step_impl(context):
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)
     assert context.current_env_info.is_running()
-    cp_node_ip = context.current_env_info.get_node_ips(node_group='cp')[0]
+    context.hasura_node_ip = context.current_env_info.get_node_ips(node_group='cp')[
+        0]
     external_api_endpoint = f'http://{context.current_env_info.domain()}/v1/graphql'
-    internal_hasura_endpoint = f'http://{cp_node_ip}:{context.hasura_internal_port}'
+    internal_hasura_endpoint = f'http://{context.hasura_node_ip}:{context.hasura_internal_port}'
     context.internal_graphql_endpoint = f'{internal_hasura_endpoint}/v1/graphql'
     context.manifest_data = get_manifest_data(success_text)
     hasura_admin_secret = context.manifest_data['Hasura Admin Secret']
+    assert host_has_port_open(context.hasura_node_ip,
+                              context.hasura_internal_port)
     context.hasura_client = context.hasura_client_factory.create(
         internal_hasura_endpoint, hasura_admin_secret)
     context.graphql_client = GraphQLClient(
@@ -49,7 +54,6 @@ def step_impl(context):
             password=admin_password,
             database=context.fusionauth_database_name)
     }
-    # TODO: refactor --> this is duplicated from faas_steps
     faas_node_type = 'docker'
     faas_node_group = 'faas'
     faas_node_ip = context.current_env_info.get_node_ips(
@@ -67,6 +71,10 @@ def step_impl(context):
         node_group=faas_node_group)
     context.faas_client = context.faas_client_factory.create(
         faas_node_ip, username, password)
+    context.current_fusionauth_ip = context.current_env_info.get_node_ips(
+        node_group='auth', node_type='docker')[0]
+    assert host_has_port_open(
+        context.current_fusionauth_ip, context.fusionauth_port)
 
 
 @given(u'its database metadata')
@@ -140,6 +148,28 @@ def step_impl(context):
         query=query, variables=variables, run_as_admin=False)
     print('response = ', response)
     context.actual_todo = response['data']['todos_by_pk']
+
+
+@then("fusionauth is available")
+def step_impl(context):
+    assert fusionauth_is_up(
+        context.current_fusionauth_ip, context.fusionauth_port) is True
+
+
+@then("the faas engine is available")
+def step_impl(context):
+    assert faas_is_up(context.faas_client) is True
+
+
+@then("hasura is available")
+def step_impl(context):
+    assert hasura_is_up(
+        context.hasura_node_ip, context.hasura_internal_port) is True
+
+
+@then("the {function_name} function is ready")
+def step_impl(context, function_name):
+    assert is_function_ready(context.faas_client, function_name) is True
 
 
 @then('the following extensions are installed on the {database_name} database')

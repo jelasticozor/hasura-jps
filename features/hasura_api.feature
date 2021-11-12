@@ -1,7 +1,7 @@
 Feature: Hasura API
 
-  As a manifest user,  
-  I want to base on hasura  
+  As a manifest user,
+  I want to base on hasura
   to build my software.
 
   The requirements for hasura are documented [here](https://hasura.io/docs/latest/graphql/core/deployment/postgres-requirements.html).
@@ -12,19 +12,28 @@ Feature: Hasura API
 
   Scenario: The Jelastic environment is well-defined
 
+  Fusionauth is available <==> its `/api/status` endpoint returns status code `200`
+  Faas is available       <==> it is possible to log on it
+  Hasura is available     <==> its `/healthz` endpoint returns status code `200`
+
     Then there is 1 docker node in the faas node group
-    And there are 2 postgres13 nodes in the sqldb node group  
+    And there are 2 postgres13 nodes in the sqldb node group
     And there is 1 docker node in the cp node group
     And there is 1 nginx-dockerized node in the bl node group
+    And fusionauth is available
+    And the faas engine is available
+    And hasura is available
+    And the login function is ready
+    And the validate-token function is ready
 
   # TODO: check that the nginx has ssl installed
 
   Scenario: The database meets the relevant preconditions
 
-    The only extension required by hasura is [pgcrypto](https://www.postgresql.org/docs/13/pgcrypto.html).  
-    The [citext extension](https://www.postgresql.org/docs/13/citext.html) provides case-insensitive character  
-    string type and the [uuid-ossp extension](https://www.postgresql.org/docs/13/uuid-ossp.html) provides functions  
-    to generate UUIDs.
+  The only extension required by hasura is [pgcrypto](https://www.postgresql.org/docs/13/pgcrypto.html).
+  The [citext extension](https://www.postgresql.org/docs/13/citext.html) provides case-insensitive character
+  string type and the [uuid-ossp extension](https://www.postgresql.org/docs/13/uuid-ossp.html) provides functions
+  to generate UUIDs.
 
     Then the following extensions are installed on the hasura database
       | extension |
@@ -38,16 +47,16 @@ Feature: Hasura API
 
   Scenario: Hasura accepts database migrations
 
-    This is one way to check that hasura is up and running.
+  This is one way to check that hasura is up and running.
 
     When the user applies the database migrations of the 'todo_project'
     Then she gets success
 
   Scenario: The hasura API is functional
 
-    After successful installation, hasura makes a graphql API  
-    available. Here we install a simple todo project and try to  
-    query a todo after its successful insertion into the database.
+  After successful installation, hasura makes a graphql API
+  available. Here we install a simple todo project and try to
+  query a todo after its successful insertion into the database.
 
     Given the user has applied the database migrations of the 'todo_project'
     And its database metadata
@@ -79,12 +88,12 @@ Feature: Hasura API
 
   Scenario: The faas engine integrates with hasura API
 
-    The faas engine makes serverless functions available for  
-    binding with hasura actions or events. Here we call our  
-    test `do` mutation which calls the `hasura-action` function  
-    on the faas engine through the mechanism of hasura actions.  
-    The `hasura-action` function changes a todo's state to  
-    `DOING`.
+  The faas engine makes serverless functions available for
+  binding with hasura actions or events. Here we call our
+  test `do` mutation which calls the `hasura-action` function
+  on the faas engine through the mechanism of hasura actions.
+  The `hasura-action` function changes a todo's state to
+  `DOING`.
 
     Given the 'hasura-action' function has been deployed on the faas engine
     And the user has applied the database migrations of the 'todo_project'
@@ -118,9 +127,9 @@ Feature: Hasura API
     """
     Then she gets state 'DOING'
 
-  # TODO: test that the login and token-validation functions are READY
-
   # TODO: try to log on as a user with some permissions and call a mutation requiring that permission (e.g. delete todo)
   # --> should work
 
   # TODO: try to call the mutation requiring permission without permission
+
+  # TODO: test that we get the right Auth API Key + Auth URL + data protection secret key out of the functions  

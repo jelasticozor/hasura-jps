@@ -2,10 +2,6 @@ version: 1.0
 provider:
   name: openfaas
 functions:
-  hello-python:
-    lang: python
-    handler: ./hello-python
-    image: softozor/hello-python:latest
   hasura-action:
     lang: node-hasura
     handler: ./hasura-action

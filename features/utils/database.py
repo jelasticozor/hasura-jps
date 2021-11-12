@@ -1,4 +1,4 @@
-from softozor_test_utils.timing import wait_until
+from softozor_test_utils.timing import fail_after_timeout
 
 
 def database_contains_table(database_connection, table_name, timeout_in_sec=120, period_in_sec=0.1):
@@ -13,11 +13,4 @@ def database_contains_table(database_connection, table_name, timeout_in_sec=120,
             """, (table_name,))
         return cursor.fetchone()[0]
 
-    try:
-        wait_until(
-            lambda: test_table(),
-            timeout_in_sec=timeout_in_sec,
-            period_in_sec=period_in_sec)
-        return True
-    except TimeoutError:
-        return False
+    return fail_after_timeout(lambda: test_table(), timeout_in_sec, period_in_sec)

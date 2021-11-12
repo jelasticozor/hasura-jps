@@ -18,8 +18,6 @@ def before_all(context):
     use_fixture(project_root_folder, context)
     use_fixture(test_manifests_folder, context)
     use_fixture(main_manifest, context)
-    use_fixture(serverless_manifest, context)
-    use_fixture(fusionauth_manifest, context)
     use_fixture(faas_port, context)
     use_fixture(fusionauth_port, context)
     use_fixture(fusionauth_admin_email, context)
