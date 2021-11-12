@@ -48,6 +48,7 @@ globals:
   # faas
   FAAS_PORT: 8080
   # auth
+  AUTH_PORT: 9011
   AUTH_ADMIN_PASSWORD: ${fn.password(20)}
   DATA_PROTECTION_SECRET_KEY: ${fn.password(40)}
   ALMIGHTY_API_KEY: ${fn.password(40)}
@@ -101,7 +102,7 @@ actions:
       jps: serverless/manifest.yml
       settings:
         authApiKey: ${globals.SERVERLESS_API_KEY}
-        authUrl: http://${nodes.auth.master.intIP}:${globals.FAAS_PORT}
+        authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
         dataProtectionSecretKey: ${globals.DATA_PROTECTION_SECRET_KEY}
   installHasura:
     install:
