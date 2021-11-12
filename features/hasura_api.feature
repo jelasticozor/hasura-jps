@@ -1,7 +1,7 @@
 Feature: Hasura API
 
-  As a manifest user,
-  I want to base on hasura
+  As a manifest user,  
+  I want to base on hasura  
   to build my software.
 
   The requirements for hasura are documented [here](https://hasura.io/docs/latest/graphql/core/deployment/postgres-requirements.html).
@@ -12,9 +12,11 @@ Feature: Hasura API
 
   Scenario: The Jelastic environment is well-defined
 
-  Fusionauth is available <==> its `/api/status` endpoint returns status code `200`
-  Faas is available       <==> it is possible to log on it
-  Hasura is available     <==> its `/healthz` endpoint returns status code `200`
+  Fusionauth is available <==> its `/api/status` endpoint returns status code `200`  
+  Faas is available       <==> it is possible to log on it  
+  Hasura is available     <==> its `/healthz` endpoint returns status code `200`  
+
+  The Auth Serverless API Key and Data Protection Secret Key are provided by the manifest's success text.
 
     Then there is 1 docker node in the faas node group
     And there are 2 postgres13 nodes in the sqldb node group
@@ -25,6 +27,8 @@ Feature: Hasura API
     And hasura is available
     And the login function is ready
     And the validate-token function is ready
+    And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
+    And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'
 
   # TODO: check that the nginx has ssl installed
 
@@ -131,5 +135,3 @@ Feature: Hasura API
   # --> should work
 
   # TODO: try to call the mutation requiring permission without permission
-
-  # TODO: test that we get the right Auth API Key + Auth URL + data protection secret key out of the functions  

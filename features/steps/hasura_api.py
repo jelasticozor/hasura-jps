@@ -1,6 +1,7 @@
 import os
 
 import psycopg2
+import requests
 from behave import *
 from softozor_graphql_client import GraphQLClient
 from softozor_test_utils.sockets import host_has_port_open
@@ -170,6 +171,24 @@ def step_impl(context):
 @then("the {function_name} function is ready")
 def step_impl(context, function_name):
     assert is_function_ready(context.faas_client, function_name) is True
+
+
+@then("the faas functions find the '{secret_content}' in the '{secret_name}'")
+def step_impl(context, secret_name, secret_content):
+    function_name = 'check-env'
+    context.faas_client.login()
+    deployment_success = deploy(
+        context.faas_client, context.path_to_serverless_configuration, function_name)
+    assert deployment_success is True
+
+    rq = requests.post(
+        f'http://{context.faas_client.endpoint}/function/{context.function_name}')
+    assert rq.status_code == 200, f'expected status 200, got {rq.status_code}'
+    secrets = rq.json
+
+    expected_secret = context.manifest_data[secret_content]
+    assert expected_secret == secrets[
+        secret_name], f'expected secret {expected_secret}, got {secrets[secret_name]}'
 
 
 @then('the following extensions are installed on the {database_name} database')

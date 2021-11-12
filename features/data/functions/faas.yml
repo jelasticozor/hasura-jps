@@ -8,6 +8,13 @@ functions:
     image: softozor/hasura-action:latest
     environment:
       GRAPHQL_ENDPOINT: ${GRAPHQL_ENDPOINT}
+  check-env:
+    lang: python
+    handler: ./check-env
+    image: softozor/check-env:latest
+    secrets:
+      - auth-secret
+      - data-protection-secret
 configuration:
   templates:
     - name: node-hasura
