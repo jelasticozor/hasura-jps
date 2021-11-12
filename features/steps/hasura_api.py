@@ -113,6 +113,8 @@ def step_impl(context, secret_name, secret_content):
     assert rq.status_code == 200, f'expected status 200, got {rq.status_code}'
     secrets = rq.json
 
+    print('secrets = ', secrets)
+
     expected_secret = context.manifest_data[secret_content]
     assert expected_secret == secrets[
         secret_name], f'expected secret {expected_secret}, got {secrets[secret_name]}'
