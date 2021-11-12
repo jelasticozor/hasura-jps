@@ -18,6 +18,10 @@ settings:
       caption: Auth URL
       type: string
       required: true
+    - name: fncTag
+      caption: Docker tag
+      type: string
+      required: true
 
 onInstall:
   - installEngine
@@ -47,6 +51,7 @@ actions:
                 vars:
                   AUTH_URL: ${settings.authUrl}
                   HASURA_CLAIMS_NAMESPACE: https://hasura.io/jwt/claims
+                  IMG_TAG: ${settings.fncTag}
     - cmd[faas]:
         - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"

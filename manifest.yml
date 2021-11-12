@@ -32,6 +32,12 @@ settings:
       caption: JWT issuer
       type: string
       default: your-company.com
+    - type: spacer
+      caption: Faas
+    - name: fncTag
+      caption: Docker tag
+      type: string
+      default: latest
 
 globals:
   # postgres
@@ -104,6 +110,7 @@ actions:
         authApiKey: ${globals.SERVERLESS_API_KEY}
         authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
         dataProtectionSecretKey: ${globals.DATA_PROTECTION_SECRET_KEY}
+        fncTag: ${settings.fncTag}
   installHasura:
     install:
       jps: hasura/manifest.yml

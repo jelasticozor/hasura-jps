@@ -16,7 +16,8 @@ def step_impl(context):
             'hasuraVersion': context.hasura_version,
             'fusionauthVersion': context.fusionauth_version,
             'authAdminEmail': context.fusionauth_admin_email,
-            'authIssuer': context.fusionauth_issuer
+            'authIssuer': context.fusionauth_issuer,
+            'fncTag': context.commit_sha
         })
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)

@@ -26,7 +26,8 @@ def step_impl(context):
         context.serverless_manifest, context.current_env_name, settings={
             'authApiKey': 'the-fake-api-key',
             'authUrl': 'the-fake-auth-url',
-            'dataProtectionSecretKey': 'the-fake-data-protection-secret-key'
+            'dataProtectionSecretKey': 'the-fake-data-protection-secret-key',
+            'fncTag': context.commit_sha
         })
     context.current_env_info = context.control_client.get_env_info(
         context.current_env_name)

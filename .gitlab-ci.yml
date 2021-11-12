@@ -24,8 +24,10 @@ variables:
     - *docker-login
   script:
     - cd $PATH_TO_FUNCTIONS
-    - faas-cli build -f ./${FAAS_CONFIG}.yml
-    - faas-cli push -f ./${FAAS_CONFIG}.yml
+    - IMG_TAG=${CI_COMMIT_SHORT_SHA} faas-cli build -f ./${FAAS_CONFIG}.yml
+    - IMG_TAG=${CI_COMMIT_SHORT_SHA} faas-cli push -f ./${FAAS_CONFIG}.yml
+    - IMG_TAG=latest faas-cli build -f ./${FAAS_CONFIG}.yml
+    - IMG_TAG=latest faas-cli push -f ./${FAAS_CONFIG}.yml
 
 dotnet-tests:
   stage: test
@@ -97,11 +99,6 @@ publish-fusionauth-functions:
   variables:
     FAAS_CONFIG: fusionauth
     PATH_TO_FUNCTIONS: serverless/functions
-  only:
-    refs:
-      - master
-    changes:
-      - serverless/functions/**/*
 
 acceptance-test:
   stage: review
