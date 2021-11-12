@@ -1,0 +1,11 @@
+actions:
+- name: login
+  definition:
+    kind: synchronous
+    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/login
+custom_types:
+  enums: []
+  input_objects: []
+  objects:
+  - name: LoginResponse
+  scalars: []
