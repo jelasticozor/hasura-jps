@@ -62,7 +62,6 @@ settings:
 onInstall:
   - setupDatabase
   - setupAppContainer
-  - redirectAppPort
   - restartContainers[cp]
 
 actions:
@@ -88,7 +87,3 @@ actions:
                   HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
                   FAAS_HOSTNAME: ${settings.faasHostname}
                   FAAS_PORT: ${settings.faasPort}
-  redirectAppPort:
-    - cmd[cp]:
-        - firewall-cmd --permanent --add-port=${settings.serverPort}/tcp
-        - firewall-cmd --reload

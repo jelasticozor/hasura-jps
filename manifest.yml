@@ -84,7 +84,7 @@ nodes:
   cloudlets: 32
   nodeGroup: cp
   nodeType: docker
-  image: hasura/graphql-engine:${settings.hasuraVersion}.centos
+  image: hasura/graphql-engine:${settings.hasuraVersion}
 - displayName: auth
   count: 1
   cloudlets: 32
