@@ -111,7 +111,7 @@ def step_impl(context, secret_name, secret_content):
     rq = requests.post(
         f'http://{context.faas_client.endpoint}/function/{function_name}')
     assert rq.status_code == 200, f'expected status 200, got {rq.status_code}'
-    secrets = rq.json
+    secrets = rq.json()
 
     print('secrets = ', secrets)
 
