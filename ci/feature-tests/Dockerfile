@@ -2,6 +2,7 @@ ARG HASURA_CLI_VERSION
 
 FROM python:3.9-slim AS build
 
+ARG FUSIONAUTH_VERSION
 ARG FAAS_CLI_VERSION
 
 COPY ./requirements.txt .
@@ -10,7 +11,8 @@ COPY ./requirements.txt .
 RUN apt update && apt install -y gcc git curl \
   && curl -sSL https://github.com/openfaas/faas-cli/releases/download/${FAAS_CLI_VERSION}/faas-cli --output /usr/local/bin/faas-cli \
   && chmod u+x /usr/local/bin/faas-cli \
-  && pip install --no-cache-dir -r requirements.txt
+  && pip install --no-cache-dir -r requirements.txt \
+  && pip install fusionauth-client==${FUSIONAUTH_VERSION}
 
 FROM hasura/graphql-engine:${HASURA_CLI_VERSION}.cli-migrations-v3 AS hasura-migrations
 

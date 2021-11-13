@@ -30,10 +30,9 @@ def before_all(context):
     use_fixture(database_user, context)
     use_fixture(database_password, context)
     use_fixture(close_database_connections, context)
-    use_fixture(hasura_projects_folder, context)
     use_fixture(hasura_client_factory, context)
     use_fixture(hasura_internal_port, context)
 
 
 def before_scenario(context, scenario):
-    use_fixture(new_environment, context)
+    pass
