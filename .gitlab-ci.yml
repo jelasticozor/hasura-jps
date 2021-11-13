@@ -115,6 +115,8 @@ publish-fusionauth-functions:
   variables:
     FAAS_CONFIG: fusionauth
     PATH_TO_FUNCTIONS: serverless/functions
+  # build everytime because we deploy the function images with tag
+  # set to commit sha, therefore the images must exist
 
 acceptance-test:
   stage: review
