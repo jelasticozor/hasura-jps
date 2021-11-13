@@ -3,11 +3,19 @@ type Mutation {
     username: String!
     password: String!
     appId: uuid!
-  ): LoginResponse
+  ): login_response
 }
 
-type LoginResponse {
+type Mutation {
+  validate_token: validate_token_response
+}
+
+type login_response {
   token: String!
+  userId: uuid!
+}
+
+type validate_token_response {
   userId: uuid!
 }
 

@@ -27,8 +27,6 @@ public static class AppSetup
             {
                 var input = ExtractInput(http);
 
-                logger.LogInformation($"bearer token = {input.Token}");
-
                 try
                 {
                     var output = await handler.Handle(input);
