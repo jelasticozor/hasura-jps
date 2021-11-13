@@ -160,13 +160,6 @@ def hasura_projects_folder(context):
 
 
 @fixture
-def hasura_version(context):
-    userdata = context.config.userdata
-    context.hasura_version = userdata['hasura-version']
-    return context.hasura_version
-
-
-@fixture
 def hasura_client_factory(context):
     context.hasura_client_factory = HasuraClientFactory(
         'default')

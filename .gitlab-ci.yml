@@ -48,6 +48,21 @@ dotnet-tests:
     changes:
       - serverless/functions/**/*
 
+publish-graphql-engine-image:
+  stage: publish-docker
+  image: docker:latest
+  variables:
+    DOCKER_IMAGE: softozor/graphql-engine
+  before_script:
+    - *docker-login
+  script:
+    - |
+      docker build . -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest \
+        --build-arg HASURA_VERSION=${HASURA_CLI_VERSION}
+    - *docker-push
+  # always build because it depends on the HASURA_CLI_VERSION env var
+  # if that var chages, this can't be detected
+
 publish-feature-test-image:
   stage: publish-docker
   image: docker:latest
@@ -117,7 +132,6 @@ acceptance-test:
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
         -D base-url="http://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/raw/${CI_COMMIT_REF_NAME}" \
-        -D hasura-version="${HASURA_CLI_VERSION}" \
         -D fusionauth-version="${FUSIONAUTH_VERSION}"
   artifacts:
     reports:

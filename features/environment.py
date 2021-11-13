@@ -31,7 +31,6 @@ def before_all(context):
     use_fixture(database_password, context)
     use_fixture(close_database_connections, context)
     use_fixture(hasura_projects_folder, context)
-    use_fixture(hasura_version, context)
     use_fixture(hasura_client_factory, context)
     use_fixture(hasura_internal_port, context)
 

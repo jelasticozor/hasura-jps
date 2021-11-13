@@ -16,7 +16,7 @@ from features.utils.hasura import hasura_is_up
 def step_impl(context):
     success_text = context.jps_client.install_from_file(
         context.main_manifest, context.current_env_name, settings={
-            'hasuraVersion': context.hasura_version,
+            'graphqlEngineTag': context.commit_sha,
             'fusionauthVersion': context.fusionauth_version,
             'authAdminEmail': context.fusionauth_admin_email,
             'authIssuer': context.fusionauth_issuer,
@@ -112,8 +112,6 @@ def step_impl(context, secret_name, secret_content):
         f'http://{context.faas_client.endpoint}/function/{function_name}')
     assert rq.status_code == 200, f'expected status 200, got {rq.status_code}'
     secrets = rq.json()
-
-    print('secrets = ', secrets)
 
     expected_secret = context.manifest_data[secret_content]
     assert expected_secret == secrets[

@@ -47,6 +47,7 @@ Feature: Hasura API
       | hdb_catalog |
       | hdb_views   |
 
+  # TODO: this scenario is too much  
   Scenario: Hasura accepts database migrations
 
   This is one way to check that hasura is up and running.
@@ -54,6 +55,7 @@ Feature: Hasura API
     When the user applies the database migrations of the 'todo_project'
     Then she gets success
 
+  # TODO: this scenario is too much
   Scenario: The hasura API is functional
 
   After successful installation, hasura makes a graphql API
@@ -88,6 +90,7 @@ Feature: Hasura API
     """
     And state 'NEW'
 
+  # TODO: this scenario is too much
   Scenario: The faas engine integrates with hasura API
 
   The faas engine makes serverless functions available for
@@ -128,6 +131,8 @@ Feature: Hasura API
     }
     """
     Then she gets state 'DOING'
+
+  # TODO: replace the above scenarios with a scenario where we log on and validate the token
 
   # TODO: try to log on as a user with some permissions and call a mutation requiring that permission (e.g. delete todo)
   # --> should work

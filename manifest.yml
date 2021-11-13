@@ -6,10 +6,10 @@ settings:
   fields:
     - type: spacer
       caption: Hasura
-    - name: hasuraVersion
-      caption: Hasura version
+    - name: graphqlEngineTag
+      caption: Graphql Engine Tag
       type: string
-      default: v2.0.9
+      default: latest
     - name: enableHasuraConsole
       caption: Enable console
       type: checkbox
@@ -84,7 +84,7 @@ nodes:
   cloudlets: 32
   nodeGroup: cp
   nodeType: docker
-  image: hasura/graphql-engine:${settings.hasuraVersion}
+  image: softozor/graphql-engine:${settings.graphqlEngineTag}
 - displayName: auth
   count: 1
   cloudlets: 32
