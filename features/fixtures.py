@@ -61,10 +61,10 @@ def faas_port(context):
     return faas_port
 
 
-def path_to_serverless_configuration(context):
-    context.path_to_serverless_configuration = os.path.join(
+def path_to_serverless_test_configuration(context):
+    context.path_to_serverless_test_configuration = os.path.join(
         context.project_root_folder, 'features', 'data', 'functions', 'faas.yml')
-    return context.path_to_serverless_configuration
+    return context.path_to_serverless_test_configuration
 
 
 @fixture
@@ -100,7 +100,14 @@ def fusionauth_issuer(context):
 
 
 @fixture
-def full_environment(context):
+def main_manifest(context):
+    context.main_manifest = os.path.join(
+        context.project_root_folder, 'manifest.yml')
+    return context.main_manifest
+
+
+@fixture
+def jelastic_environment(context):
     context.current_env_name = get_new_random_env_name(
         context.control_client, context.commit_sha, context.worker_id)
 
@@ -128,20 +135,31 @@ def full_environment(context):
         internal_hasura_endpoint, hasura_admin_secret)
     context.graphql_client = GraphQLClient(
         external_api_endpoint, hasura_admin_secret)
-    # TODO: factor this out somehow for reuse in the next fixture
-    database_node_ip = context.current_env_info.get_node_ip_from_name(
-        'Primary')
-    assert database_node_ip is not None
+    primary_node_ip = context.current_env_info.get_node_ip_from_name('Primary')
+    assert primary_node_ip is not None
+    secondary_node_ip = context.current_env_info.get_node_ip_from_name(
+        'Secondary')
+    assert secondary_node_ip is not None
     admin_user = context.manifest_data['Database Admin User']
     admin_password = context.manifest_data['Database Admin Password']
     context.connections = {
+        'primary': psycopg2.connect(
+            host=primary_node_ip,
+            user=admin_user,
+            password=admin_password,
+            database=context.hasura_database_name),
+        'secondary': psycopg2.connect(
+            host=secondary_node_ip,
+            user=admin_user,
+            password=admin_password,
+            database=context.hasura_database_name),
         'hasura': psycopg2.connect(
-            host=database_node_ip,
+            host=primary_node_ip,
             user=admin_user,
             password=admin_password,
             database=context.hasura_database_name),
         'auth': psycopg2.connect(
-            host=database_node_ip,
+            host=primary_node_ip,
             user=admin_user,
             password=admin_password,
             database=context.fusionauth_database_name)
@@ -174,65 +192,6 @@ def full_environment(context):
         context.current_env_name)
     if env_info.exists():
         context.control_client.delete_env(context.current_env_name)
-
-
-@fixture
-def database_environment(context):
-    context.current_env_name = get_new_random_env_name(
-        context.control_client, context.commit_sha, context.worker_id)
-    # create environment
-    path_to_manifest = os.path.join(
-        context.test_manifests_folder, f'postgres-cluster.yml')
-    success_text = context.jps_client.install_from_file(
-        path_to_manifest,
-        context.current_env_name)
-    context.manifest_data = get_manifest_data(success_text)
-    context.current_env_info = context.control_client.get_env_info(
-        context.current_env_name)
-    current_env_info = context.control_client.get_env_info(
-        context.current_env_name)
-    assert current_env_info.is_running()
-    # create connections
-    primary_node_ip = context.current_env_info.get_node_ip_from_name('Primary')
-    assert primary_node_ip is not None
-    secondary_node_ip = context.current_env_info.get_node_ip_from_name(
-        'Secondary')
-    assert secondary_node_ip is not None
-    admin_user = context.manifest_data['Username']
-    admin_password = context.manifest_data['Password']
-    database_name = 'postgres'
-    context.connections = {
-        'primary': psycopg2.connect(
-            host=primary_node_ip,
-            user=admin_user,
-            password=admin_password,
-            database=database_name),
-        'secondary': psycopg2.connect(
-            host=secondary_node_ip,
-            user=admin_user,
-            password=admin_password,
-            database=database_name)
-    }
-    yield context.current_env_name
-
-    env_info = context.control_client.get_env_info(
-        context.current_env_name)
-    if env_info.exists():
-        context.control_client.delete_env(context.current_env_name)
-
-
-@fixture
-def main_manifest(context):
-    context.main_manifest = os.path.join(
-        context.project_root_folder, 'manifest.yml')
-    return context.main_manifest
-
-
-@fixture
-def test_manifests_folder(context):
-    context.test_manifests_folder = os.path.join(
-        context.project_root_folder, 'features', 'data', 'manifests')
-    return context.test_manifests_folder
 
 
 @fixture
@@ -281,6 +240,5 @@ def hasura_internal_port(context):
 
 
 fixtures_registry = {
-    'database-environment': database_environment,
-    'full-environment': full_environment
+    'jelastic-environment': jelastic_environment
 }

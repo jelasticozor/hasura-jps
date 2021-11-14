@@ -2,12 +2,6 @@ version: 1.0
 provider:
   name: openfaas
 functions:
-  hasura-action:
-    lang: node-hasura
-    handler: ./hasura-action
-    image: softozor/hasura-action:latest
-    environment:
-      GRAPHQL_ENDPOINT: ${GRAPHQL_ENDPOINT}
   check-env:
     lang: python
     handler: ./check-env
