@@ -250,12 +250,14 @@ def hasura_internal_port(context):
 def auth_test_application(context):
     # get lambda id
     response = context.fusionauth_client.retrieve_lambdas()
-    assert response.was_successful() is True
+    assert response.was_successful() is True,\
+        f'response = {response.error_response}'
     lambda_id = response['lambdas'][0]['id']
 
     # get access key id
     response = context.fusionauth_client.retrieve_keys()
-    assert response.was_successful() is True
+    assert response.was_successful() is True,\
+        f'response = {response.error_response}'
     key_id = response['keys'][0]['id']
 
     # create application
@@ -285,7 +287,8 @@ def auth_test_application(context):
             ]
         }
     })
-    assert response.was_successful() is True
+    assert response.was_successful() is True,\
+        f'response = {response.error_response}'
     context.auth_test_application = response['application']['id']
 
     yield context.auth_test_application
@@ -293,7 +296,8 @@ def auth_test_application(context):
     # delete application
     response = context.fusionauth_client.delete_application(
         context.auth_test_application)
-    assert response.was_successful() is True
+    assert response.was_successful() is True,\
+        f'response = {response.error_response}'
 
 
 @fixture
