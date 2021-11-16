@@ -52,12 +52,12 @@ Feature: Hasura environment is well-defined
       | hdb_catalog |
       | hdb_views   |
 
-  Scenario: Any change done on primary gets reflected on secondary
+  Scenario: Any change done on primary database gets reflected on secondary database
 
     When a user creates table 'primary_table' on the primary database
     Then she sees table 'primary_table' in the secondary database
 
-  Scenario: Secondary is read-only
+  Scenario: Secondary database is read-only
 
     When a user creates table 'secondary_table' on the secondary database
     Then she gets the error
@@ -65,6 +65,6 @@ Feature: Hasura environment is well-defined
     cannot execute CREATE TABLE in a read-only transaction
     """
 
-  Scenario: Postgres at least version 10 is installed
+  Scenario: Postgres is at least version 10
 
     Then the postgres version is 13

@@ -4,12 +4,15 @@ import random
 import psycopg2
 from behave import fixture
 from faas_client import FaasClientFactory
+from fusionauth.fusionauth_client import FusionAuthClient
 from hasura_client import HasuraClientFactory
 from jelastic_client import JelasticClientFactory
 from softozor_graphql_client import GraphQLClient
 from softozor_test_utils import host_has_port_open
 from test_utils import get_new_random_env_name
 from test_utils.manifest_data import get_manifest_data
+
+from features.utils.fusionauth import create_user, register_user, delete_registration, delete_user
 
 
 @fixture
@@ -185,9 +188,13 @@ def jelastic_environment(context):
         node_group='auth', node_type='docker')[0]
     assert host_has_port_open(
         context.current_fusionauth_ip, context.fusionauth_port)
+    api_key = context.manifest_data['Auth Almighty API Key']
+    auth_url = f'http://{context.current_fusionauth_ip}:{context.fusionauth_port}'
+    context.fusionauth_client = FusionAuthClient(api_key, auth_url)
 
     yield context.current_env_name
 
+    # TODO: reactivate!
     env_info = context.control_client.get_env_info(
         context.current_env_name)
     if env_info.exists():
@@ -239,6 +246,77 @@ def hasura_internal_port(context):
     return context.hasura_internal_port
 
 
+@fixture
+def auth_test_application(context):
+    # get lambda id
+    response = context.fusionauth_client.retrieve_lambdas()
+    assert response.was_successful() is True
+    lambda_id = response['lambdas'][0]['id']
+
+    # get access key id
+    response = context.fusionauth_client.retrieve_keys()
+    assert response.was_successful() is True
+    key_id = response['keys'][0]['id']
+
+    # create application
+    response = context.fusionauth_client.create_application(request={
+        "application": {
+            "jwtConfiguration": {
+                "accessTokenKeyId": key_id,
+                "enabled": True,
+                "refreshTokenTimeToLiveInMinutes": 1440,
+                "timeToLiveInSeconds": 3600
+            },
+            "lambdaConfiguration": {
+                "accessTokenPopulateId": lambda_id
+            },
+            "loginConfiguration": {
+                "allowTokenRefresh": True,
+                "generateRefreshTokens": True,
+                "requireAuthentication": True
+            },
+            "name": "test-application",
+            "roles": [
+                {
+                    "isDefault": True,
+                    "isSuperRole": False,
+                    "name": "user"
+                }
+            ]
+        }
+    })
+    assert response.was_successful() is True
+    context.auth_test_application = response['application']['id']
+
+    yield context.auth_test_application
+
+    # delete application
+    response = context.fusionauth_client.delete_application(
+        context.auth_test_application)
+    assert response.was_successful() is True
+
+
+@fixture
+def registered_user_on_test_application(context):
+    test_application_id = context.auth_test_application
+    context.registered_user_on_test_application = {
+        'username': 'user@company.com',
+        'password': 'password'
+    }
+    user_id = create_user(context.fusionauth_client,
+                          context.context.registered_user_on_test_application)
+    register_user(context.fusionauth_client, user_id, test_application_id, [
+        'user'
+    ])
+    yield context.registered_user_on_test_application
+    # delete user + registration
+    delete_registration(context.fusionauth_client,
+                        user_id, test_application_id)
+    delete_user(context.fusionauth_client, user_id)
+
+
 fixtures_registry = {
-    'jelastic-environment': jelastic_environment
+    'jelastic-environment': jelastic_environment,
+    'auth-test-application': auth_test_application,
+    'registered-user-on-test-application': registered_user_on_test_application
 }

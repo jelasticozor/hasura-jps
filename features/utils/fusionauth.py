@@ -21,45 +21,37 @@ def create_user(client, user):
             'email': user['email'],
             'password': user['password']
         }
-    }, user['id'])
-    if response.was_successful() is False:
-        user_id = user['id']
-        print(f'cannot create user with id <{user_id}>')
-        print('error: ', response.error_response)
+    })
+    assert response.was_successful() is True, \
+        f'unable to create user: {response.error_response}'
+    return response['user']['id']
 
 
-def register_user(client, user, app_id, roles):
+def register_user(client, user_id, app_id, roles):
     response = client.register({
         'registration': {
             'applicationId': app_id,
             'roles': roles
         }
-    }, user['id'])
-    if response.was_successful() is False:
-        user_id = user['id']
-        print(
-            f'cannot register user with id <{user_id}> on application <{app_id}>')
-        print('error: ', response.error_response)
+    }, user_id)
+    assert response.was_successful() is True, \
+        f'cannot register user with id <{user_id}> on application <{app_id}>: {response.error_response}'
 
 
 def delete_registration(client, user_id, app_id):
     response = client.delete_registration(user_id, app_id)
-    if response.was_successful() is False:
-        print(f'cannot unregister user id <{user_id}> from app id <{app_id}>')
-        print('error: ', response.error_response)
+    assert response.was_successful() is True, \
+        f'cannot unregister user id <{user_id}> from app id <{app_id}>: {response.error_response}'
 
 
 def retrieve_user(client, user_id):
     response = client.retrieve_user(user_id)
-    if response.was_successful() is False:
-        print(f'cannot retrieve user with id <{user_id}>')
-        print('error: ', response.error_response)
-        return None
+    assert response.was_successful() is True, \
+        f'cannot retrieve user with id <{user_id}>: {response.error_response}'
     return response.success_response['user']
 
 
 def delete_user(client, user_id):
     response = client.delete_user(user_id)
-    if response.was_successful() is False:
-        print(f'cannot remove user with id <{user_id}>')
-        print('error: ', response.error_response)
+    assert response.was_successful() is True, \
+        f'cannot remove user with id <{user_id}>: {response.error_response}'
