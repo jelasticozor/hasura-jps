@@ -24,7 +24,7 @@ def create_user(client, user):
     })
     assert response.was_successful() is True, \
         f'unable to create user: {response.exception} ({response.status})'
-    return response['user']['id']
+    return response.success_response['user']['id']
 
 
 def register_user(client, user_id, app_id, roles):
