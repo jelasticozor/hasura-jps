@@ -308,7 +308,7 @@ def registered_user_on_test_application(context):
         'password': 'password'
     }
     user_id = create_user(context.fusionauth_client,
-                          context.context.registered_user_on_test_application)
+                          context.registered_user_on_test_application)
     register_user(context.fusionauth_client, user_id, test_application_id, [
         'user'
     ])
