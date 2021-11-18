@@ -7,7 +7,7 @@ def step_impl(context, user_email):
     assert response.was_successful() is True, \
         f'cannot find user with email {user_email}'
     assert context.registered_user_on_test_application['email'] == user_email
-    context.current_user_id = response['user']['id']
+    context.current_user_id = response.success_response['user']['id']
     app_id = context.auth_test_application
     response = context.fusionauth_client.retrieve_registration(
         context.current_user_id, app_id)
