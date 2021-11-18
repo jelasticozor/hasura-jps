@@ -86,7 +86,8 @@ def jelastic_environment(context):
     main_manifest = os.path.join(
         context.project_root_folder, 'manifest.yml')
 
-    success_text = context.jps_client.install_from_file(
+    jps_client = context.jelastic_clients_factory.create_jps_client()
+    success_text = jps_client.install_from_file(
         main_manifest, context.current_env_name, settings={
             'graphqlEngineTag': context.commit_sha,
             'fusionauthVersion': context.fusionauth_version,
