@@ -247,6 +247,12 @@ def hasura_internal_port(context):
 
 
 @fixture
+def registered_user_role(context):
+    context.registered_user_role = 'user'
+    return context.registered_user_role
+
+
+@fixture
 def auth_test_application(context):
     # get lambda id
     response = context.fusionauth_client.retrieve_lambdas()
@@ -262,27 +268,27 @@ def auth_test_application(context):
 
     # create application
     response = context.fusionauth_client.create_application(request={
-        "application": {
-            "jwtConfiguration": {
-                "accessTokenKeyId": key_id,
-                "enabled": True,
-                "refreshTokenTimeToLiveInMinutes": 1440,
-                "timeToLiveInSeconds": 3600
+        'application': {
+            'jwtConfiguration': {
+                'accessTokenKeyId': key_id,
+                'enabled': True,
+                'refreshTokenTimeToLiveInMinutes': 1440,
+                'timeToLiveInSeconds': 3600
             },
-            "lambdaConfiguration": {
-                "accessTokenPopulateId": lambda_id
+            'lambdaConfiguration': {
+                'accessTokenPopulateId': lambda_id
             },
-            "loginConfiguration": {
-                "allowTokenRefresh": True,
-                "generateRefreshTokens": True,
-                "requireAuthentication": True
+            'loginConfiguration': {
+                'allowTokenRefresh': True,
+                'generateRefreshTokens': True,
+                'requireAuthentication': True
             },
-            "name": "test-application",
-            "roles": [
+            'name': 'test-application',
+            'roles': [
                 {
-                    "isDefault": True,
-                    "isSuperRole": False,
-                    "name": "user"
+                    'isDefault': True,
+                    'isSuperRole': False,
+                    'name': context.registered_user_role
                 }
             ]
         }
@@ -310,7 +316,7 @@ def registered_user_on_test_application(context):
     user_id = create_user(context.fusionauth_client,
                           context.registered_user_on_test_application)
     register_user(context.fusionauth_client, user_id, test_application_id, [
-        'user'
+        context.registered_user_role
     ])
     yield context.registered_user_on_test_application
     # delete user + registration
