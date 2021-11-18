@@ -304,7 +304,7 @@ def auth_test_application(context):
 def registered_user_on_test_application(context):
     test_application_id = context.auth_test_application
     context.registered_user_on_test_application = {
-        'username': 'user@company.com',
+        'email': 'user@company.com',
         'password': 'password'
     }
     user_id = create_user(context.fusionauth_client,
