@@ -9,6 +9,7 @@ actions:
   definition:
     kind: synchronous
     handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/validate-token
+    forward_client_headers: true
 custom_types:
   enums: []
   input_objects: []
