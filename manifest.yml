@@ -14,10 +14,6 @@ settings:
       caption: Enable console
       type: checkbox
       value: true
-    - name: hasuraUnauthorizedRole
-      caption: Unauthorized role
-      type: string
-      default: anonymous
     - type: spacer
       caption: Auth
     - name: fusionauthVersion
@@ -51,6 +47,7 @@ globals:
   # hasura
   HASURA_ADMIN_SECRET: ${fn.password(20)}
   HASURA_SERVER_PORT: 8080
+  HASURA_UNAUTHORIZED_ROLE: anonymous
   # faas
   FAAS_PORT: 8080
   # auth
@@ -122,7 +119,7 @@ actions:
         dbName: ${globals.DB_NAME}
         enableConsole: ${settings.enableHasuraConsole}
         adminSecret: ${globals.HASURA_ADMIN_SECRET}
-        unauthorizedRole: ${settings.hasuraUnauthorizedRole}
+        unauthorizedRole: ${globals.HASURA_UNAUTHORIZED_ROLE}
         serverPort: ${globals.HASURA_SERVER_PORT}
         faasHostname: ${nodes.faas.master.intIP}
         faasPort: ${globals.FAAS_PORT}

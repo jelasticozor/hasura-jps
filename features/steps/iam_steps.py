@@ -24,7 +24,7 @@ def step_impl(context):
             'password': context.registered_user_on_test_application['password'],
             'appId': context.auth_test_application
         }, run_as_admin=False)
-    assert 'errors' not in response
+    assert 'errors' not in response, f'errors: {response}'
     context.current_jwt = response['data']['login']['token']
 
 
@@ -33,5 +33,5 @@ def step_impl(context):
     mutation = context.text
     response, _ = context.graphql_client.execute(
         query=mutation, auth_token=context.current_jwt, run_as_admin=False)
-    assert 'errors' not in response
+    assert 'errors' not in response, f'errors: {response}'
     assert context.current_user_id == response['validate_token']['userId']

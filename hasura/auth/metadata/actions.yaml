@@ -3,6 +3,8 @@ actions:
   definition:
     kind: synchronous
     handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/login
+  permissions:
+  - role: anonymous
 - name: validate_token
   definition:
     kind: synchronous
