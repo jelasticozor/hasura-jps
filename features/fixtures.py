@@ -252,13 +252,13 @@ def auth_test_application(context):
     response = context.fusionauth_client.retrieve_lambdas()
     assert response.was_successful() is True,\
         f'unable to get lambdas: {response.exception} ({response.status})'
-    lambda_id = response['lambdas'][0]['id']
+    lambda_id = response.success_response['lambdas'][0]['id']
 
     # get access key id
     response = context.fusionauth_client.retrieve_keys()
     assert response.was_successful() is True,\
         f'unable to get access keys: {response.exception} ({response.status})'
-    key_id = response['keys'][0]['id']
+    key_id = response.success_response['keys'][0]['id']
 
     # create application
     response = context.fusionauth_client.create_application(request={
@@ -289,7 +289,7 @@ def auth_test_application(context):
     })
     assert response.was_successful() is True,\
         f'unable to create application: {response.exception} ({response.status})'
-    context.auth_test_application = response['application']['id']
+    context.auth_test_application = response.success_response['application']['id']
 
     yield context.auth_test_application
 
