@@ -23,7 +23,7 @@ def create_user(client, user):
         }
     })
     assert response.was_successful() is True, \
-        f'unable to create user: {response.error_response}'
+        f'unable to create user: {response.exception} ({response.status})'
     return response['user']['id']
 
 
@@ -35,23 +35,23 @@ def register_user(client, user_id, app_id, roles):
         }
     }, user_id)
     assert response.was_successful() is True, \
-        f'cannot register user with id <{user_id}> on application <{app_id}>: {response.error_response}'
+        f'cannot register user with id <{user_id}> on application <{app_id}>: {response.exception} ({response.status})'
 
 
 def delete_registration(client, user_id, app_id):
     response = client.delete_registration(user_id, app_id)
     assert response.was_successful() is True, \
-        f'cannot unregister user id <{user_id}> from app id <{app_id}>: {response.error_response}'
+        f'cannot unregister user id <{user_id}> from app id <{app_id}>: {response.exception} ({response.status})'
 
 
 def retrieve_user(client, user_id):
     response = client.retrieve_user(user_id)
     assert response.was_successful() is True, \
-        f'cannot retrieve user with id <{user_id}>: {response.error_response}'
+        f'cannot retrieve user with id <{user_id}>: {response.exception} ({response.status})'
     return response.success_response['user']
 
 
 def delete_user(client, user_id):
     response = client.delete_user(user_id)
     assert response.was_successful() is True, \
-        f'cannot remove user with id <{user_id}>: {response.error_response}'
+        f'cannot remove user with id <{user_id}>: {response.exception} ({response.status})'

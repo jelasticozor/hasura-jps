@@ -30,6 +30,8 @@ def main(args):
         data['variables']['defaultTenantId'] = str(uuid.uuid4())
         data['variables']['hasuraClaimsNamespace'] = args.hasura_claims_namespace
         data['variables']['issuer'] = args.issuer
+        data['variables']['almightyApiKey'] = args.almighty_api_key
+        data['variables']['serverlessApiKey'] = args.serverless_api_key
         if args.cors_allowed_origins:
             data['requests'].append(system_configuration(
                 args.cors_allowed_origins.replace(' ', '').split(',')))

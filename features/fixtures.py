@@ -251,13 +251,13 @@ def auth_test_application(context):
     # get lambda id
     response = context.fusionauth_client.retrieve_lambdas()
     assert response.was_successful() is True,\
-        f'unable to get lambdas, exception = {response.exception} ({response.status})'
+        f'unable to get lambdas: {response.exception} ({response.status})'
     lambda_id = response['lambdas'][0]['id']
 
     # get access key id
     response = context.fusionauth_client.retrieve_keys()
     assert response.was_successful() is True,\
-        f'unable to get access keys, exception = {response.exception} ({response.status})'
+        f'unable to get access keys: {response.exception} ({response.status})'
     key_id = response['keys'][0]['id']
 
     # create application
@@ -288,7 +288,7 @@ def auth_test_application(context):
         }
     })
     assert response.was_successful() is True,\
-        f'unable to create application, exception = {response.exception} ({response.status})'
+        f'unable to create application: {response.exception} ({response.status})'
     context.auth_test_application = response['application']['id']
 
     yield context.auth_test_application
@@ -297,7 +297,7 @@ def auth_test_application(context):
     response = context.fusionauth_client.delete_application(
         context.auth_test_application)
     assert response.was_successful() is True,\
-        f'unable to delete application, exception = {response.exception} ({response.status})'
+        f'unable to delete application: {response.exception} ({response.status})'
 
 
 @fixture
