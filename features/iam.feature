@@ -1,6 +1,3 @@
-@fixture.jelastic-environment
-@fixture.auth-test-application
-@fixture.registered-user-on-test-application
 Feature: Identity and Access Management
 
   As an API developer,

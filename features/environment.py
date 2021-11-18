@@ -10,28 +10,21 @@ def before_tag(context, tag):
 
 
 def before_all(context):
-    use_fixture(api_clients, context)
+    use_fixture(jelastic_clients_factory, context)
     use_fixture(random_seed, context)
     use_fixture(worker_id, context)
     use_fixture(base_url, context)
     use_fixture(commit_sha, context)
     use_fixture(project_root_folder, context)
-    use_fixture(main_manifest, context)
-    use_fixture(faas_port, context)
-    use_fixture(fusionauth_port, context)
     use_fixture(fusionauth_admin_email, context)
     use_fixture(fusionauth_issuer, context)
     use_fixture(path_to_serverless_test_configuration, context)
     use_fixture(fusionauth_version, context)
-    use_fixture(faas_client_factory, context)
-    use_fixture(hasura_database_name, context)
-    use_fixture(fusionauth_database_name, context)
-    use_fixture(database_user, context)
-    use_fixture(database_password, context)
-    use_fixture(close_database_connections, context)
     use_fixture(registered_user_role, context)
-    use_fixture(hasura_client_factory, context)
-    use_fixture(hasura_internal_port, context)
+    use_fixture(jelastic_environment, context)
+    use_fixture(api_developer, context)
+    use_fixture(auth_test_application, context)
+    use_fixture(registered_user_on_test_application, context)
 
 
 def before_scenario(context, scenario):

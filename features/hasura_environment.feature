@@ -1,4 +1,3 @@
-@fixture.jelastic-environment
 Feature: Hasura environment is well-defined
 
   As an API developer,  
@@ -54,12 +53,12 @@ Feature: Hasura environment is well-defined
 
   Scenario: Any change done on primary database gets reflected on secondary database
 
-    When a user creates table 'primary_table' on the primary database
+    When the api developer creates table 'primary_table' on the primary database
     Then she sees table 'primary_table' in the secondary database
 
   Scenario: Secondary database is read-only
 
-    When a user creates table 'secondary_table' on the secondary database
+    When the api developer creates table 'secondary_table' on the secondary database
     Then she gets the error
     """
     cannot execute CREATE TABLE in a read-only transaction
