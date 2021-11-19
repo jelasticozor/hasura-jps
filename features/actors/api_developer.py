@@ -225,6 +225,56 @@ class ApiDeveloper:
 
         return fail_after_timeout(lambda: test_is_up(), timeout_in_sec, period_in_sec)
 
+    def get_lambda_id(self, idx=0):
+        response = self.__fusionauth_client.retrieve_lambdas()
+        assert response.was_successful() is True, \
+            f'unable to get lambdas: {response.exception} ({response.status})'
+        return response.success_response['lambdas'][idx]['id']
+
+    def get_access_key_id(self, idx=0):
+        response = self.__fusionauth_client.retrieve_keys()
+        assert response.was_successful() is True, \
+            f'unable to get access keys: {response.exception} ({response.status})'
+        return response.success_response['keys'][idx]['id']
+
+    def create_test_application(self, user_role):
+        lambda_id = self.get_lambda_id()
+        key_id = self.get_access_key_id()
+        response = self.__fusionauth_client.create_application(request={
+            'application': {
+                'jwtConfiguration': {
+                    'accessTokenKeyId': key_id,
+                    'enabled': True,
+                    'refreshTokenTimeToLiveInMinutes': 1440,
+                    'timeToLiveInSeconds': 3600
+                },
+                'lambdaConfiguration': {
+                    'accessTokenPopulateId': lambda_id
+                },
+                'loginConfiguration': {
+                    'allowTokenRefresh': True,
+                    'generateRefreshTokens': True,
+                    'requireAuthentication': True
+                },
+                'name': 'test-application',
+                'roles': [
+                    {
+                        'isDefault': True,
+                        'isSuperRole': False,
+                        'name': user_role
+                    }
+                ]
+            }
+        })
+        assert response.was_successful() is True, \
+            f'unable to create application: {response.exception} ({response.status})'
+        return response.success_response['application']['id']
+
+    def delete_application(self, app_id):
+        response = self.__fusionauth_client.delete_application(app_id)
+        assert response.was_successful() is True, \
+            f'unable to delete application: {response.exception} ({response.status})'
+
     def create_user(self, user):
         response = self.__fusionauth_client.create_user({
             'sendSetPasswordEmail': False,

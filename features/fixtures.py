@@ -79,13 +79,10 @@ def fusionauth_issuer(context):
 @fixture
 def jelastic_environment(context):
     control_client = context.jelastic_clients_factory.create_control_client()
-
     context.current_env_name = get_new_random_env_name(
         control_client, context.commit_sha, context.worker_id)
-
     main_manifest = os.path.join(
         context.project_root_folder, 'manifest.yml')
-
     jps_client = context.jelastic_clients_factory.create_jps_client()
     success_text = jps_client.install_from_file(
         main_manifest, context.current_env_name, settings={
@@ -99,9 +96,7 @@ def jelastic_environment(context):
         context.current_env_name)
     assert context.current_env_info.is_running()
     context.manifest_data = get_manifest_data(success_text)
-
     yield context.current_env_name
-
     env_info = control_client.get_env_info(
         context.current_env_name)
     if env_info.exists():
@@ -124,56 +119,11 @@ def registered_user_role(context):
 
 @fixture
 def auth_test_application(context):
-    # get lambda id
-    response = context.fusionauth_client.retrieve_lambdas()
-    assert response.was_successful() is True, \
-        f'unable to get lambdas: {response.exception} ({response.status})'
-    lambda_id = response.success_response['lambdas'][0]['id']
-
-    # get access key id
-    response = context.fusionauth_client.retrieve_keys()
-    assert response.was_successful() is True, \
-        f'unable to get access keys: {response.exception} ({response.status})'
-    key_id = response.success_response['keys'][0]['id']
-
-    # create application
-    response = context.fusionauth_client.create_application(request={
-        'application': {
-            'jwtConfiguration': {
-                'accessTokenKeyId': key_id,
-                'enabled': True,
-                'refreshTokenTimeToLiveInMinutes': 1440,
-                'timeToLiveInSeconds': 3600
-            },
-            'lambdaConfiguration': {
-                'accessTokenPopulateId': lambda_id
-            },
-            'loginConfiguration': {
-                'allowTokenRefresh': True,
-                'generateRefreshTokens': True,
-                'requireAuthentication': True
-            },
-            'name': 'test-application',
-            'roles': [
-                {
-                    'isDefault': True,
-                    'isSuperRole': False,
-                    'name': context.registered_user_role
-                }
-            ]
-        }
-    })
-    assert response.was_successful() is True, \
-        f'unable to create application: {response.exception} ({response.status})'
-    context.auth_test_application = response.success_response['application']['id']
-
+    context.auth_test_application = context.api_developer.create_test_application(
+        context.registered_user_role)
     yield context.auth_test_application
-
-    # delete application
-    response = context.fusionauth_client.delete_application(
+    context.api_developer.delete_application(
         context.auth_test_application)
-    assert response.was_successful() is True, \
-        f'unable to delete application: {response.exception} ({response.status})'
 
 
 @fixture
@@ -189,7 +139,6 @@ def registered_user_on_test_application(context):
         context.registered_user_role
     ])
     yield context.registered_user_on_test_application
-    # delete user + registration
     context.api_developer.delete_registration(
         user_id, test_application_id)
     context.api_developer.delete_user(user_id)
