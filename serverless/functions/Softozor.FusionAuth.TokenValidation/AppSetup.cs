@@ -23,7 +23,7 @@ public static class AppSetup
     {
         app.MapPost(
             "/",
-            async (HttpContext http, IActionHandler<BearerTokenAuthorizationHeader, ValidateTokenOutput> handler, ILogger<WebApplication> logger) =>
+            async (HttpContext http, IActionHandler<BearerTokenAuthorizationHeader, ValidateTokenOutput> handler) =>
             {
                 var input = ExtractInput(http);
 

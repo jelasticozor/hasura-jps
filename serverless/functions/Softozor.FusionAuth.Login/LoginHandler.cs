@@ -5,6 +5,7 @@ using AutoMapper;
 using io.fusionauth;
 using io.fusionauth.domain.api;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
@@ -41,12 +42,18 @@ public class LoginHandler : IActionHandler<LoginInput, (LoginOutput, string)>
         {
             this.logger.LogInformation($"Successful login for user {input.Username} on application {input.AppId}");
 
+            if (response.successResponse.refreshToken is null)
+            {
+                throw new HasuraFunctionException(
+                    $"No refresh token for user {input.Username} on application {input.AppId}", StatusCodes.Status401Unauthorized);
+            }
+
             var protectedRefreshToken = this.protector.Protect(response.successResponse.refreshToken);
 
             return (this.mapper.Map<LoginResponse, LoginOutput>(response.successResponse), protectedRefreshToken);
         }
 
-        var errorMsg = $"Unable to log in user {input.Username} on application {input.AppId}";
-        throw new HasuraFunctionException(errorMsg, response.statusCode, response.exception);
+        throw new HasuraFunctionException(
+            $"Unable to log in user {input.Username} on application {input.AppId}", response.statusCode, response.exception);
     }
 }

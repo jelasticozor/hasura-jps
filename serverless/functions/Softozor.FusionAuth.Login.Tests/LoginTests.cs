@@ -117,6 +117,31 @@ public class LoginTests
         actualProtectedRefreshToken.Should().NotBe(expectedRefreshToken).And.Be(expectedProtectedRefreshToken);
     }
 
+    [Fact]
+    public async Task ShouldThrowWhenRefreshTokenIsNull()
+    {
+        // Arrange
+        var successResponseStub = new LoginResponse
+        {
+            refreshToken = null, token = "token", user = new User { id = Guid.NewGuid() }
+        };
+        var clientResponseStub = new ClientResponse<LoginResponse>
+        {
+            statusCode = 200, successResponse = successResponseStub
+        };
+        clientResponseStub.WasSuccessful().Should().BeTrue();
+
+        var authClientStub = Mock.Get(this.authClient);
+        authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
+
+        // Act
+        Func<Task> act = async () => await this.sut.Handle(this.validInput);
+
+        // Assert
+        var exception = await act.Should().ThrowAsync<HasuraFunctionException>();
+        exception.Which.ErrorCode.Should().Be(401);
+    }
+
     private static IMapper CreateMapper()
     {
         var config = new MapperConfiguration(cfg => { cfg.AddProfile<LoginProfile>(); });
