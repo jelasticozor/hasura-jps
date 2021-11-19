@@ -1,7 +1,7 @@
 from behave import *
 
 
-@given("the user '{user_email}' registered on the test application")
+@given('the user \'{user_email}\' registered on the test application')
 def step_impl(context, user_email):
     assert context.registered_user_on_test_application['email'] == user_email
     context.current_user_id = context.api_developer.retrieve_user_by_email(user_email)[
@@ -11,7 +11,7 @@ def step_impl(context, user_email):
         context.current_user_id, app_id)
 
 
-@when("she logs on with graphql mutation")
+@when('she logs on with graphql mutation')
 def step_impl(context):
     mutation = context.text
     response = context.api_developer.post_graphql(
@@ -25,7 +25,7 @@ def step_impl(context):
     context.current_jwt = response['login']['token']
 
 
-@then("her token validates by calling the following graphql mutation with bearer token")
+@then('her token validates by calling the following graphql mutation with bearer token')
 def step_impl(context):
     mutation = context.text
     # people should never call this function with admin rights
