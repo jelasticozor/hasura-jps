@@ -18,7 +18,7 @@ def step_impl(context, postgres_version):
     assert min_version <= context.api_developer.get_database_version(
         'primary') < max_version
     assert min_version <= context.api_developer.get_database_version(
-        'secondary').server_version < max_version
+        'secondary') < max_version
 
 
 @then('she gets the error')
