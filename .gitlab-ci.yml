@@ -11,8 +11,7 @@ variables:
   TEST_IMAGE_NAME: softozor/hasura-jps-test
 
 .docker-login: &docker-login
-#  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  - echo "this step should be removed"
+  - docker login -u $DOCKER_HUB_REGISTRY_USER -p $DOCKER_HUB_REGISTRY_PASSWORD $DOCKER_HUB_REGISTRY
 
 .docker-push: &docker-push
   - docker push $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA
