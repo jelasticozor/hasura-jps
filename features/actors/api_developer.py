@@ -341,9 +341,9 @@ class ApiDeveloper:
 
         return fail_after_timeout(lambda: test_is_up(), timeout_in_sec, period_in_sec)
 
-    def post_graphql(self, query, variables, run_as_admin):
+    def post_graphql(self, query, variables=None, auth_token=None, run_as_admin=True):
         response, _ = self.__graphql_client.execute(
-            query=query, variables=variables, run_as_admin=run_as_admin)
+            query=query, variables=variables, auth_token=auth_token, run_as_admin=run_as_admin)
         assert 'errors' not in response, f'errors: {response}'
         return response['data']
 

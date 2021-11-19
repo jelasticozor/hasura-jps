@@ -97,11 +97,10 @@ def jelastic_environment(context):
     assert context.current_env_info.is_running()
     context.manifest_data = get_manifest_data(success_text)
     yield context.current_env_name
-    # TODO: reactivate
-    # env_info = control_client.get_env_info(
-    #     context.current_env_name)
-    # if env_info.exists():
-    #     control_client.delete_env(context.current_env_name)
+    env_info = control_client.get_env_info(
+        context.current_env_name)
+    if env_info.exists():
+        control_client.delete_env(context.current_env_name)
 
 
 @fixture
