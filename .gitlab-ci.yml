@@ -9,7 +9,7 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   PACKAGE_SOURCE_NAME: softozor-packages-gitlab
   TEST_IMAGE_NAME: softozor/hasura-jps-test
-  CI_PROJECT_DIR: /builds/${CI_PROJECT_ID}/${CI_JOB_ID}
+  GIT_CLONE_PATH: ${CI_BUILDS_DIR}/${CI_PROJECT_ID}/${CI_JOB_ID}
 
 .docker-login: &docker-login
   - docker login -u $DOCKER_HUB_REGISTRY_USER -p $DOCKER_HUB_REGISTRY_PASSWORD $DOCKER_HUB_REGISTRY
@@ -55,7 +55,6 @@ publish-graphql-engine-image:
   variables:
     DOCKER_IMAGE: softozor/graphql-engine
   before_script:
-    - echo "BUILD_DIRS=$CI_BUILDS_DIR"
     - *docker-login
   script:
     - |
