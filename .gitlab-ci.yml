@@ -22,7 +22,7 @@ variables:
   stage: publish-docker
   image: softozor/faas-cli:${TOOLS_SHA}
   before_script:
-    - echo "CI_CONCURRENT_ID = $CI_CONCURRENT_ID"
+    - echo "CI_CONCURRENT_ID: $CI_CONCURRENT_ID"
     - *docker-login
   script:
     - cd $PATH_TO_FUNCTIONS
@@ -56,7 +56,7 @@ publish-graphql-engine-image:
   variables:
     DOCKER_IMAGE: softozor/graphql-engine
   before_script:
-    - echo "CI_CONCURRENT_ID = $CI_CONCURRENT_ID"
+    - echo "CI_CONCURRENT_ID: $CI_CONCURRENT_ID"
     - *docker-login
   script:
     - |
