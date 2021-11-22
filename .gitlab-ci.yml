@@ -55,6 +55,7 @@ publish-graphql-engine-image:
   variables:
     DOCKER_IMAGE: softozor/graphql-engine
   before_script:
+    - echo "BUILD_DIRS=$CI_BUILDS_DIR"
     - *docker-login
   script:
     - |
