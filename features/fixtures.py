@@ -88,6 +88,7 @@ def jelastic_environment(context):
             'graphqlEngineTag': context.commit_sha,
             'hasuraAdminSecret': context.hasura_admin_secret,
             'fusionauthVersion': context.fusionauth_version,
+            'useJelasticEmailAsAuthAdminEmail': False,
             'authAdminEmail': context.fusionauth_admin_email,
             'authIssuer': context.fusionauth_issuer,
             'fncTag': context.commit_sha
