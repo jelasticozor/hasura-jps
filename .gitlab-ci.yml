@@ -9,8 +9,6 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   PACKAGE_SOURCE_NAME: softozor-packages-gitlab
   TEST_IMAGE_NAME: softozor/hasura-jps-test
-  CI_DEBUG_TRACE: "true"
-#  GIT_CLONE_PATH: ${CI_BUILDS_DIR}/${CI_CONCURRENT_ID}/${CI_PROJECT_ID}
 
 .docker-login: &docker-login
   - docker login -u $DOCKER_HUB_REGISTRY_USER -p $DOCKER_HUB_REGISTRY_PASSWORD $DOCKER_HUB_REGISTRY
@@ -97,6 +95,8 @@ publish-faas-image:
     - docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest
     - *docker-push
   only:
+    refs:
+      - master
     changes:
       - ci/ubuntu/Dockerfile
 
