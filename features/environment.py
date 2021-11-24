@@ -12,7 +12,6 @@ def before_tag(context, tag):
 def before_all(context):
     use_fixture(random_seed, context)
     use_fixture(worker_id, context)
-    use_fixture(base_url, context)
     use_fixture(commit_sha, context)
     use_fixture(project_root_folder, context)
     use_fixture(jelastic_clients_factory, context)

@@ -21,13 +21,6 @@ def worker_id(context):
 
 
 @fixture
-def base_url(context):
-    userdata = context.config.userdata
-    context.base_url = userdata['base-url']
-    return context.base_url
-
-
-@fixture
 def commit_sha(context):
     userdata = context.config.userdata
     context.commit_sha = userdata['commit-sha']
@@ -90,6 +83,7 @@ def jelastic_environment(context):
             'fusionauthVersion': context.fusionauth_version,
             'authAdminEmail': context.fusionauth_admin_email,
             'authIssuer': context.fusionauth_issuer,
+            'faasTag': context.commit_sha,
             'fncTag': context.commit_sha
         })
     context.current_env_info = control_client.get_env_info(
