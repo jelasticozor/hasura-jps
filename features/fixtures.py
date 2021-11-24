@@ -81,6 +81,7 @@ def jelastic_environment(context):
         main_manifest, context.current_env_name, settings={
             'graphqlEngineTag': context.commit_sha,
             'fusionauthVersion': context.fusionauth_version,
+            'useJelasticEmailAsAuthAdminEmail': False,
             'authAdminEmail': context.fusionauth_admin_email,
             'authIssuer': context.fusionauth_issuer,
             'fncTag': context.commit_sha
