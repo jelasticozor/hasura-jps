@@ -20,10 +20,17 @@ settings:
       caption: Fusionauth version
       type: string
       default: 1.30.1
-    - name: authAdminEmail
-      caption: Admin email
-      type: string
-      required: true
+    - name: useJelasticEmailAsAuthAdminEmail
+      type: toggle
+      caption: Use Jelastic Email
+      value: true
+      hidden: false
+      showIf:
+        false:
+          name: authAdminEmail
+          caption: Admin email
+          type: string
+          required: true
     - name: authIssuer
       caption: JWT issuer
       type: string
@@ -95,6 +102,7 @@ nodes:
 skipNodeEmails: true
 
 onInstall:
+  - script: 'return { result: 0, email: ${settings.useJelasticEmailAsAuthAdminEmail} ? "${user.email}" : "${settings.authAdminEmail}" };'
   - installFusionAuth
   # the faas engine uses fusionauth
   - installFaas
@@ -143,7 +151,7 @@ actions:
         databasePassword: ${globals.DB_AUTH_PASSWORD}
         appRunTime: production
         searchType: database
-        adminEmail: ${settings.authAdminEmail}
+        adminEmail: ${response.email}
         adminPassword: ${globals.AUTH_ADMIN_PASSWORD}
         issuer: ${settings.authIssuer}
         almightyApiKey: ${globals.ALMIGHTY_API_KEY}
