@@ -97,8 +97,6 @@ publish-faas-image:
     - docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest
     - *docker-push
   only:
-    refs:
-      - master
     changes:
       - ci/ubuntu/Dockerfile
 
@@ -108,8 +106,6 @@ publish-test-faas-functions:
     FAAS_CONFIG: faas
     PATH_TO_FUNCTIONS: features/data/functions
   only:
-    refs:
-      - master
     changes:
       - features/data/functions/**/*
 
