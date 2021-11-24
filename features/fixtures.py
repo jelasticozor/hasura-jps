@@ -84,7 +84,6 @@ def jelastic_environment(context):
             'useJelasticEmailAsAuthAdminEmail': False,
             'authAdminEmail': context.fusionauth_admin_email,
             'authIssuer': context.fusionauth_issuer,
-            'faasTag': context.commit_sha,
             'fncTag': context.commit_sha
         })
     context.current_env_info = control_client.get_env_info(

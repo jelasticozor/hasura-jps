@@ -37,10 +37,6 @@ settings:
       default: your-company.com
     - type: spacer
       caption: Faas
-    - name: faasTag
-      caption: Faas Image tag
-      type: string
-      default: latest
     - name: fncTag
       caption: Faas Functions Image tag
       type: string
@@ -78,7 +74,7 @@ nodes:
   cloudlets: 16
   nodeGroup: faas
   nodeType: docker
-  image: softozor/ubuntu-git:${settings.faasTag}
+  image: softozor/ubuntu-git:latest
 - displayName: database
   count: 2
   fixedCloudlets: 3
