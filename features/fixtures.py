@@ -70,6 +70,12 @@ def fusionauth_issuer(context):
 
 
 @fixture
+def hasura_admin_secret(context):
+    context.hasura_admin_secret = 'admin'
+    return context.hasura_admin_secret
+
+
+@fixture
 def jelastic_environment(context):
     control_client = context.jelastic_clients_factory.create_control_client()
     context.current_env_name = get_new_random_env_name(
@@ -80,6 +86,7 @@ def jelastic_environment(context):
     success_text = jps_client.install_from_file(
         main_manifest, context.current_env_name, settings={
             'graphqlEngineTag': context.commit_sha,
+            'hasuraAdminSecret': context.hasura_admin_secret,
             'fusionauthVersion': context.fusionauth_version,
             'authAdminEmail': context.fusionauth_admin_email,
             'authIssuer': context.fusionauth_issuer,
