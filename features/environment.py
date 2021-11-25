@@ -21,6 +21,7 @@ def before_all(context):
     use_fixture(fusionauth_version, context)
     use_fixture(registered_user_role, context)
     use_fixture(hasura_admin_secret, context)
+    use_fixture(graphql_engine_image, context)
     use_fixture(jelastic_environment, context)
     use_fixture(api_developer, context)
     use_fixture(auth_test_application, context)

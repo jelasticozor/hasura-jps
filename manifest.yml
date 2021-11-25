@@ -6,10 +6,10 @@ settings:
   fields:
     - type: spacer
       caption: Hasura
-    - name: graphqlEngineTag
-      caption: Graphql Engine Tag
+    - name: graphqlEngineImage
+      caption: GraphQL Engine Image
       type: string
-      default: latest
+      default: softozor/graphql-engine:latest
     - name: enableHasuraConsole
       caption: Enable console
       type: checkbox
@@ -92,7 +92,7 @@ nodes:
   cloudlets: 32
   nodeGroup: cp
   nodeType: docker
-  image: softozor/graphql-engine:${settings.graphqlEngineTag}
+  image: ${settings.graphqlEngineImage}
 - displayName: auth
   count: 1
   cloudlets: 32
@@ -157,6 +157,7 @@ actions:
           almightyApiKey: ${globals.ALMIGHTY_API_KEY}
           serverlessApiKey: ${globals.SERVERLESS_API_KEY}
 
+# TODO: we display the wrong email address
 success:
   text: |
     **Hasura Console**: [${env.protocol}://${env.domain}/](${env.protocol}://${env.domain}/)  

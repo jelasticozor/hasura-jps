@@ -76,6 +76,12 @@ def hasura_admin_secret(context):
 
 
 @fixture
+def graphql_engine_image(context):
+    context.graphql_engine_image = 'softozor/graphql-engine'
+    return context.graphql_engine_image
+
+
+@fixture
 def jelastic_environment(context):
     control_client = context.jelastic_clients_factory.create_control_client()
     context.current_env_name = get_new_random_env_name(
@@ -85,7 +91,7 @@ def jelastic_environment(context):
     jps_client = context.jelastic_clients_factory.create_jps_client()
     success_text = jps_client.install_from_file(
         main_manifest, context.current_env_name, settings={
-            'graphqlEngineTag': context.commit_sha,
+            'graphqlEngineImage': f'{context.graphql_engine_image}:{context.commit_sha}',
             'hasuraAdminSecret': context.hasura_admin_secret,
             'fusionauthVersion': context.fusionauth_version,
             'useJelasticEmailAsAuthAdminEmail': False,
