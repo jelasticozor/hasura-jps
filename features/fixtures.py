@@ -44,6 +44,7 @@ def jelastic_clients_factory(context):
     return context.jelastic_clients_factory
 
 
+@fixture
 def path_to_serverless_test_configuration(context):
     context.path_to_serverless_test_configuration = os.path.join(
         context.project_root_folder, 'features', 'data', 'functions', 'faas.yml')
