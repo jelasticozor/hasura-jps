@@ -109,8 +109,12 @@ onInstall:
   - installHasura
   # the load balancer uses hasura
   - installLoadBalancer
+  # this is to set the right e-mail in the success text
+  - getEmail
 
 actions:
+  getEmail:
+    - script: 'return { result: 0, email: ${settings.useJelasticEmailAsAuthAdminEmail} ? "${user.email}" : "${settings.authAdminEmail}" };'  
   installFaas:
     install:
       jps: serverless/manifest.yml
@@ -140,7 +144,7 @@ actions:
       settings:
         serverPort: ${globals.HASURA_SERVER_PORT}
   installFusionAuth:
-    - script: 'return { result: 0, email: ${settings.useJelasticEmailAsAuthAdminEmail} ? "${user.email}" : "${settings.authAdminEmail}" };'
+    - getEmail
     - install:
         jps: fusionauth/manifest.yml
         settings:
@@ -157,7 +161,6 @@ actions:
           almightyApiKey: ${globals.ALMIGHTY_API_KEY}
           serverlessApiKey: ${globals.SERVERLESS_API_KEY}
 
-# TODO: we display the wrong email address
 success:
   text: |
     **Hasura Console**: [${env.protocol}://${env.domain}/](${env.protocol}://${env.domain}/)  
@@ -172,7 +175,7 @@ success:
     **Auth Database Name**: ${globals.DB_AUTH_NAME}  
     **Auth Database Username**: ${globals.DB_AUTH_USERNAME}  
     **Auth Database Password**: ${globals.DB_AUTH_PASSWORD}  
-    **Auth Admin Email**: ${settings.authAdminEmail}  
+    **Auth Admin Email**: ${response.email}  
     **Auth Admin Password**: ${globals.AUTH_ADMIN_PASSWORD}  
     **Auth Almighty API Key**: ${globals.ALMIGHTY_API_KEY}  
     **Auth Serverless API Key**: ${globals.SERVERLESS_API_KEY}  

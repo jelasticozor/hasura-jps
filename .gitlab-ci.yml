@@ -62,7 +62,7 @@ publish-graphql-engine-image:
         --build-arg HASURA_VERSION=${HASURA_CLI_VERSION}
     - *docker-push
   # always build because it depends on the HASURA_CLI_VERSION env var
-  # if that var chages, this can't be detected
+  # if that var changes, this can't be detected
 
 publish-feature-test-image:
   stage: publish-docker
