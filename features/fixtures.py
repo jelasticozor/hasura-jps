@@ -200,5 +200,7 @@ fixtures_registry = {
     'default-jelastic-env': default_jelastic_environment,
     'jelastic-env-with-automatic-auth-admin-email': jelastic_environment_with_automatic_auth_admin_email,
     'jelastic-env-with-automatic-hasura-admin-secret': jelastic_environment_with_automatic_hasura_admin_secret,
-    'api-developer': api_developer
+    'api-developer': api_developer,
+    'auth-test-application': auth_test_application,
+    'registered-user-on-test-application': registered_user_on_test_application
 }

@@ -22,8 +22,6 @@ def before_all(context):
     use_fixture(registered_user_role, context)
     use_fixture(hasura_admin_secret, context)
     use_fixture(graphql_engine_image, context)
-    use_fixture(auth_test_application, context)
-    use_fixture(registered_user_on_test_application, context)
 
 
 def before_scenario(context, scenario):
