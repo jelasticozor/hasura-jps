@@ -13,4 +13,7 @@
     <orderEntry type="jdk" jdkName="3.9 @ Ubuntu-20.04" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PyBDDFrameworkConfig">
+    <option name="preferedFrameworkName" value="behave" />
+  </component>
 </module>

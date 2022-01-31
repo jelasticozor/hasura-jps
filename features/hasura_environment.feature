@@ -1,3 +1,4 @@
+@fixture.default-jelastic-env
 Feature: Hasura environment is well-defined
 
   As an API developer,  
