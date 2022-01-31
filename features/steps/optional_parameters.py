@@ -11,7 +11,7 @@ def step_impl(context, manifest_field):
         f'expected {expected_email}, got {actual_email}'
 
 
-@then('the \'{manifest_field}\' contains {field_length} characters')
+@then('the \'{manifest_field}\' contains {field_length:d} characters')
 def step_impl(context, manifest_field, field_length):
     actual_field_value = context.manifest_data[manifest_field]
     assert len(actual_field_value) == field_length, \
