@@ -5,11 +5,13 @@ Feature: Optional manifest parameters
   in order to ease environment deployment.
 
   @fixture.jelastic-env-with-automatic-auth-admin-email
+  @fixture.api-developer
   Scenario: Use automatic Jelastic user email as IAM admin email
 
     Then the 'Auth Admin Email' is the current Jelastic user email
 
   @fixture.jelastic-env-with-automatic-hasura-admin-secret
+  @fixture.api-developer
   Scenario: Use automatic Hasura admin secret
 
     Then the 'Hasura Admin Secret' contains 40 characters

@@ -1,4 +1,5 @@
 @fixture.default-jelastic-env
+@fixture.api-developer
 Feature: Identity and Access Management
 
   As an API developer,
