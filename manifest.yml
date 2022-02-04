@@ -169,7 +169,7 @@ actions:
           issuer: ${settings.authIssuer}
           almightyApiKey: ${globals.ALMIGHTY_API_KEY}
           serverlessApiKey: ${globals.SERVERLESS_API_KEY}
-          fromEmail: ${settings.authIssuer}
+          fromEmail: no-reply@${settings.authIssuer}
           fromName: ${settings.authIssuer}
 
 success:
