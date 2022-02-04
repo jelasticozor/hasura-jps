@@ -45,7 +45,69 @@
     },
     {
       "body": {
+        "emailTemplate": {
+          "defaultFromName": "#{fromName}",
+          "defaultHtmlTemplate": "To change your password use the following token: <p>${changePasswordId}</p>",
+          "defaultSubject": "Reset your password",
+          "defaultTextTemplate": "To change your password use the following token: \n\n${changePasswordId}",
+          "fromEmail": "#{fromEmail}",
+          "name": "Forgot Password"
+        }
+      },
+      "method": "POST",
+      "url": "/api/email/template/#{forgotPasswordEmailTemplateId}"
+    },
+    {
+      "body": {
+        "emailTemplate": {
+          "defaultFromName": "#{fromName}",
+          "defaultHtmlTemplate": "Your account has been created and you must setup a password. Use the following token to setup your password: \n<p>${changePasswordId}</p>",
+          "defaultSubject": "Setup your password",
+          "defaultTextTemplate": "Your account has been created and you must setup a password. Use the following token to setup your password: \n\n${changePasswordId}",
+          "fromEmail": "#{fromEmail}",
+          "name": "Setup Password"
+        }
+      },
+      "method": "POST",
+      "url": "/api/email/template/#{setPasswordEmailTemplateId}"
+    },
+    {
+      "body": {
+        "emailTemplate": {
+          "defaultFromName": "#{fromName}",
+          "defaultHtmlTemplate": "[#if user.verified]\nPro tip, your email has already been verified, but feel free to complete the verification process to verify your verification of your email address.\n[/#if]\n\nTo complete your email verification use the following token: <p>${verificationId}</p>",
+          "defaultSubject": "Verify your email address",
+          "defaultTextTemplate": "[#if user.verified]\nPro tip, your email has already been verified, but feel free to complete the verification process to verify your verification of your email address.\n[/#if]\n\nTo complete your email verification use the following token:\n\n${verificationId}",
+          "fromEmail": "#{fromEmail}",
+          "name": "Email Verification"
+        }
+      },
+      "method": "POST",
+      "url": "/api/email/template/#{verificationEmailTemplateId}"
+    },
+    {
+      "body": {
+        "emailTemplate": {
+          "defaultFromName": "#{fromName}",
+          "defaultHtmlTemplate": "[#if registration.verified]\nPro tip, your registration has already been verified, but feel free to complete the verification process to verify your verification of your registration.\n[/#if]\n\nTo complete your registration verification use the following token: \n<p>${verificationId}</p>",
+          "defaultSubject": "Verify your registration",
+          "defaultTextTemplate": "[#if registration.verified]\nPro tip, your registration has already been verified, but feel free to complete the verification process to verify your verification of your registration.\n[/#if]\n\nTo complete your registration verification use the following token: \n\n${verificationId}",
+          "fromEmail": "#{fromEmail}",
+          "name": "Registration Verification"
+        }
+      },
+      "method": "POST",
+      "url": "/api/email/template/#{registrationVerificationEmailTemplateId}"
+    },
+    {
+      "body": {
         "tenant": {
+          "emailConfiguration": {
+            "forgotPasswordEmailTemplateId": "#{forgotPasswordEmailTemplateId}",
+            "registrationVerificationEmailTemplateId": "#{registrationVerificationEmailTemplateId}",
+            "setPasswordEmailTemplateId": "#{setPasswordEmailTemplateId}",
+            "verificationEmailTemplateId": "#{verificationEmailTemplateId}"
+          },
           "issuer": "#{issuer}",
           "name": "Default"
         }
@@ -84,9 +146,15 @@
     "adminPassword": "my admin password",
     "almightyApiKey": "24114b81-4207-4b02-bcd5-3bbbb91a66e7",
     "defaultTenantId": "9d72d134-464e-4542-a42f-6b0ac602f0d2",
+    "forgotPasswordEmailTemplateId": "#{UUID()}",
+    "fromEmail": "no-reply@company.com",
+    "fromName": "Company",
     "hasuraClaimsNamespace": "https://hasura.io/jwt/claims",
     "hasuraLambdaId": "#{UUID()}",
     "issuer": "company.com",
-    "serverlessApiKey": "42f41c94-e41a-492c-891c-c85f2204c639"
+    "registrationVerificationEmailTemplateId": "#{UUID()}",
+    "serverlessApiKey": "42f41c94-e41a-492c-891c-c85f2204c639",
+    "setPasswordEmailTemplateId": "#{UUID()}",
+    "verificationEmailTemplateId": "#{UUID()}"
   }
 }

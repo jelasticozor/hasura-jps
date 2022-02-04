@@ -61,6 +61,16 @@ settings:
       type: string
       inputType: password
       required: true
+    - type: space
+      caption: Email templates
+    - name: fromEmail
+      caption: From Email
+      type: string
+      required: true
+    - name: fromName
+      caption: From Name
+      type: string
+      required: true
 
 globals:
   APP_MEMORY: 512
@@ -85,6 +95,8 @@ actions:
             --almighty-api-key ${settings.almightyApiKey} \
             --serverless-api-key ${settings.serverlessApiKey} \
             --issuer ${settings.issuer} \
+            --from-email ${settings.fromEmail} \
+            --from-name ${settings.fromName} \
             --input-kickstart ${globals.PATH_TO_KICKSTART_JSON} \
             --output-kickstart ${globals.PATH_TO_KICKSTART_JSON}
   setupDatabase:
