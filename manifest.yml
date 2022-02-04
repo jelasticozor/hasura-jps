@@ -165,7 +165,7 @@ actions:
             port: ${settings.useMailhog} ? "1025" : "${settings.mailServerPort}",
             username: ${settings.useMailhog} ? "" : "${settings.mailServerUsername}",
             password: ${settings.useMailhog} ? "" : "${settings.mailServerPassword}",
-            enableSsl: ${settings.useMailhog} ? false : true
+            enableSsl: ${settings.useMailhog} ? "False" : "True"
           }
         };
   installMailServer:
