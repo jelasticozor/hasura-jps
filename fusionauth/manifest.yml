@@ -118,8 +118,8 @@ actions:
             --issuer ${settings.issuer} \
             --mail-server-host ${settings.mailServerHost} \
             --mail-server-port ${settings.mailServerPort} \
-            --mail-server-username ${settings.mailServerUsername} \
-            --mail-server-password ${settings.mailServerPassword} \
+            --mail-server-username="${settings.mailServerUsername}" \
+            --mail-server-password="${settings.mailServerPassword}" \
             --mail-server-enable-ssl ${settings.mailServerEnableSsl} \
             --from-email ${settings.fromEmail} \
             --from-name ${settings.fromName} \

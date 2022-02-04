@@ -66,9 +66,9 @@ if __name__ == '__main__':
     parser.add_argument('--mail-server-port', required=True,
                         type=int, action='store')
     parser.add_argument('--mail-server-username',
-                        required=True, type=str, action='store')
+                        default='', type=str, action='store')
     parser.add_argument('--mail-server-password',
-                        required=True, type=str, action='store')
+                        default='', type=str, action='store')
     parser.add_argument('--mail-server-enable-ssl',
                         required=True, action='store_true')
     parser.add_argument('--from-name', required=True, type=str, action='store')
