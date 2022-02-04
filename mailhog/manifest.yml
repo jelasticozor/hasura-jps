@@ -1,0 +1,13 @@
+type: update
+name: Jelasticozor Dev Mail Server
+
+onInstall:
+- addNodes:
+  - nodeType: docker
+    nodeGroup: mail
+    displayName: Mailhog
+    count: 1
+    fixedCloudlets: 1
+    cloudlets: 16
+    dockerName: mailhog/mailhog
+    dockerTag: latest

@@ -62,7 +62,28 @@ settings:
       inputType: password
       required: true
     - type: space
-      caption: Email templates
+      caption: Email server
+    - name: mailServerHost
+      caption: Host
+      type: string
+      required: true
+    - name: mailServerPort
+      caption: Port
+      type: string
+      required: true
+    - name: mailServerUsername
+      caption: Username
+      type: string
+      required: true
+    - name: mailServerPassword
+      caption: Password
+      type: string
+      inputType: password
+      required: true
+    - name: mailServerEnableSsl
+      caption: Enable SSL
+      type: toggle
+      value: true
     - name: fromEmail
       caption: From Email
       type: string
@@ -95,6 +116,11 @@ actions:
             --almighty-api-key ${settings.almightyApiKey} \
             --serverless-api-key ${settings.serverlessApiKey} \
             --issuer ${settings.issuer} \
+            --mail-server-host ${settings.mailServerHost} \
+            --mail-server-port ${settings.mailServerPort} \
+            --mail-server-username ${settings.mailServerUsername} \
+            --mail-server-password ${settings.mailServerPassword} \
+            --mail-server-enable-ssl ${settings.mailServerEnableSsl} \
             --from-email ${settings.fromEmail} \
             --from-name ${settings.fromName} \
             --input-kickstart ${globals.PATH_TO_KICKSTART_JSON} \

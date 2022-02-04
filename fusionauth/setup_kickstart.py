@@ -31,6 +31,11 @@ def main(args):
         data['variables']['issuer'] = args.issuer
         data['variables']['almightyApiKey'] = args.almighty_api_key
         data['variables']['serverlessApiKey'] = args.serverless_api_key
+        data['variables']['mailServerHost'] = args.mail_server_host
+        data['variables']['mailServerPort'] = args.mail_server_port
+        data['variables']['mailServerUsername'] = args.mail_server_username
+        data['variables']['mailServerPassword'] = args.mail_server_password
+        data['variables']['mailServerSecurity'] = 'SSL' if args.mail_server_enable_ssl else 'NONE'
         data['variables']['fromEmail'] = args.from_email
         data['variables']['fromName'] = args.from_name
         if args.cors_allowed_origins:
@@ -56,9 +61,19 @@ if __name__ == '__main__':
     parser.add_argument('--hasura-claims-namespace',
                         default='https://hasura.io/jwt/claims', type=str, action='store')
     parser.add_argument('--issuer', required=True, type=str, action='store')
+    parser.add_argument('--mail-server-host', required=True,
+                        type=str, action='store')
+    parser.add_argument('--mail-server-port', required=True,
+                        type=int, action='store')
+    parser.add_argument('--mail-server-username',
+                        required=True, type=str, action='store')
+    parser.add_argument('--mail-server-password',
+                        required=True, type=str, action='store')
+    parser.add_argument('--mail-server-enable-ssl',
+                        required=True, action='store_true')
+    parser.add_argument('--from-name', required=True, type=str, action='store')
     parser.add_argument('--from-email', required=True,
                         type=str, action='store')
-    parser.add_argument('--from-name', required=True, type=str, action='store')
     parser.add_argument('--input-kickstart', required=True,
                         type=str, action='store')
     parser.add_argument('--output-kickstart', required=True,

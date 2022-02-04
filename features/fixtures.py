@@ -116,7 +116,8 @@ def default_jelastic_environment(context):
         'useJelasticEmailAsAuthAdminEmail': False,
         'authAdminEmail': context.fusionauth_admin_email,
         'authIssuer': context.fusionauth_issuer,
-        'fncTag': context.commit_sha
+        'fncTag': context.commit_sha,
+        'useMailhog': True
     }
     yield create_jelastic_environment(
         context, settings)
@@ -132,7 +133,8 @@ def jelastic_environment_with_automatic_settings(context):
         'fusionauthVersion': context.fusionauth_version,
         'useJelasticEmailAsAuthAdminEmail': True,
         'authIssuer': context.fusionauth_issuer,
-        'fncTag': context.commit_sha
+        'fncTag': context.commit_sha,
+        'useMailhog': True
     }
     yield create_jelastic_environment(
         context, settings)

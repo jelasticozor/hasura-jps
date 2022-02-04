@@ -98,12 +98,17 @@
             "defaultFromEmail": "#{fromEmail}",
             "defaultFromName": "#{fromName}",
             "forgotPasswordEmailTemplateId": "#{forgotPasswordEmailTemplateId}",
+            "host": "#{mailServerHost}",
+            "password": "#{mailServerPassword}",
+            "port": "#{mailServerPort}",
+            "security": "#{mailServerSecurity}",
             "setPasswordEmailTemplateId": "#{setPasswordEmailTemplateId}",
             "userDeletePolicy": {
               "unverified": {
                 "enabled": true
               }
             },
+            "username": "#{mailServerUsername}",
             "verificationEmailTemplateId": "#{verificationEmailTemplateId}",
             "verificationStrategy": "FormField",
             "verifyEmail": true,
@@ -153,6 +158,11 @@
     "hasuraClaimsNamespace": "https://hasura.io/jwt/claims",
     "hasuraLambdaId": "#{UUID()}",
     "issuer": "company.com",
+    "mailServerHost": "smtp-host",
+    "mailServerPassword": "smtp-pwd",
+    "mailServerPort": 1025,
+    "mailServerSecurity": "NONE",
+    "mailServerUsername": "smtp-user",
     "registrationVerificationEmailTemplateId": "#{UUID()}",
     "serverlessApiKey": "42f41c94-e41a-492c-891c-c85f2204c639",
     "setPasswordEmailTemplateId": "#{UUID()}",
