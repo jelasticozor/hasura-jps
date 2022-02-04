@@ -105,7 +105,8 @@
             "setPasswordEmailTemplateId": "#{setPasswordEmailTemplateId}",
             "userDeletePolicy": {
               "unverified": {
-                "enabled": true
+                "enabled": true,
+                "numberOfDaysToRetain": 1
               }
             },
             "username": "#{mailServerUsername}",
