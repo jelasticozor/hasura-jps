@@ -120,7 +120,7 @@ actions:
             --mail-server-port ${settings.mailServerPort} \
             --mail-server-username="${settings.mailServerUsername}" \
             --mail-server-password="${settings.mailServerPassword}" \
-            --mail-server-enable-ssl ${settings.mailServerEnableSsl} \
+            --mail-server-enable-ssl="${settings.mailServerEnableSsl}" \
             --from-email ${settings.fromEmail} \
             --from-name ${settings.fromName} \
             --input-kickstart ${globals.PATH_TO_KICKSTART_JSON} \
