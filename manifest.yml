@@ -140,8 +140,8 @@ nodes:
 skipNodeEmails: true
 
 onInstall:
-  # fusionauth uses the mail server
   - installMailServer
+  # fusionauth uses the mail server
   - installFusionAuth
   # the faas engine uses fusionauth
   - installFaas
@@ -226,6 +226,7 @@ actions:
           fromEmail: no-reply@${settings.authIssuer}
           fromName: ${settings.authIssuer}
 
+# TODO: add url to mailhog
 success:
   text: |
     **Hasura Console**: [${env.protocol}://${env.domain}/](${env.protocol}://${env.domain}/)  
