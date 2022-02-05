@@ -58,6 +58,10 @@ settings:
       caption: Server port
       type: string
       default: 8080
+    - name: hasuraClaimsNamespace
+      caption: Claims Namespace
+      type: string
+      default: https://hasura.io/jwt/claims
 
 onInstall:
   - setupDatabase
@@ -87,3 +91,5 @@ actions:
                   HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
                   FAAS_HOSTNAME: ${settings.faasHostname}
                   FAAS_PORT: ${settings.faasPort}
+                  # TODO: set type, key, and issuer (get from fusionauth api)
+                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "", "key": "", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": ""}'

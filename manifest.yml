@@ -97,6 +97,7 @@ globals:
   HASURA_SERVER_PORT: 8080
   HASURA_UNAUTHORIZED_ROLE: anonymous
   HASURA_ADMIN_SECRET_AUTO: ${fn.password(40)}
+  HASURA_CLAIMS_NAMESPACE: https://hasura.io/jwt/claims
   # faas
   FAAS_PORT: 8080
   # auth
@@ -196,6 +197,7 @@ actions:
           serverPort: ${globals.HASURA_SERVER_PORT}
           faasHostname: ${nodes.faas.master.intIP}
           faasPort: ${globals.FAAS_PORT}
+          hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
   installLoadBalancer:
     install:
       jps: bl/manifest.yml
@@ -225,6 +227,7 @@ actions:
           mailServerEnableSsl: ${response.mailServer.enableSsl}
           fromEmail: no-reply@${settings.authIssuer}
           fromName: ${settings.authIssuer}
+          hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
 
 # TODO: add url to mailhog
 success:

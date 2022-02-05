@@ -38,6 +38,7 @@ def main(args):
         data['variables']['mailServerSecurity'] = 'SSL' if args.mail_server_enable_ssl == 'True' else 'NONE'
         data['variables']['fromEmail'] = args.from_email
         data['variables']['fromName'] = args.from_name
+        data['variables']['hasuraClaimsNamespace'] = args.hasura_claims_namespace
         if args.cors_allowed_origins:
             data['requests'].append(system_configuration(
                 args.cors_allowed_origins.replace(' ', '').split(',')))
@@ -73,6 +74,8 @@ if __name__ == '__main__':
                         choices=('True', 'False'), action='store')
     parser.add_argument('--from-name', required=True, type=str, action='store')
     parser.add_argument('--from-email', required=True,
+                        type=str, action='store')
+    parser.add_argument('--hasura-claims-namespace', required=True,
                         type=str, action='store')
     parser.add_argument('--input-kickstart', required=True,
                         type=str, action='store')
