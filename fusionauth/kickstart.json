@@ -159,7 +159,7 @@
     "hasuraClaimsNamespace": "https://hasura.io/jwt/claims",
     "hasuraLambdaId": "#{UUID()}",
     "issuer": "company.com",
-    "jwtKeyAlgorithm": "RSA256",
+    "jwtKeyAlgorithm": "RS256",
     "jwtKeySize": 2048,
     "mailServerHost": "smtp-host",
     "mailServerPassword": "smtp-pwd",

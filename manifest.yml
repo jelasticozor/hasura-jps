@@ -106,7 +106,7 @@ globals:
   DATA_PROTECTION_SECRET_KEY: ${fn.password(40)}
   ALMIGHTY_API_KEY: ${fn.password(40)}
   SERVERLESS_API_KEY: ${fn.password(40)}
-  JWT_KEY_ALGORITHM: RSA256
+  JWT_KEY_ALGORITHM: RS256
   JWT_KEY_SIZE: 2048
 
 nodes:
