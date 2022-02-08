@@ -12,7 +12,8 @@ def create_hasura_client(env_info, admin_secret):
     port = 8080
     ip = env_info.get_node_ips(node_group='cp')[0]
     endpoint = f'http://{ip}:{port}'
-    assert host_has_port_open(ip, port)
+    assert host_has_port_open(ip, port), \
+        f'hasura port {port} not open on ip {ip}'
     factory = HasuraClientFactory('default')
 
     return factory.create(endpoint, admin_secret)
@@ -26,10 +27,12 @@ def create_graphql_client(env_info, admin_secret):
 
 def create_database_connections(env_info, admin_user, admin_password):
     primary_node_ip = env_info.get_node_ip_from_name('Primary')
-    assert primary_node_ip is not None
+    assert primary_node_ip is not None, \
+        f'expected primary node ip to be defined'
     secondary_node_ip = env_info.get_node_ip_from_name(
         'Secondary')
-    assert secondary_node_ip is not None
+    assert secondary_node_ip is not None, \
+        f'expected secondary node ip to be defined'
 
     hasura_db_name = 'hasura'
     auth_db_name = 'fusionauth'
@@ -63,7 +66,8 @@ def create_faas_client(env_info, file_client):
     node_group = 'faas'
     port = 8080
     ip = env_info.get_node_ips(node_type=node_type, node_group=node_group)[0]
-    assert host_has_port_open(ip, port)
+    assert host_has_port_open(ip, port), \
+        f'faas port {port} not open on ip {ip}'
     username = file_client.read(
         env_info.env_name(),
         '/var/lib/faasd/secrets/basic-auth-user',
@@ -82,7 +86,8 @@ def create_faas_client(env_info, file_client):
 def create_fusionauth_client(env_info, api_key):
     ip = env_info.get_node_ips(node_group='auth', node_type='docker')[0]
     port = 9011
-    assert host_has_port_open(ip, port)
+    assert host_has_port_open(ip, port), \
+        f'fusionauth port {port} not open on ip {ip}'
     auth_url = f'http://{ip}:{port}'
 
     return FusionAuthClient(api_key, auth_url)
@@ -231,6 +236,7 @@ class ApiDeveloper:
             f'unable to get lambdas: {response.exception} ({response.status})'
         return response.success_response['lambdas'][idx]['id']
 
+    # TODO: this works by coincidence; instead we should grab the only key with issuer jelasticozor.com
     def get_access_key_id(self, idx=0):
         response = self.__fusionauth_client.retrieve_keys()
         assert response.was_successful() is True, \
