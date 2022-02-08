@@ -102,32 +102,22 @@ actions:
     # https://stackoverflow.com/questions/71005123/how-can-i-query-an-internally-deployed-api-from-my-jelastic-environment
     - cmd [cp]:
         - keys=$(curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key)
+        - echo "keys = $keys"
         - echo $keys | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).algorithm' 1> /tmp/type
         - echo $keys | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).publicKey' 1> /tmp/key
     # TODO: extract out to separate script
     - script: |  
         function getFileContent(path) {
           const APPID = getParam("TARGET_APPID");
-          const response = jelastic.environment.file.read(APPID, session, path, "", "cp", "");
+          const response = jelastic.environment.file.read(APPID, session, path, "", "cp", "${nodes.cp.master.id}");
           if(response.result !== 0) {
             throw response.error + ": cannot read file content from path " + path;
           }
           return response.body
         }
 
-        function deleteFile(path) {
-          const APPID = getParam("TARGET_APPID");
-          const response = jelastic.environment.file.delete(APPID, session, path, "", "cp", "", "");
-          if(response.result !== 0) {
-            throw response.error + ": cannot read file content from path " + path;
-          }
-        }
-
         const type = getFileContent("/tmp/type");
         const key = getFileContent("/tmp/key");
-
-        deleteFile("/tmp/type");
-        deleteFile("/tmp/key");
 
         return {
           result: 0,
