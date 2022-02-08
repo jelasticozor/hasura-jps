@@ -198,6 +198,9 @@ actions:
           faasHostname: ${nodes.faas.master.intIP}
           faasPort: ${globals.FAAS_PORT}
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
+          authAlmightyApiKey: ${globals.ALMIGHTY_API_KEY}
+          authPort: ${globals.AUTH_PORT}
+          authIssuer: ${settings.authIssuer}
   installLoadBalancer:
     install:
       jps: bl/manifest.yml

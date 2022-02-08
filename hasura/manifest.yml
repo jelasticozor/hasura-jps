@@ -40,6 +40,21 @@ settings:
       type: string
       required: true
     - type: spacer
+      caption: Auth
+    - name: authAlmightyApiKey
+      caption: Almighty API Key
+      type: string
+      inputType: password
+      required: true
+    - name: authPort
+      caption: Auth Port
+      type: string
+      required: true
+    - name: authIssuer
+      caption: Auth Issuer
+      type: string
+      required: true
+    - type: spacer
       caption: Hasura
     - name: enableConsole
       caption: Enable console
@@ -64,11 +79,15 @@ settings:
       default: https://hasura.io/jwt/claims
 
 onInstall:
+  - installTools
   - setupDatabase
   - setupAppContainer
   - restartContainers[cp]
 
 actions:
+  # TODO: this is only needed for the hack to get the key and type from fusionauth in setupAppContainer
+  installTools:
+    - apt update && apt install -y jq
   setupDatabase:
     - cmd[${nodes.sqldb.master.id}]:
         - export PGPASSWORD=${settings.dbAdminPassword}
@@ -78,7 +97,44 @@ actions:
         - sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
         - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
   setupAppContainer:
+    # TODO: we might simplify this with an api call with the hivext library, but an issue is still open on the topic:
+    # https://stackoverflow.com/questions/71005123/how-can-i-query-an-internally-deployed-api-from-my-jelastic-environment
+    - cmd [cp]:
+        - keys=$(curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key)
+        - echo $keys | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).algorithm' 1> /tmp/type
+        - echo $keys | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).publicKey' 1> /tmp/key
+    # TODO: extract out to separate script
+    - script: |  
+        function getFileContent(path) {
+          const APPID = getParam("TARGET_APPID");
+          const response = jelastic.environment.file.read(APPID, session, path, "", "cp", "");
+          if(response.result !== 0) {
+            throw response.error + ": cannot read file content from path " + path;
+          }
+          return response.body
+        }
+
+        function deleteFile(path) {
+          const APPID = getParam("TARGET_APPID");
+          const response = jelastic.environment.file.delete(APPID, session, path, "", "cp", "", "");
+          if(response.result !== 0) {
+            throw response.error + ": cannot read file content from path " + path;
+          }
+        }
+
+        const type = getFileContent("/tmp/type");
+        const key = getFileContent("/tmp/key");
+
+        deleteFile("/tmp/type");
+        deleteFile("/tmp/key");
+
+        return {
+          result: 0,
+          type: type,
+          key: key
+        };  
     - forEach(nodes.cp):
+        # TODO: we can maybe simplify this as api [cp]:
         - api:
             - method: environment.control.SetContainerEnvVars
               params:
@@ -91,5 +147,4 @@ actions:
                   HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
                   FAAS_HOSTNAME: ${settings.faasHostname}
                   FAAS_PORT: ${settings.faasPort}
-                  # TODO: set type, key, and issuer (get from fusionauth api)
-                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "", "key": "", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": ""}'
+                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "${response.type}", "key": "${response.key}", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'

@@ -157,6 +157,9 @@ def registered_user_role(context):
 
 @fixture
 def auth_test_application(context):
+    # TODO: use an update manifest which
+    # 1. creates the app id on fusionauth
+    # 2. adds the app id in HASURA_GRAPHQL_JWT_SECRET on api
     context.auth_test_application = context.api_developer.create_test_application(
         context.registered_user_role)
     yield context.auth_test_application
