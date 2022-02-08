@@ -102,8 +102,7 @@ actions:
     # https://stackoverflow.com/questions/71005123/how-can-i-query-an-internally-deployed-api-from-my-jelastic-environment
     # TODO: make the algorithm a settings parameter!
     - cmd [cp]: |
-        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key \
-            | jq -r '.keys[] | select(.algorithm | contains("RS256")).publicKey' 1> /tmp/key
+        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.algorithm | contains("RS256")).publicKey' 1> /tmp/key
     # TODO: extract out to separate script
     - script: |  
         function getFileContent(path) {
