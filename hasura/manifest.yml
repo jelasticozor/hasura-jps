@@ -87,7 +87,8 @@ onInstall:
 actions:
   # TODO: this is only needed for the hack to get the key and type from fusionauth in setupAppContainer
   installTools:
-    - apt update && apt install -y jq
+    - cmd[cp]:
+        - apt update && apt install -y jq
   setupDatabase:
     - cmd[${nodes.sqldb.master.id}]:
         - export PGPASSWORD=${settings.dbAdminPassword}
