@@ -101,10 +101,8 @@ actions:
     # TODO: we might simplify this with an api call with the hivext library, but an issue is still open on the topic:
     # https://stackoverflow.com/questions/71005123/how-can-i-query-an-internally-deployed-api-from-my-jelastic-environment
     - cmd [cp]:
-        - keys=$(curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key)
-        - echo "keys = $keys"
-        - echo $keys | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).algorithm' 1> /tmp/type
-        - echo $keys | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).publicKey' 1> /tmp/key
+        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).algorithm' 1> /tmp/type
+        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).publicKey' 1> /tmp/key
     # TODO: extract out to separate script
     - script: |  
         function getFileContent(path) {
