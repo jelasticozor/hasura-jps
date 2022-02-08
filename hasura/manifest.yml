@@ -98,12 +98,8 @@ actions:
         - sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
         - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
   setupAppContainer:
-    # TODO: we might simplify this with an api call with the hivext library, but an issue is still open on the topic:
-    # https://stackoverflow.com/questions/71005123/how-can-i-query-an-internally-deployed-api-from-my-jelastic-environment
     # TODO: make the algorithm a settings parameter!
-    - getPublicKey
     - forEach(nodes.cp):
-        # TODO: we can maybe simplify this as api [cp]:
         - api:
             - method: environment.control.SetContainerEnvVars
               params:
@@ -117,7 +113,4 @@ actions:
                   FAAS_HOSTNAME: ${settings.faasHostname}
                   FAAS_PORT: ${settings.faasPort}
                   # TODO: get the type from the settings!
-                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "${response.out}", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
-  getPublicKey:
-    - cmd [cp]: |
-        curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.algorithm | contains("RS256")).publicKey'
+                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "jwk_url": "http://${nodes.auth.master.intIP}:${settings.authPort}/.well-known/jwks.json", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
