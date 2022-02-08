@@ -100,9 +100,10 @@ actions:
   setupAppContainer:
     # TODO: we might simplify this with an api call with the hivext library, but an issue is still open on the topic:
     # https://stackoverflow.com/questions/71005123/how-can-i-query-an-internally-deployed-api-from-my-jelastic-environment
-    - cmd [cp]:
-        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).algorithm' 1> /tmp/type
-        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.issuer | contains("${settings.authIssuer}")).publicKey' 1> /tmp/key
+    # TODO: make the algorithm a settings parameter!
+    - cmd [cp]: |
+        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key \
+            | jq -r '.keys[] | select(.algorithm | contains("RS256")).publicKey' 1> /tmp/key
     # TODO: extract out to separate script
     - script: |  
         function getFileContent(path) {
@@ -114,12 +115,10 @@ actions:
           return response.body
         }
 
-        const type = getFileContent("/tmp/type");
         const key = getFileContent("/tmp/key");
 
         return {
           result: 0,
-          type: type,
           key: key
         };  
     - forEach(nodes.cp):
@@ -136,4 +135,5 @@ actions:
                   HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
                   FAAS_HOSTNAME: ${settings.faasHostname}
                   FAAS_PORT: ${settings.faasPort}
-                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "${response.type}", "key": "${response.key}", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
+                  # TODO: get the type from the settings!
+                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "${response.key}", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
