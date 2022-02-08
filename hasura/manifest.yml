@@ -101,25 +101,7 @@ actions:
     # TODO: we might simplify this with an api call with the hivext library, but an issue is still open on the topic:
     # https://stackoverflow.com/questions/71005123/how-can-i-query-an-internally-deployed-api-from-my-jelastic-environment
     # TODO: make the algorithm a settings parameter!
-    - cmd [cp]: |
-        - curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.algorithm | contains("RS256")).publicKey' 1> /tmp/key
-    # TODO: extract out to separate script
-    - script: |  
-        function getFileContent(path) {
-          const APPID = getParam("TARGET_APPID");
-          const response = jelastic.environment.file.read(APPID, session, path, "", "cp", "${nodes.cp.master.id}");
-          if(response.result !== 0) {
-            throw response.error + ": cannot read file content from path " + path;
-          }
-          return response.body
-        }
-
-        const key = getFileContent("/tmp/key");
-
-        return {
-          result: 0,
-          key: key
-        };  
+    - getPublicKey
     - forEach(nodes.cp):
         # TODO: we can maybe simplify this as api [cp]:
         - api:
@@ -135,4 +117,7 @@ actions:
                   FAAS_HOSTNAME: ${settings.faasHostname}
                   FAAS_PORT: ${settings.faasPort}
                   # TODO: get the type from the settings!
-                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "${response.key}", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
+                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "${response.out}", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
+  getPublicKey:
+    - cmd [cp]: |
+        curl -s -H "Authorization: ${settings.authAlmightyApiKey}" http://${nodes.auth.master.intIP}:${settings.authPort}/api/key | jq -r '.keys[] | select(.algorithm | contains("RS256")).publicKey'
