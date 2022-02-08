@@ -125,8 +125,8 @@
     {
       "body": {
         "key": {
-          "algorithm": "RS256",
-          "length": 2048,
+          "algorithm": "#{jwtKeyAlgorithm}",
+          "length": "#{jwtKeySize}",
           "name": "RS256 Access token signing key"
         }
       },
@@ -159,6 +159,8 @@
     "hasuraClaimsNamespace": "https://hasura.io/jwt/claims",
     "hasuraLambdaId": "#{UUID()}",
     "issuer": "company.com",
+    "jwtKeyAlgorithm": "RSA256",
+    "jwtKeySize": 2048,
     "mailServerHost": "smtp-host",
     "mailServerPassword": "smtp-pwd",
     "mailServerPort": 1025,

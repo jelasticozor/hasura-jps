@@ -106,6 +106,8 @@ globals:
   DATA_PROTECTION_SECRET_KEY: ${fn.password(40)}
   ALMIGHTY_API_KEY: ${fn.password(40)}
   SERVERLESS_API_KEY: ${fn.password(40)}
+  JWT_KEY_ALGORITHM: RSA256
+  JWT_KEY_SIZE: 2048
 
 nodes:
 - count: 1
@@ -201,6 +203,7 @@ actions:
           authAlmightyApiKey: ${globals.ALMIGHTY_API_KEY}
           authPort: ${globals.AUTH_PORT}
           authIssuer: ${settings.authIssuer}
+          jwtKeyAlgorithm: ${globals.JWT_KEY_ALGORITHM}
   installLoadBalancer:
     install:
       jps: bl/manifest.yml
@@ -231,6 +234,8 @@ actions:
           fromEmail: no-reply@${settings.authIssuer}
           fromName: ${settings.authIssuer}
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
+          jwtKeyAlgorithm: ${globals.JWT_KEY_ALGORITHM}
+          jwtKeySize: ${globals.JWT_KEY_SIZE}
 
 # TODO: add url to mailhog
 success:

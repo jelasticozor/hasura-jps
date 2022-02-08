@@ -54,6 +54,10 @@ settings:
       caption: Auth Issuer
       type: string
       required: true
+    - name: jwtKeyAlgorithm
+      caption: JWT Key Algorithm
+      type: string
+      required: true
     - type: spacer
       caption: Hasura
     - name: enableConsole
@@ -93,7 +97,6 @@ actions:
         - sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
         - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
   setupAppContainer:
-    # TODO: make the algorithm a settings parameter!
     - forEach(nodes.cp):
         - api:
             - method: environment.control.SetContainerEnvVars
@@ -107,5 +110,4 @@ actions:
                   HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
                   FAAS_HOSTNAME: ${settings.faasHostname}
                   FAAS_PORT: ${settings.faasPort}
-                  # TODO: get the type from the settings!
-                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "jwk_url": "http://${nodes.auth.master.intIP}:${settings.authPort}/.well-known/jwks.json", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
+                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "${settings.jwtKeyAlgorithm}", "jwk_url": "http://${nodes.auth.master.intIP}:${settings.authPort}/.well-known/jwks.json", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'

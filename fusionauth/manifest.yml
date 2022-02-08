@@ -37,6 +37,14 @@ settings:
       inputType: password
       type: string
       required: true
+    - name: jwtKeyAlgorithm
+      caption: JWT Key Algorithm
+      type: string
+      required: true
+    - name: jwtKeySize
+      caption: JWT Key Size
+      type: string
+      required: true
     - type: spacer
       caption: Hasura
     - name: hasuraClaimsNamespace
@@ -130,6 +138,8 @@ actions:
             --from-email ${settings.fromEmail} \
             --from-name ${settings.fromName} \
             --hasura-claims-namespace ${settings.hasuraClaimsNamespace} \
+            --jwt-key-algorithm ${settings.jwtKeyAlgorithm} \
+            --jwt-key-size ${settings.jwtKeySize} \
             --input-kickstart ${globals.PATH_TO_KICKSTART_JSON} \
             --output-kickstart ${globals.PATH_TO_KICKSTART_JSON}
   setupDatabase:
