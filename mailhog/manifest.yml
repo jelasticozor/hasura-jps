@@ -5,7 +5,8 @@ onInstall:
 - addNodes:
   - nodeType: docker
     nodeGroup: mail
-    displayName: Mailhog
+    nodeGroupData:
+      displayName: Mailhog
     count: 1
     fixedCloudlets: 1
     cloudlets: 16
