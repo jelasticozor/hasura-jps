@@ -79,16 +79,11 @@ settings:
       default: https://hasura.io/jwt/claims
 
 onInstall:
-  - installTools
   - setupDatabase
   - setupAppContainer
   - restartContainers[cp]
 
 actions:
-  # TODO: this is only needed for the hack to get the key and type from fusionauth in setupAppContainer
-  installTools:
-    - cmd[cp]:
-        - apt update && apt install -y jq
   setupDatabase:
     - cmd[${nodes.sqldb.master.id}]:
         - export PGPASSWORD=${settings.dbAdminPassword}
