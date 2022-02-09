@@ -97,17 +97,16 @@ actions:
         - sed -i s/DATABASE_USER/${settings.dbUsername}/g setup.sql
         - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
   setupAppContainer:
-    - forEach(nodes.cp):
-        - api:
-            - method: environment.control.SetContainerEnvVars
-              params:
-                nodeId: ${@i.id}
-                vars:
-                  HASURA_GRAPHQL_DATABASE_URL: postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}
-                  HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
-                  HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
-                  HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
-                  HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
-                  FAAS_HOSTNAME: ${settings.faasHostname}
-                  FAAS_PORT: ${settings.faasPort}
-                  HASURA_GRAPHQL_JWT_SECRET: '{"type": "${settings.jwtKeyAlgorithm}", "jwk_url": "http://${nodes.auth.master.intIP}:${settings.authPort}/.well-known/jwks.json", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
+      - api:
+          - method: environment.control.SetContainerEnvVarsByGroup
+            params:
+              nodeGroup: cp
+              data:
+                HASURA_GRAPHQL_DATABASE_URL: postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}
+                HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
+                HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
+                HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${settings.unauthorizedRole}
+                HASURA_GRAPHQL_SERVER_PORT: ${settings.serverPort}
+                FAAS_HOSTNAME: ${settings.faasHostname}
+                FAAS_PORT: ${settings.faasPort}
+                HASURA_GRAPHQL_JWT_SECRET: '{"type": "${settings.jwtKeyAlgorithm}", "jwk_url": "http://${nodes.auth.master.intIP}:${settings.authPort}/.well-known/jwks.json", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
