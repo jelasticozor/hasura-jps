@@ -16,8 +16,8 @@ settings:
 onInstall:
   - installAddon:
       id: letsencrypt
-  - redirectHttpToHttps
-  - restartContainers[bl]
+#  - redirectHttpToHttps
+#  - restartContainers[bl]
 
 actions:
   redirectHttpToHttps:
