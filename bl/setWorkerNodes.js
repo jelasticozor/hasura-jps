@@ -1,11 +1,11 @@
 function checkJelasticResponse(response, errorMsg) {
   if (!response || response.result !== 0) {
-    throw errorMsg + ': ' + response;
+    throw errorMsg + ': ' + response
   }
 }
 
 function getNodesInfo(envName) {
-  const resp = jelastic.environment.control.GetEnvInfo(envName, session);
+  const resp = jelastic.environment.control.GetEnvInfo(envName, session)
   checkJelasticResponse(
     resp,
     "Cannot get environment info of environment <" +
@@ -13,20 +13,20 @@ function getNodesInfo(envName) {
       ">, session <" +
       session +
       ">"
-  );
-  return resp.nodes;
+  )
+  return resp.nodes
 }
 
 function getWorkerNodeServers(envName, serverPort) {
-  var result = [];
-  const nodes = getNodesInfo(envName);
+  var result = []
+  const nodes = getNodesInfo(envName)
   for (var i = 0; i < nodes.length; ++i) {
-    var node = nodes[i];
+    var node = nodes[i]
     if (node.nodeGroup == 'cp') {
-      result.push('server ' + node.intIP + ':' + serverPort + '; ');
+      result.push('server ' + node.intIP + ':' + serverPort + '; ')
     }
   }
-  return result.toString();
+  return result.toString()
 }
 
 function replaceInBody(envName, path, pattern, replacement) {
@@ -37,9 +37,9 @@ function replaceInBody(envName, path, pattern, replacement) {
     pattern,
     replacement,
     '', // nth
-    '' // nodeType
+    '', // nodeType
     'bl' // nodeGroup
-  );
+  )
   checkJelasticResponse(
     resp,
     'Replacing pattern <' +
@@ -57,4 +57,4 @@ function setWorkerNodes (envName, filename, placeholder, serverPort) {
   replaceInBody(envName, filename, placeholder, workerNodes)
 }
 
-return setWorkerNodes(getParam('TARGET_APPID'), getParam('filename'), getParam('workerNodesPlaceholder'), getParam('serverPort'))
+return setWorkerNodes(getParam('TARGET_APPID'), getParam('filename'), getParam('workerNodesPlaceholder'))
