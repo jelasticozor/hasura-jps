@@ -6,13 +6,14 @@ targetNodes:
   nodeGroup:
     - bl
 
-settings:
-  fields:
-    - name: externalDomains
-      caption: External domain names (;-separated list)
-      type: string
-      vtype: domainlist
-      required: true
+# TODO: find out why this does not work
+#settings:
+#  fields:
+#    - name: externalDomains
+#      caption: External domain names (;-separated list)
+#      type: string
+#      vtype: domainlist
+#      required: true
 
 onInstall:
   - installAddon:
@@ -34,4 +35,4 @@ addons:
           envName: ${env.envName}
           jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
           settings:
-            customDomains: ${settings.externalDomains}
+            customDomains: ${env.envName}.hidora.com

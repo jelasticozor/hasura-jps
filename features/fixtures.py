@@ -119,7 +119,7 @@ def default_jelastic_environment(context):
         'fncTag': context.commit_sha,
         'useMailhog': True,
         # TODO: we should test that the external domains be set correctly
-        'useDefaultExternalDomain': True
+        # 'useDefaultExternalDomain': True
     }
     yield create_jelastic_environment(
         context, settings)
