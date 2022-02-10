@@ -1,21 +1,36 @@
 type: update
 name: load balancer
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+
+targetNodes:
+  nodeGroup:
+    - bl
 
 settings:
   fields:
-    - name: serverPort
-      caption: Server port
+    - name: externalDomains
+      caption: External domain names (;-separated list)
       type: string
-      default: 8080
+      required: true
 
 onInstall:
-  - replaceUpstreamServerPortWithHasuraPort
+  - installAddon:
+      id: letsencrypt
+  - redirectHttpToHttps
   - restartContainers[bl]
 
 actions:
-  replaceUpstreamServerPortWithHasuraPort:
-    - cmd[bl]:
-        - cp /etc/nginx/nginx-jelastic.conf /etc/nginx/nginx-jelastic.conf.bak
-        - sed -i -E 's/([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\)\:80/\1:${settings.serverPort}/g' /etc/nginx/nginx-jelastic.conf
-        - sed -i -E 's/(server [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/\1:${settings.serverPort}/g' /etc/nginx/nginx-jelastic.conf
+  redirectHttpToHttps:
+    - cmd [bl]:
+        - wget ${baseUrl}/bl/nginx-jelastic.conf -O /etc/nginx/nginx-jelastic.conf
       user: root
+
+addons:
+  - id: letsencrypt
+    name: letsencrypt
+    onInstall:
+      - install [bl]:
+          envName: ${env.envName}
+          jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
+          settings:
+            customDomains: ${settings.externalDomains}

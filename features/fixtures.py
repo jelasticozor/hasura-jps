@@ -117,7 +117,9 @@ def default_jelastic_environment(context):
         'authAdminEmail': context.fusionauth_admin_email,
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
-        'useMailhog': True
+        'useMailhog': True,
+        # TODO: we should test that the external domains be set correctly
+        'useDefaultExternalDomain': True
     }
     yield create_jelastic_environment(
         context, settings)
@@ -134,7 +136,8 @@ def jelastic_environment_with_automatic_settings(context):
         'useJelasticEmailAsAuthAdminEmail': True,
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
-        'useMailhog': True
+        'useMailhog': True,
+        'useDefaultExternalDomain': True
     }
     yield create_jelastic_environment(
         context, settings)
