@@ -11,6 +11,7 @@ settings:
     - name: externalDomains
       caption: External domain names (;-separated list)
       type: string
+      vtype: domainlist
       required: true
 
 onInstall:
