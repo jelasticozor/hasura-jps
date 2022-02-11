@@ -135,7 +135,6 @@ def jelastic_environment_with_automatic_settings(context):
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
         'useMailhog': True,
-        'useDefaultExternalDomain': True
     }
     yield create_jelastic_environment(
         context, settings)

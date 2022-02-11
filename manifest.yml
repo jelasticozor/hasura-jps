@@ -4,9 +4,9 @@ baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
-    - type: spacer
-      caption: SSL
 # TODO: find out why this does not work
+#    - type: spacer
+#      caption: SSL
 #    - name: useDefaultExternalDomain
 #      type: toggle
 #      caption: Use Default External Domain

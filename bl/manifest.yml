@@ -18,13 +18,19 @@ targetNodes:
 onInstall:
   - installAddon:
       id: letsencrypt
-#  - redirectHttpToHttps
-#  - restartContainers[bl]
+  - redirectHttpToHttps
+  - restartContainers[bl]
 
 actions:
   redirectHttpToHttps:
     - cmd [bl]:
-        - wget ${baseUrl}/bl/nginx-jelastic.conf -O /etc/nginx/nginx-jelastic.conf
+        - wget ${baseUrl}/bl/main-server.conf -O /etc/nginx/conf.d/main-server.conf
+      user: root
+    - cmd [bl]:
+        - cd /etc/nginx
+        - cp nginx-jelastic.conf nginx-jelastic.conf.bak
+        - out=$(head -n -6 nginx-jelastic.conf; echo "END_MARKER" ; tail -6 nginx-jelastic.conf); echo "$out" > nginx-jelastic.conf
+        - sed -i -e '/GFADMIN/,/END_MARKER/!b' -e '/END_MARKER/!d' -e 'd' nginx-jelastic.conf
       user: root
 
 addons:
