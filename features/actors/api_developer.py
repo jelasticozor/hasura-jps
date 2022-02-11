@@ -20,7 +20,7 @@ def create_hasura_client(env_info, admin_secret):
 
 
 def create_graphql_client(env_info, admin_secret):
-    endpoint = f'http://{env_info.domain()}/v1/graphql'
+    endpoint = f'https://{env_info.domain()}/v1/graphql'
 
     return GraphQLClient(endpoint, admin_secret)
 
