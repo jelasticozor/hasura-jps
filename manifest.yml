@@ -99,7 +99,14 @@ settings:
             type: toggle
             value: true
 
+# TODO: define dev / prod cluster
+# - dev --> mailhog + OPENSSL_NUMBITS = 256
+# - prod --> OPENSSL_NUMBITS = 4096
+
 globals:
+  # nginx
+  # TODO: remove
+  OPENSSL_NUMBITS: 256
   # postgres
   DB_ADMIN_USERNAME: webadmin
   DB_NAME: hasura
@@ -225,8 +232,9 @@ actions:
     - getOptionalParams
     - install:
         jps: bl/manifest.yml
+        settings:
+          openSslNumbits: ${globals.OPENSSL_NUMBITS}
 # TODO: find out why this does not work
-#        settings:
 #          externalDomains: ${response.externalDomains}
   installFusionAuth:
     - getOptionalParams

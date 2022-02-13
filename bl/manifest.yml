@@ -6,26 +6,46 @@ targetNodes:
   nodeGroup:
     - bl
 
+settings:
+  fields:
+    - name: openSslNumbits
+      caption: Numbits (OpenSSL)
+      type: numberpicker
+      required: true
+      default: 4096
+      editable: true
+      min: 0
+      max: 16384
 # TODO: find out why this does not work
-#settings:
-#  fields:
 #    - name: externalDomains
 #      caption: External domain names (;-separated list)
 #      type: string
 #      vtype: domainlist
 #      required: true
 
+globals:
+  DHPARAM_FILENAME: /var/lib/nginx/dhparam.pem
+
 onInstall:
   - installAddon:
       id: letsencrypt
-  - redirectHttpToHttps
+  - configureSSL
   - restartContainers[bl]
 
 actions:
-  redirectHttpToHttps:
+  configureSSL:
+    - cmd [bl]:
+        - openssl dhparam -out ${globals.DHPARAM_FILENAME} ${settings.openSslNumbits}
     - cmd [bl]:
         - wget ${baseUrl}/bl/main-server.conf -O /etc/nginx/conf.d/main-server.conf
+        - wget ${baseUrl}/bl/ssl.conf -O /etc/nginx/conf.d/ssl.conf
       user: root
+    - replaceInFile:
+        path: /etc/nginx/conf.d/ssl.conf
+        replacements:
+          - pattern: PATH_TO_PEM_FILE
+            replacement: ${globals.DHPARAM_FILENAME}
+        nodeType: bl
     - cmd [bl]:
         - cd /etc/nginx
         - cp nginx-jelastic.conf nginx-jelastic.conf.bak
