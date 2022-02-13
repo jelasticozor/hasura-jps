@@ -6,17 +6,6 @@ targetNodes:
   nodeGroup:
     - bl
 
-settings:
-  fields:
-    - name: openSslNumbits
-      caption: Numbits (OpenSSL)
-      type: numberpicker
-      required: true
-      default: 4096
-      editable: true
-      min: 0
-      max: 16384
-
 globals:
   DHPARAM_FILENAME: /var/lib/nginx/dhparam.pem
 
