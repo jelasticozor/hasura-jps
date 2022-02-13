@@ -16,12 +16,6 @@ settings:
       editable: true
       min: 0
       max: 16384
-# TODO: find out why this does not work
-#    - name: externalDomains
-#      caption: External domain names (;-separated list)
-#      type: string
-#      vtype: domainlist
-#      required: true
 
 globals:
   DHPARAM_FILENAME: /var/lib/nginx/dhparam.pem

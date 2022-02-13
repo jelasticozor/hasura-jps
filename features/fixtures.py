@@ -118,7 +118,7 @@ def default_jelastic_environment(context):
         'authAdminEmail': context.fusionauth_admin_email,
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
-        'useMailhog': True,
+        'clusterType': 'dev',
     }
     yield create_jelastic_environment(
         context, settings)
@@ -136,7 +136,7 @@ def jelastic_environment_with_automatic_settings(context):
         'useJelasticEmailAsAuthAdminEmail': True,
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
-        'useMailhog': True,
+        'clusterType': 'dev',
     }
     yield create_jelastic_environment(
         context, settings)
