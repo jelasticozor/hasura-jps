@@ -34,7 +34,10 @@ Feature: Hasura environment is well-defined
     And there is 1 docker node in the cp node group
     And there is 1 nginx-dockerized node in the bl node group
 
-  # TODO: check that the nginx has ssl installed
+  Scenario: The api cannot be accessed through http
+
+    When the api developer sends an http request to the api
+    Then she gets http status code 307
 
   Scenario: The database meets the relevant preconditions
 

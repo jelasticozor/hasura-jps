@@ -103,6 +103,7 @@ def can_invoke_function(url, timeout_in_sec=120, period_in_sec=5):
 
 class ApiDeveloper:
     def __init__(self, jelastic_clients_factory, env_info, manifest_data):
+        self.__env_info = env_info
         self.__db_connections = create_database_connections(
             env_info, manifest_data['Database Admin User'], manifest_data['Database Admin Password'])
         file_client = jelastic_clients_factory.create_file_client()
@@ -117,6 +118,15 @@ class ApiDeveloper:
 
     def __del__(self):
         self.__close_database_connections()
+
+    # region General
+
+    def ping_api_through_http(self):
+        response = requests.get(
+            f'http://{self.__env_info.domain()}/v1/graphql')
+        return response.status_code
+
+    # endregion
 
     # region Database
 
