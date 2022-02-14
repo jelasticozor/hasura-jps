@@ -1,5 +1,5 @@
 type: update
-name: Jelasticozor Dev Mail Server
+name: Dev Mail Server
 
 onInstall:
 - addNodes:
