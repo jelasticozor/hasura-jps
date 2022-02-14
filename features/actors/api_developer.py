@@ -122,8 +122,10 @@ class ApiDeveloper:
     # region General
 
     def ping_api_through_http(self):
-        response = requests.get(
-            f'http://{self.__env_info.domain()}/v1/graphql')
+        endpoint = f'http://{self.__env_info.domain()}/v1/graphql'
+        print('pinging ', endpoint)
+        response = requests.get(endpoint)
+        print('response = ', response)
         return response.status_code
 
     # endregion
