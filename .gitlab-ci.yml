@@ -1,4 +1,5 @@
 stages:
+  - setup
   - test
   - publish-docker
   - review
@@ -28,6 +29,15 @@ variables:
     - IMG_TAG=${CI_COMMIT_SHORT_SHA} faas-cli push -f ./${FAAS_CONFIG}.yml
     - IMG_TAG=latest faas-cli build -f ./${FAAS_CONFIG}.yml
     - IMG_TAG=latest faas-cli push -f ./${FAAS_CONFIG}.yml
+
+start runners:
+  stage: setup
+  image: softozor/gitlab-runner-mgmt:$JELASTIC_ENV_MGMT_SHA
+  script:
+    - |
+      python3 /app/start_env.py --api-url ${JELASTIC_API_URL} \
+        --access-token ${JELASTIC_ACCESS_TOKEN} \
+        --env-name ${GITLAB_RUNNERS_ENV_NAME}
 
 dotnet-tests:
   stage: test
