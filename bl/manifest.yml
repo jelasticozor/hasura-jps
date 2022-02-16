@@ -35,4 +35,4 @@ addons:
           envName: ${env.envName}
           jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
           settings:
-            customDomains: ${env.envName}.hidora.com
+            customDomains: ${env.domain}
