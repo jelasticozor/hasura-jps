@@ -112,7 +112,6 @@ globals:
   ALMIGHTY_API_KEY: ${fn.password(40)}
   SERVERLESS_API_KEY: ${fn.password(40)}
   JWT_KEY_ALGORITHM: RS256
-  JWT_KEY_SIZE: 2048
 
 nodes:
 - count: 1
@@ -239,8 +238,6 @@ actions:
           fromEmail: no-reply@${settings.authIssuer}
           fromName: ${settings.authIssuer}
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
-          jwtKeyAlgorithm: ${globals.JWT_KEY_ALGORITHM}
-          jwtKeySize: ${globals.JWT_KEY_SIZE}
           fusionauthVersion: ${settings.fusionauthVersion}
 
 success:

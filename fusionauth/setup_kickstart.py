@@ -38,8 +38,6 @@ def main(args):
         data['variables']['mailServerSecurity'] = 'SSL' if args.mail_server_enable_ssl == 'True' else 'NONE'
         data['variables']['fromEmail'] = args.from_email
         data['variables']['fromName'] = args.from_name
-        data['variables']['jwtKeyAlgorithm'] = args.jwt_key_algorithm
-        data['variables']['jwtKeySize'] = args.jwt_key_size
         if args.cors_allowed_origins:
             data['requests'].append(system_configuration(
                 args.cors_allowed_origins.replace(' ', '').split(',')))
@@ -76,10 +74,6 @@ if __name__ == '__main__':
     parser.add_argument('--from-name', required=True, type=str, action='store')
     parser.add_argument('--from-email', required=True,
                         type=str, action='store')
-    parser.add_argument('--jwt-key-algorithm', required=True,
-                        type=str, action='store')
-    parser.add_argument('--jwt-key-size', required=True,
-                        type=int, action='store')
     parser.add_argument('--input-kickstart', required=True,
                         type=str, action='store')
     parser.add_argument('--output-kickstart', required=True,

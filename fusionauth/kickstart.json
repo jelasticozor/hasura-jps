@@ -124,17 +124,6 @@
     },
     {
       "body": {
-        "key": {
-          "algorithm": "#{jwtKeyAlgorithm}",
-          "length": "#{jwtKeySize}",
-          "name": "RS256 Access token signing key"
-        }
-      },
-      "method": "POST",
-      "url": "/api/key/generate/#{accessTokenSigningKeyId}"
-    },
-    {
-      "body": {
         "lambda": {
           "body": "function populate(jwt, user, registration) { jwt['#{hasuraClaimsNamespace}'] = { 'x-hasura-allowed-roles': jwt.roles, 'x-hasura-default-role': jwt.roles[0], 'x-hasura-user-id': user.id }; }",
           "debug": true,
@@ -148,7 +137,6 @@
     }
   ],
   "variables": {
-    "accessTokenSigningKeyId": "#{UUID()}",
     "adminEmail": "admin@company.com",
     "adminPassword": "my admin password",
     "almightyApiKey": "24114b81-4207-4b02-bcd5-3bbbb91a66e7",
@@ -159,8 +147,6 @@
     "hasuraClaimsNamespace": "https://hasura.io/jwt/claims",
     "hasuraLambdaId": "#{UUID()}",
     "issuer": "company.com",
-    "jwtKeyAlgorithm": "RS256",
-    "jwtKeySize": 2048,
     "mailServerHost": "smtp-host",
     "mailServerPassword": "smtp-pwd",
     "mailServerPort": 1025,
