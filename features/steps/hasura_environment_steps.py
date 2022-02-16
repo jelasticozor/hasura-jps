@@ -11,11 +11,6 @@ def step_impl(context, table_name, database):
         context.database_error = str(e)
 
 
-@when("the api developer sends an http request to the api")
-def step_impl(context):
-    context.request_status_code = context.api_developer.ping_api_through_http()
-
-
 @then('the postgres version is {postgres_version:d}')
 def step_impl(context, postgres_version):
     min_version = postgres_version * 10000
@@ -93,9 +88,3 @@ def step_impl(context, nb_nodes, node_type, node_group):
     node_ips = context.current_env_info.get_node_ips(
         node_group=node_group, node_type=node_type)
     assert len(node_ips) == nb_nodes
-
-
-@then("she gets http status code {expected_status_code:d}")
-def step_impl(context, expected_status_code):
-    assert context.request_status_code == expected_status_code, \
-        f'expected status {expected_status_code}, got {context.request_status_code}'

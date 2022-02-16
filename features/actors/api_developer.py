@@ -119,17 +119,6 @@ class ApiDeveloper:
     def __del__(self):
         self.__close_database_connections()
 
-    # region General
-
-    def ping_api_through_http(self):
-        endpoint = f'http://{self.__env_info.domain()}/v1/graphql'
-        print('pinging ', endpoint)
-        response = requests.get(endpoint)
-        print('response = ', response)
-        return response.status_code
-
-    # endregion
-
     # region Database
 
     def database_contains_table(self, database, table_name, timeout_in_sec=120, period_in_sec=0.1):
