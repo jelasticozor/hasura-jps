@@ -1,0 +1,50 @@
+type: update
+name: Add Application To Hasura
+baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+
+settings:
+  fields:
+    - type: spacer
+      caption: Application
+    - name: appName
+      caption: Name
+      type: string
+      required: true
+    - name: appRoles
+      caption: Roles (";"-separated list; first is default)
+      type: string
+      required: true
+    - name: appId
+      caption: Id
+      type: string
+      regex: ^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$
+    - type: spacer
+      caption: Fusionauth
+    - name: almightyApiKey
+      caption: Almighty API Key
+      type: string
+      inputType: password
+      required: true
+    - name: jwtIssuer
+      caption: JWT Issuer
+      type: string
+      required: true
+    - name: jwtAlgo
+      caption: JWT Algorithm
+      type: string
+      required: true
+
+onInstall:
+  # TODO:
+  #   2. load python script from repo to read HASURA_GRAPHQL_JWT_SECRET into json, modify it, and set it back
+  - cmd[auth]:
+      - wget ${baseUrl}/fusionauth/create_application.py -O create_application.py
+  - cmd[auth]: |
+      python3 ./create_application.py --api-url http://localhost:9011 \
+        --api-key ${settings.almightApiKey} \
+        --jwt-issuer ${settings.jwtIssuer} \
+        --jwt-algorithm ${settings.jwtAlgo} \
+        --app-name ${settings.appName} \
+        --app-id ${settings.appId} \
+        --roles ${settings.appRoles}
+  - log: "created application id = ${response.out}"

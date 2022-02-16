@@ -241,6 +241,7 @@ actions:
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
           jwtKeyAlgorithm: ${globals.JWT_KEY_ALGORITHM}
           jwtKeySize: ${globals.JWT_KEY_SIZE}
+          fusionauthVersion: ${settings.fusionauthVersion}
 
 success:
   text: |

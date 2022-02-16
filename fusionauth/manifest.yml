@@ -106,6 +106,10 @@ settings:
       caption: From Name
       type: string
       required: true
+    - name: fusionauthVersion
+      caption: Fusionauth version
+      type: string
+      required: true
 
 globals:
   APP_MEMORY: 512
@@ -113,12 +117,17 @@ globals:
   PATH_TO_SETUP_KICKSTART: /usr/local/fusionauth/setup_kickstart.py
 
 onInstall:
+  - installClient
   - setupKickstart
   - setupDatabase
   - setupAppContainer
   - restartContainers[auth]
 
 actions:
+  installClient:
+    - cmd[auth]:
+        - apt update && apt install -y python3-pip
+        - pip3 install fusionauth-client==${settings.fusionauthVersion}
   setupKickstart:
     - cmd[auth]:
         - wget --quiet ${baseUrl}/fusionauth/kickstart.json -O ${globals.PATH_TO_KICKSTART_JSON}
