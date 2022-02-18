@@ -26,6 +26,9 @@ settings:
       inputType: password
       required: true
 
+globals:
+  ENV_VAR_NAME: HASURA_GRAPHQL_JWT_SECRET
+
 onInstall:
   - cmd[auth]:
       - wget ${baseUrl}/fusionauth/create_application.py -O create_application.py
@@ -35,6 +38,37 @@ onInstall:
         --app-name "${settings.appName}" \
         --app-id "${settings.appId}" \
         --roles "${settings.appRoles}"
-  - log: "created application id = ${response.out}"
-  # TODO:
-  #   2. load python script from repo to read HASURA_GRAPHQL_JWT_SECRET into json, modify it, and set it back
+  - script: |
+      const appId = "${response.out}"
+
+      const resp = jelastic.environment.control.GetContainerEnvVarsByGroup({
+        envName: '${env.appid}',
+        session: session,
+        nodeGroup: 'cp'
+      })
+
+      if (resp.result != 0) return resp
+
+      const variablesDict = resp.object;
+      if (!("${globals.ENV_VAR_NAME}" in variablesDict)) {
+        return {
+          result: 1,
+          errOut: "variable ${globals.ENV_VAR_NAME} not found in the set of environment variables on 'cp' nodegroup: " + variablesDict
+        }
+      }
+
+      const value = JSON.parse(variablesDict["${globals.ENV_VAR_NAME}"])
+
+      value["audience"].push(appId)
+
+      const vars = {
+        "${globals.ENV_VAR_NAME}": value
+      }
+
+      jelastic.environment.control.AddContainerEnvVars({
+        envName: '${env.appid}',
+        session: session,
+        nodeGroup: 'cp',
+        vars: JSON.stringify(vars)
+      })
+  - restartContainers[cp]

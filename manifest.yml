@@ -66,7 +66,7 @@ settings:
     - name: fusionauthVersion
       caption: Fusionauth version
       type: string
-      default: 1.30.1
+      default: 1.32.1
     - name: useJelasticEmailAsAuthAdminEmail
       type: toggle
       caption: Use Jelastic Email
