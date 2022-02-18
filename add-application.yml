@@ -38,8 +38,10 @@ onInstall:
         --app-name "${settings.appName}" \
         --app-id "${settings.appId}" \
         --roles "${settings.appRoles}"
+  - setGlobals:
+      NEW_APP_ID: ${response.out}
   - script: |
-      const appId = "${response.out}"
+      const appId = "${globals.NEW_APP_ID}"
 
       const resp = jelastic.environment.control.GetContainerEnvVarsByGroup({
         envName: '${env.appid}',
@@ -71,4 +73,12 @@ onInstall:
         nodeGroup: 'cp',
         vars: JSON.stringify(vars)
       })
+
+      return {
+        result: 0
+      }
   - restartContainers[cp]
+
+success:
+  text: |
+    **AppId**: ${globals.NEW_APP_ID}

@@ -6,6 +6,7 @@ from hasura_client import HasuraClientFactory
 from softozor_graphql_client import GraphQLClient
 from softozor_test_utils import host_has_port_open
 from softozor_test_utils.timing import fail_after_timeout
+from test_utils.manifest_data import get_manifest_data
 
 
 def create_hasura_client(env_info, admin_secret):
@@ -102,11 +103,14 @@ def can_invoke_function(url, timeout_in_sec=120, period_in_sec=5):
 
 
 class ApiDeveloper:
-    def __init__(self, jelastic_clients_factory, env_info, manifest_data):
+    def __init__(self, jelastic_clients_factory, env_info, manifest_data, add_application_manifest_file):
         self.__env_info = env_info
+        self.__add_application_manifest_file = add_application_manifest_file
+        self.__manifest_data = manifest_data
         self.__db_connections = create_database_connections(
             env_info, manifest_data['Database Admin User'], manifest_data['Database Admin Password'])
         file_client = jelastic_clients_factory.create_file_client()
+        self.__jps_client = jelastic_clients_factory.create_jps_client()
         self.__faas_client = create_faas_client(
             env_info, file_client)
         self.__fusionauth_client = create_fusionauth_client(
@@ -231,52 +235,17 @@ class ApiDeveloper:
 
         return fail_after_timeout(lambda: test_is_up(), timeout_in_sec, period_in_sec)
 
-    def get_lambda_id(self, idx=0):
-        response = self.__fusionauth_client.retrieve_lambdas()
-        assert response.was_successful() is True, \
-            f'unable to get lambdas: {response.exception} ({response.status})'
-        return response.success_response['lambdas'][idx]['id']
-
-    # TODO: this works by coincidence; instead we should grab the only key with issuer jelasticozor.com
-    def get_access_key_id(self, idx=0):
-        response = self.__fusionauth_client.retrieve_keys()
-        assert response.was_successful() is True, \
-            f'unable to get access keys: {response.exception} ({response.status})'
-        return response.success_response['keys'][idx]['id']
-
     def create_test_application(self, user_role):
-        lambda_id = self.get_lambda_id()
-        key_id = self.get_access_key_id()
-        response = self.__fusionauth_client.create_application(request={
-            'application': {
-                'jwtConfiguration': {
-                    'accessTokenKeyId': key_id,
-                    'enabled': True,
-                    'refreshTokenTimeToLiveInMinutes': 1440,
-                    'timeToLiveInSeconds': 3600
-                },
-                'lambdaConfiguration': {
-                    'accessTokenPopulateId': lambda_id
-                },
-                'loginConfiguration': {
-                    'allowTokenRefresh': True,
-                    'generateRefreshTokens': True,
-                    'requireAuthentication': True
-                },
-                'name': 'test-application',
-                'roles': [
-                    {
-                        'isDefault': True,
-                        'isSuperRole': False,
-                        'name': user_role
-                    }
-                ]
-            }
+        env_name = self.__env_info.env_name()
+        success_text = self.__jps_client.install_from_file(self.__add_application_manifest_file, env_name, settings={
+            'appName': 'test-application',
+            'appRoles': user_role,
+            'almightyApiKey': self.__manifest_data['Auth Almighty API Key']
         })
-        assert response.was_successful() is True, \
-            f'unable to create application: {response.exception} ({response.status})'
-        return response.success_response['application']['id']
+        manifest_data = get_manifest_data(success_text)
+        return manifest_data['AppId']
 
+    # TODO: delete application with manifest, do the inverse operation of add_application
     def delete_application(self, app_id):
         response = self.__fusionauth_client.delete_application(app_id)
         assert response.was_successful() is True, \

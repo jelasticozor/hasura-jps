@@ -144,9 +144,18 @@ def jelastic_environment_with_automatic_settings(context):
 
 
 @fixture
+def add_application_manifest_file(context):
+    context.add_application_manifest_file = os.path.join(
+        context.project_root_folder, 'add-application.yml')
+
+
+@fixture
 def api_developer(context):
     context.api_developer = ApiDeveloper(
-        context.jelastic_clients_factory, context.current_env_info, context.manifest_data)
+        context.jelastic_clients_factory,
+        context.current_env_info,
+        context.manifest_data,
+        context.add_application_manifest_file)
     yield context.api_developer
     del context.api_developer
 
@@ -159,9 +168,6 @@ def registered_user_role(context):
 
 @fixture
 def auth_test_application(context):
-    # TODO: use an update manifest which
-    # 1. creates the app id on fusionauth
-    # 2. adds the app id in HASURA_GRAPHQL_JWT_SECRET on api
     context.auth_test_application = context.api_developer.create_test_application(
         context.registered_user_role)
     yield context.auth_test_application
