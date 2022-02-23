@@ -243,7 +243,9 @@ class ApiDeveloper:
             'almightyApiKey': self.__manifest_data['Auth Almighty API Key']
         })
         manifest_data = get_manifest_data(success_text)
-        return manifest_data['AppId']
+        app_id = manifest_data['AppId']
+        assert self.hasura_is_up()
+        return app_id
 
     # TODO: delete application with manifest, do the inverse operation of add_application
     def delete_application(self, app_id):

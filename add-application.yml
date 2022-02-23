@@ -79,6 +79,8 @@ onInstall:
       }
   - restartContainers[cp]
 
+# TODO: we should grant all the roles permission to run validate_token!
+
 success:
   text: |
     **AppId**: ${globals.NEW_APP_ID}
