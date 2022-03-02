@@ -28,13 +28,9 @@ def step_impl(context):
 @then('her token validates by calling the following graphql mutation with bearer token')
 def step_impl(context):
     mutation = context.text
-    # people should never call this function with admin rights
-    # but for the sake of testing it is fine; the alternative is
-    # to deploy metadata where role context.registered_user_role is
-    # granted permission to call the validate_token action
     response = context.api_developer.post_graphql(
         query=mutation,
         auth_token=context.current_jwt,
-        run_as_admin=True
+        run_as_admin=False
     )
     assert context.current_user_id == response['validate_token']['userId']

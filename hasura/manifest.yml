@@ -83,11 +83,16 @@ settings:
       default: https://hasura.io/jwt/claims
 
 onInstall:
+  - installTools
   - setupDatabase
   - setupAppContainer
   - restartContainers[cp]
 
 actions:
+  installTools:
+    - cmd[cp]:
+        - apt update && apt install -y python3-pip
+        - pip3 install pyyaml==6.0
   setupDatabase:
     - cmd[${nodes.sqldb.master.id}]:
         - export PGPASSWORD=${settings.dbAdminPassword}
