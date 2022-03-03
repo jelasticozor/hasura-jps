@@ -1,6 +1,6 @@
 type: update
 name: faasd
-baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
@@ -41,7 +41,7 @@ actions:
   pullTemplatesForFunctionDeployment:
     - cmd[faas]:
         - faas-cli template pull
-        - faas-cli template pull http://gitlab.hidora.com/softozor/faas-templates.git
+        - faas-cli template pull https://gitlab.hidora.com/softozor/faas-templates.git
   deployAuthFunctions:
     - forEach(nodes.faas):
         - api:

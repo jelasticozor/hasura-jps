@@ -1,6 +1,6 @@
 type: update
 name: load balancer
-baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 targetNodes:
   nodeGroup:

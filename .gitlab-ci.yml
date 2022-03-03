@@ -135,7 +135,7 @@ acceptance-test:
     # is not done from within the features/data/functions folder but from the project root
     # instead
     - faas-cli template pull
-    - faas-cli template pull http://${CI_SERVER_HOST}/softozor/faas-templates.git
+    - faas-cli template pull https://${CI_SERVER_HOST}/softozor/faas-templates.git
   script:
     - |
       behave --junit --junit-directory ./features/test-reports --tags ~wip \

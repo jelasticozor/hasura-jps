@@ -1,6 +1,6 @@
 type: update
 name: fusionauth
-baseUrl: http://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:

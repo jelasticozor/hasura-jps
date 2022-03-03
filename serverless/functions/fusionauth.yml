@@ -28,4 +28,4 @@ functions:
 configuration:
   templates:
     - name: dotnet-hasura
-      source: http://gitlab.hidora.com/softozor/faas-templates.git
+      source: https://gitlab.hidora.com/softozor/faas-templates.git
