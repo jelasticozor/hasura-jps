@@ -160,6 +160,7 @@ onInstall:
   - getOptionalParams
 
 actions:
+  # TODO: replace with setGlobals
   # caution: this method cannot be used before installMailServer has been called
   getOptionalParams:
     - script: |
@@ -210,7 +211,6 @@ actions:
           authIssuer: ${settings.authIssuer}
           jwtKeyAlgorithm: ${globals.JWT_KEY_ALGORITHM}
   installLoadBalancer:
-    - getOptionalParams
     - install:
         jps: bl/manifest.yml
   installFusionAuth:

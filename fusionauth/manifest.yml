@@ -116,6 +116,7 @@ onInstall:
   - restartContainers[auth]
 
 actions:
+  # TODO: put this in the fusionauth image directly
   installClient:
     - cmd[auth]:
         - apt update && apt install -y python3-pip
