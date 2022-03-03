@@ -81,7 +81,7 @@ onInstall:
     - wget ${baseUrl}/hasura/update_user_mgmt_actions_permissions.py -O update_user_mgmt_actions_permissions.py
   - cmd[cp]: |-
       python3 ./update_user_mgmt_actions_permissions.py --roles "${settings.appRoles}" \
-        --actions-file /hasura-metadata/actions.graphql
+        --actions-file /hasura-metadata/actions.yaml
   - restartContainers[cp]
 
 success:
