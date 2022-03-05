@@ -103,12 +103,6 @@
             "port": "#{mailServerPort}",
             "security": "#{mailServerSecurity}",
             "setPasswordEmailTemplateId": "#{setPasswordEmailTemplateId}",
-            "userDeletePolicy": {
-              "unverified": {
-                "enabled": true,
-                "numberOfDaysToRetain": 1
-              }
-            },
             "username": "#{mailServerUsername}",
             "verificationEmailTemplateId": "#{verificationEmailTemplateId}",
             "verificationStrategy": "FormField",
@@ -116,7 +110,13 @@
             "verifyEmailWhenChanged": true
           },
           "issuer": "#{issuer}",
-          "name": "Default"
+          "name": "Default",
+          "userDeletePolicy": {
+            "unverified": {
+              "enabled": true,
+              "numberOfDaysToRetain": 1
+            }
+          }
         }
       },
       "method": "PATCH",
