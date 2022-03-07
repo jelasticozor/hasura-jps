@@ -60,7 +60,8 @@ def main(client, app_name, roles, lambda_id, verify_registration, app_id=None):
         }
         request['application']['verifyRegistration'] = True
 
-    response = client.main(request=request, application_id=app_id)
+    response = client.create_application(
+        request=request, application_id=app_id)
     assert response.was_successful() is True, \
         f'unable to create application: {response.exception} ({response.status})'
     return response.success_response['application']['id']
