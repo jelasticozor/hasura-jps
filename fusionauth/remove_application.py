@@ -12,4 +12,4 @@ if __name__ == '__main__':
     client = FusionAuthClient(args.api_key, args.api_url)
     response = client.delete_application(args.app_id)
 
-    exit(response.was_successful())
+    exit(not response.was_successful())
