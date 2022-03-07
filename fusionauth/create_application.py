@@ -27,10 +27,10 @@ def semi_colon_separated_list_to_json_roles(roles):
     return roles
 
 
-def create_test_application(client, app_name, roles, lambda_id, app_id=None):
+def main(client, app_name, roles, lambda_id, verify_registration, app_id=None):
     user_roles = semi_colon_separated_list_to_json_roles(roles)
 
-    response = client.create_application(request={
+    request = {
         'application': {
             'jwtConfiguration': {
                 'enabled': True,
@@ -48,7 +48,19 @@ def create_test_application(client, app_name, roles, lambda_id, app_id=None):
             'name': app_name,
             'roles': user_roles
         }
-    }, application_id=app_id)
+    }
+
+    if verify_registration:
+        # TODO: this requires that we set the application.verificationEmailTemplateId
+        request['application']['registrationDeletePolicy'] = {
+            'unverified': {
+                'enabled': True,
+                'numberOfDaysToRetain': 1
+            }
+        }
+        request['application']['verifyRegistration'] = True
+
+    response = client.main(request=request, application_id=app_id)
     assert response.was_successful() is True, \
         f'unable to create application: {response.exception} ({response.status})'
     return response.success_response['application']['id']
@@ -61,13 +73,16 @@ if __name__ == '__main__':
     parser.add_argument('--app-name', required=True, type=str, action='store')
     parser.add_argument('--app-id', required=False, type=str, action='store')
     parser.add_argument('--roles', required=True, type=str, action='store')
+    parser.add_argument('--verify-registration',
+                        choices=('True', 'False'), default='False', action='store')
     args = parser.parse_args()
 
     client = FusionAuthClient(args.api_key, args.api_url)
     lambda_id = get_hasura_lambda_id(client)
     args.app_id = None if args.app_id is None or len(
         args.app_id) == 0 else args.app_id
-    app_id = create_test_application(
-        client, args.app_name, args.roles, lambda_id, args.app_id)
+    verify_registration = True if args.verify_registration == 'True' else False
+    app_id = main(
+        client, args.app_name, args.roles, lambda_id, verify_registration, args.app_id)
 
     print(app_id)

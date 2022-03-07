@@ -1,23 +1,14 @@
 type: update
-name: Add Application To Hasura
+name: Remove Application From Hasura
 baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
-    - type: spacer
-      caption: Application
-    - name: appName
-      caption: Name
-      type: string
-      required: true
-    - name: appRoles
-      caption: Roles (";"-separated list; first is default)
-      type: string
-      required: true
     - name: appId
       caption: Id
       type: string
       regex: ^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$
+      required: true
     - type: spacer
       caption: Fusionauth
     - name: almightyApiKey
@@ -30,26 +21,29 @@ globals:
   ENV_VAR_NAME: HASURA_GRAPHQL_JWT_SECRET
 
 onInstall:
-  - addApplicationToIamService
-  - addAppIdToHasuraJwtAudience
   - updateUserMgmtActionsPermissions
-  - restartContainers[cp]
+  - removeAppIdFromHasuraJwtAudience
+  - removeApplicationFromIamService
+  - restartContainers[cp]  
 
 actions:
-  addApplicationToIamService:
+  updateUserMgmtActionsPermissions:
     - cmd[auth]:
-        - wget ${baseUrl}/fusionauth/create_application.py -O create_application.py
+        - wget ${baseUrl}/fusionauth/get_application_roles_to_keep.py -O get_application_roles_to_keep.py
     - cmd[auth]: |-
-        python3 ./create_application.py --api-url "http://localhost:9011" \
+        python3 ./get_application_roles_to_keep.py --api-url "http://localhost:9011" \
           --api-key "${settings.almightyApiKey}" \
-          --app-name "${settings.appName}" \
-          --app-id "${settings.appId}" \
-          --roles "${settings.appRoles}"
+          --app-id "${settings.appId}"
     - setGlobals:
-        NEW_APP_ID: ${response.out}
-  addAppIdToHasuraJwtAudience:
+        ROLES_TO_KEEP: ${response.out}
+    - cmd[cp]:
+        - wget ${baseUrl}/fusionauth/remove_user_mgmt_actions_permissions.py -O remove_user_mgmt_actions_permissions.py
+    - cmd[cp]: |-
+        python3 ./remove_user_mgmt_actions_permissions.py --actions-file /hasura-metadata/actions.yaml \
+          --roles-to-keep "${globals.ROLES_TO_KEEP}"
+  removeAppIdFromHasuraJwtAudience:
     - script: |
-        const appId = "${globals.NEW_APP_ID}"
+        const appId = "${settings.appId}"
 
         const resp = jelastic.environment.control.GetContainerEnvVarsByGroup({
           envName: '${env.appid}',
@@ -69,7 +63,9 @@ actions:
 
         const value = JSON.parse(variablesDict["${globals.ENV_VAR_NAME}"])
 
-        value["audience"].push(appId)
+        value["audience"] = value["audience"].filter(function(value, index, arr){
+            return value != appId
+        })
 
         const vars = {
           "${globals.ENV_VAR_NAME}": value
@@ -85,13 +81,10 @@ actions:
         return {
           result: 0
         }
-  updateUserMgmtActionsPermissions:
-    - cmd[cp]:
-        - wget ${baseUrl}/hasura/add_user_mgmt_actions_permissions.py -O add_user_mgmt_actions_permissions.py
-    - cmd[cp]: |-
-        python3 ./add_user_mgmt_actions_permissions.py --roles "${settings.appRoles}" \
-          --actions-file /hasura-metadata/actions.yaml
-
-success:
-  text: |
-    **AppId**: ${globals.NEW_APP_ID}
+  removeApplicationFromIamService:
+    - cmd[auth]:
+        - wget ${baseUrl}/fusionauth/remove_application.py -O remove_application.py
+    - cmd[auth]: |-
+        python3 ./remove_application.py --api-url "http://localhost:9011" \
+          --api-key "${settings.almightyApiKey}" \
+          --app-id "${settings.appId}"
