@@ -37,7 +37,7 @@ actions:
     - setGlobals:
         ROLES_TO_KEEP: ${response.out}
     - cmd[cp]:
-        - wget ${baseUrl}/fusionauth/remove_user_mgmt_actions_permissions.py -O remove_user_mgmt_actions_permissions.py
+        - wget ${baseUrl}/hasura/remove_user_mgmt_actions_permissions.py -O remove_user_mgmt_actions_permissions.py
     - cmd[cp]: |-
         python3 ./remove_user_mgmt_actions_permissions.py --actions-file /hasura-metadata/actions.yaml \
           --roles-to-keep "${globals.ROLES_TO_KEEP}"

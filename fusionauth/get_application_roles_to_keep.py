@@ -8,8 +8,9 @@ def main(client, app_id):
     assert response.was_successful(), \
         f'unable to retrieve all applications'
     applications = response.success_response['applications']
-    roles = [role['name'] for application in applications if application['id'] != app_id for role in
-             application['roles']]
+    roles = [role['name']
+             for application in applications if application['id'] != app_id and application['name'] != 'FusionAuth'
+             for role in application['roles']]
     return set(roles)
 
 
