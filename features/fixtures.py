@@ -150,12 +150,19 @@ def add_application_manifest_file(context):
 
 
 @fixture
+def remove_application_manifest_file(context):
+    context.remove_application_manifest_file = os.path.join(
+        context.project_root_folder, 'remove-application.yml')
+
+
+@fixture
 def api_developer(context):
     context.api_developer = ApiDeveloper(
         context.jelastic_clients_factory,
         context.current_env_info,
         context.manifest_data,
-        context.add_application_manifest_file)
+        context.add_application_manifest_file,
+        context.remove_application_manifest_file)
     yield context.api_developer
     del context.api_developer
 
@@ -168,8 +175,8 @@ def registered_user_role(context):
 
 @fixture
 def auth_test_application(context):
-    context.auth_test_application = context.api_developer.create_test_application(
-        context.registered_user_role)
+    context.auth_test_application = context.api_developer.create_application(
+        'test-application', context.registered_user_role)
     yield context.auth_test_application
     context.api_developer.delete_application(
         context.auth_test_application)

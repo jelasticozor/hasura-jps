@@ -103,9 +103,10 @@ def can_invoke_function(url, timeout_in_sec=120, period_in_sec=5):
 
 
 class ApiDeveloper:
-    def __init__(self, jelastic_clients_factory, env_info, manifest_data, add_application_manifest_file):
+    def __init__(self, jelastic_clients_factory, env_info, manifest_data, add_application_manifest_file, remove_application_manifest_file):
         self.__env_info = env_info
         self.__add_application_manifest_file = add_application_manifest_file
+        self.__remove_application_manifest_file = remove_application_manifest_file
         self.__manifest_data = manifest_data
         self.__db_connections = create_database_connections(
             env_info, manifest_data['Database Admin User'], manifest_data['Database Admin Password'])
@@ -235,10 +236,10 @@ class ApiDeveloper:
 
         return fail_after_timeout(lambda: test_is_up(), timeout_in_sec, period_in_sec)
 
-    def create_test_application(self, user_role):
+    def create_application(self, app_name, user_role):
         env_name = self.__env_info.env_name()
         success_text = self.__jps_client.install_from_file(self.__add_application_manifest_file, env_name, settings={
-            'appName': 'test-application',
+            'appName': app_name,
             'appRoles': user_role,
             'almightyApiKey': self.__manifest_data['Auth Almighty API Key']
         })
@@ -247,11 +248,13 @@ class ApiDeveloper:
         assert self.hasura_is_up()
         return app_id
 
-    # TODO: delete application with manifest, do the inverse operation of add_application
     def delete_application(self, app_id):
-        response = self.__fusionauth_client.delete_application(app_id)
-        assert response.was_successful() is True, \
-            f'unable to delete application: {response.exception} ({response.status})'
+        env_name = self.__env_info.env_name()
+        self.__jps_client.install_from_file(self.__remove_application_manifest_file, env_name, settings={
+            'appId': app_id,
+            'almightyApiKey': self.__manifest_data['Auth Almighty API Key']
+        })
+        assert self.hasura_is_up()
 
     def create_user(self, user):
         response = self.__fusionauth_client.create_user({
