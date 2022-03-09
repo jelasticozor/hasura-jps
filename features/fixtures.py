@@ -174,9 +174,17 @@ def registered_user_role(context):
 
 
 @fixture
+def cleanup_applications(context):
+    context.app_ids = []
+    yield
+    for app_id in context.app_ids:
+        context.api_developer.delete_application(app_id)
+
+
+@fixture
 def auth_test_application(context):
     context.auth_test_application = context.api_developer.create_application(
-        'test-application', context.registered_user_role)
+        'test-application', [context.registered_user_role])
     yield context.auth_test_application
     context.api_developer.delete_application(
         context.auth_test_application)
@@ -205,5 +213,6 @@ fixtures_registry = {
     'jelastic-env-with-automatic-settings': jelastic_environment_with_automatic_settings,
     'api-developer': api_developer,
     'auth-test-application': auth_test_application,
-    'registered-user-on-test-application': registered_user_on_test_application
+    'registered-user-on-test-application': registered_user_on_test_application,
+    'cleanup-applications': cleanup_applications
 }

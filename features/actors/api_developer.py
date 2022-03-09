@@ -1,5 +1,8 @@
+import json
+
 import psycopg2
 import requests
+import yaml
 from faas_client import FaasClientFactory
 from fusionauth.fusionauth_client import FusionAuthClient
 from hasura_client import HasuraClientFactory
@@ -103,17 +106,19 @@ def can_invoke_function(url, timeout_in_sec=120, period_in_sec=5):
 
 
 class ApiDeveloper:
-    def __init__(self, jelastic_clients_factory, env_info, manifest_data, add_application_manifest_file, remove_application_manifest_file):
+    def __init__(self, jelastic_clients_factory, env_info, manifest_data, add_application_manifest_file,
+                 remove_application_manifest_file):
         self.__env_info = env_info
         self.__add_application_manifest_file = add_application_manifest_file
         self.__remove_application_manifest_file = remove_application_manifest_file
         self.__manifest_data = manifest_data
         self.__db_connections = create_database_connections(
             env_info, manifest_data['Database Admin User'], manifest_data['Database Admin Password'])
-        file_client = jelastic_clients_factory.create_file_client()
+        self.__file_client = jelastic_clients_factory.create_file_client()
         self.__jps_client = jelastic_clients_factory.create_jps_client()
+        self.__control_client = jelastic_clients_factory.create_control_client()
         self.__faas_client = create_faas_client(
-            env_info, file_client)
+            env_info, self.__file_client)
         self.__fusionauth_client = create_fusionauth_client(
             env_info, manifest_data['Auth Almighty API Key'])
         self.__hasura_client = create_hasura_client(
@@ -236,12 +241,50 @@ class ApiDeveloper:
 
         return fail_after_timeout(lambda: test_is_up(), timeout_in_sec, period_in_sec)
 
-    def create_application(self, app_name, user_role):
+    def retrieve_application_ids(self):
+        response = self.__fusionauth_client.retrieve_applications()
+        assert response.was_successful() is True, \
+            f'cannot retrieve applications'
+        applications = response.success_response['applications']
+        return [application['id'] for application in applications if application['name'] != 'FusionAuth']
+
+    def get_application_id(self, app_name):
+        response = self.__fusionauth_client.retrieve_applications()
+        assert response.was_successful() is True, \
+            f'cannot retrieve applications'
+        applications = response.success_response['applications']
+        application_ids_with_name = [application['id'] for application in applications if
+                                     application['name'] == app_name]
+        return application_ids_with_name[0] if len(application_ids_with_name) == 1 else None
+
+    def get_application_roles(self, app_id):
+        response = self.__fusionauth_client.retrieve_application(app_id)
+        assert response.was_successful() is True, \
+            f'cannot retrieve application with id {app_id}'
+        application = response.success_response['application']
+        return application['roles']
+
+    def applications_exist(self):
+        app_ids = self.retrieve_application_ids()
+        jwt_secret = self.get_hasura_graphql_jwt_secret()
+        return len(app_ids) > 0 and len(jwt_secret['audience']) > 0 and len(
+            self.get_role_names_from_user_management_actions()) > 0
+
+    def application_exists(self, app_name):
+        app_id = self.get_application_id(app_name)
+        jwt_secret = self.get_hasura_graphql_jwt_secret()
+        return app_id is not None and app_id in jwt_secret['audience']
+
+    def create_application(self, app_name, role_names=None, app_id=None):
+        if role_names is None:
+            role_names = []
         env_name = self.__env_info.env_name()
+        roles = ';'.join(role_names)
         success_text = self.__jps_client.install_from_file(self.__add_application_manifest_file, env_name, settings={
             'appName': app_name,
-            'appRoles': user_role,
-            'almightyApiKey': self.__manifest_data['Auth Almighty API Key']
+            'appRoles': roles,
+            'almightyApiKey': self.__manifest_data['Auth Almighty API Key'],
+            'appId': app_id
         })
         manifest_data = get_manifest_data(success_text)
         app_id = manifest_data['AppId']
@@ -327,5 +370,34 @@ class ApiDeveloper:
             query=query, variables=variables, auth_token=auth_token, run_as_admin=run_as_admin)
         assert 'errors' not in response, f'errors: {response}'
         return response['data']
+
+    def get_hasura_graphql_jwt_secret(self):
+        env_name = self.__env_info.env_name()
+        env_vars = self.__control_client.get_container_env_vars_by_group(
+            env_name, 'cp')
+        jwt_secret = env_vars["HASURA_GRAPHQL_JWT_SECRET"]
+        return json.loads(jwt_secret)
+
+    def get_role_names_from_user_management_actions(self):
+        env_name = self.__env_info.env_name()
+        yaml_content = self.__file_client.read(
+            env_name, '/hasura-metadata/actions.yaml', node_group='cp')
+        yaml_data = yaml.load(yaml_content, yaml.Loader)
+        actions = [action for action in yaml_data['actions']
+                   if action['name'] != 'login']
+        role_names = set(
+            permission['role'] for action in actions for permission in action['permissions'])
+        return role_names
+
+    def get_role_names_from_login_action(self):
+        env_name = self.__env_info.env_name()
+        yaml_content = self.__file_client.read(
+            env_name, '/hasura-metadata/actions.yaml', node_group='cp')
+        yaml_data = yaml.load(yaml_content, yaml.Loader)
+        actions = [action for action in yaml_data['actions']
+                   if action['name'] == 'login']
+        role_names = set(
+            permission['role'] for action in actions for permission in action['permissions'])
+        return role_names
 
     # endregion
