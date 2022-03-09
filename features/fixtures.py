@@ -35,6 +35,13 @@ def project_root_folder(context):
 
 
 @fixture
+def jelastic_region(context):
+    userdata = context.config.userdata
+    context.jelastic_region = userdata['jelastic-region']
+    return context.jelastic_region
+
+
+@fixture
 def jelastic_clients_factory(context):
     userdata = context.config.userdata
     api_url = userdata['api-url']
@@ -90,7 +97,7 @@ def create_jelastic_environment(context, settings):
         context.project_root_folder, 'manifest.yml')
     jps_client = context.jelastic_clients_factory.create_jps_client()
     success_text = jps_client.install_from_file(
-        main_manifest, context.current_env_name, settings=settings)
+        main_manifest, context.current_env_name, settings=settings, region=context.jelastic_region)
     context.current_env_info = control_client.get_env_info(
         context.current_env_name)
     assert context.current_env_info.is_running()

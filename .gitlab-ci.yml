@@ -139,6 +139,7 @@ acceptance-test:
   script:
     - |
       behave --junit --junit-directory ./features/test-reports --tags ~wip \
+        -D jelastic-region="${JELASTIC_REGION}" \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
