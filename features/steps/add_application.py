@@ -69,7 +69,7 @@ def step_impl(context):
 
 @then("application '{app_name}' exists")
 def step_impl(context, app_name):
-    assert context.api_developer.applications_exists(app_name), \
+    assert context.api_developer.application_exists(app_name), \
         f'expected application {app_name} to exist'
 
 
