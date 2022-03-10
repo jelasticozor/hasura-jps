@@ -1,10 +1,10 @@
 @fixture.default-jelastic-env
 @fixture.api-developer
-Feature: Add an application
+Feature: Create applications
 
-  As an API developer,
-  I want to add new applications,
-  so that client applications can identify.
+  As an API developer,  
+  I want to add new applications,  
+  so that clients can identify.
 
   An application is something a user can log into.
   It is characterized by an application id.
