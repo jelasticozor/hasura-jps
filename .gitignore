@@ -9,3 +9,6 @@ specification/
 
 # local config
 behave.ini
+
+# faas
+template

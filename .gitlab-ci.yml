@@ -1,5 +1,6 @@
 stages:
   - setup
+  - prepare-faas
   - test
   - publish-docker
   - review
@@ -38,6 +39,20 @@ start runners:
       python3 /app/start_env.py --api-url ${JELASTIC_API_URL} \
         --access-token ${JELASTIC_ACCESS_TOKEN} \
         --env-name ${GITLAB_RUNNERS_ENV_NAME}
+
+get faas templates:
+  stage: prepare-faas
+  # TODO: use image with faas-cli and git
+  image: ${TEST_IMAGE_NAME}:latest
+  script:
+    # this hack is necessary to allow for a call to faas-cli deploy later in the test that
+    # is not done from within the features/data/functions folder but from the project root
+    # instead
+    - faas-cli template pull
+    - faas-cli template pull https://${CI_SERVER_HOST}/softozor/faas-templates.git
+  artifacts:
+    paths:
+      - template
 
 dotnet-tests:
   stage: test
@@ -129,16 +144,11 @@ publish-fusionauth-functions:
 
 acceptance test dev:
   stage: review
+  # TODO: simplify this image
   image: ${TEST_IMAGE_NAME}:latest
-  before_script:
-    # this hack is necessary to allow for a call to faas-cli deploy later in the test that
-    # is not done from within the features/data/functions folder but from the project root
-    # instead
-    - faas-cli template pull
-    - faas-cli template pull https://${CI_SERVER_HOST}/softozor/faas-templates.git
   script:
     - |
-      behave --junit --junit-directory ./features/test-reports --tags="~wip and ~production" \
+      behave --junit --junit-directory ./features/test-reports --tags ~wip \
         -D jelastic-region="${JELASTIC_REGION}" \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
@@ -153,32 +163,25 @@ acceptance test dev:
     paths:
       - ./features/test-reports/*.xml
 
-# TODO: this will cause issues because of the template pull
-#acceptance test production:
-#  stage: review
-#  image: ${TEST_IMAGE_NAME}:latest
-#  before_script:
-#    # this hack is necessary to allow for a call to faas-cli deploy later in the test that
-#    # is not done from within the features/data/functions folder but from the project root
-#    # instead
-#    - faas-cli template pull
-#    - faas-cli template pull https://${CI_SERVER_HOST}/softozor/faas-templates.git
-#  script:
-#    - |
-#      behave --junit --junit-directory ./features/test-reports --tags="~wip and ~dev" \
-#        -D jelastic-region="${JELASTIC_REGION}" \
-#        -D project-root-folder="${CI_PROJECT_DIR}" \
-#        -D api-url="${JELASTIC_API_URL}" \
-#        -D api-token="${JELASTIC_ACCESS_TOKEN}" \
-#        -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
-#        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
-#        -D cluster-type="prod"
-#  artifacts:
-#    reports:
-#      junit:
-#        - ./features/test-reports/*.xml
-#    paths:
-#      - ./features/test-reports/*.xml
+acceptance test production:
+  stage: review
+  image: ${TEST_IMAGE_NAME}:latest
+  script:
+    - |
+      behave --junit --junit-directory ./features/test-reports --tags ~wip \
+        -D jelastic-region="${JELASTIC_REGION}" \
+        -D project-root-folder="${CI_PROJECT_DIR}" \
+        -D api-url="${JELASTIC_API_URL}" \
+        -D api-token="${JELASTIC_ACCESS_TOKEN}" \
+        -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
+        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
+        -D cluster-type="prod"
+  artifacts:
+    reports:
+      junit:
+        - ./features/test-reports/*.xml
+    paths:
+      - ./features/test-reports/*.xml
 
 publish pickles:
   stage: report
