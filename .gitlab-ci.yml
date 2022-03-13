@@ -127,7 +127,7 @@ publish-fusionauth-functions:
   # build everytime because we deploy the function images with tag
   # set to commit sha, therefore the images must exist
 
-acceptance-test:
+acceptance test dev:
   stage: review
   image: ${TEST_IMAGE_NAME}:latest
   before_script:
@@ -138,13 +138,14 @@ acceptance-test:
     - faas-cli template pull https://${CI_SERVER_HOST}/softozor/faas-templates.git
   script:
     - |
-      behave --junit --junit-directory ./features/test-reports --tags ~wip \
+      behave --junit --junit-directory ./features/test-reports --tags="~wip and ~production" \
         -D jelastic-region="${JELASTIC_REGION}" \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
-        -D fusionauth-version="${FUSIONAUTH_VERSION}"
+        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
+        -D cluster-type="dev"
   artifacts:
     reports:
       junit:
@@ -152,7 +153,34 @@ acceptance-test:
     paths:
       - ./features/test-reports/*.xml
 
-publish-pickles:
+# TODO: this will cause issues because of the template pull
+#acceptance test production:
+#  stage: review
+#  image: ${TEST_IMAGE_NAME}:latest
+#  before_script:
+#    # this hack is necessary to allow for a call to faas-cli deploy later in the test that
+#    # is not done from within the features/data/functions folder but from the project root
+#    # instead
+#    - faas-cli template pull
+#    - faas-cli template pull https://${CI_SERVER_HOST}/softozor/faas-templates.git
+#  script:
+#    - |
+#      behave --junit --junit-directory ./features/test-reports --tags="~wip and ~dev" \
+#        -D jelastic-region="${JELASTIC_REGION}" \
+#        -D project-root-folder="${CI_PROJECT_DIR}" \
+#        -D api-url="${JELASTIC_API_URL}" \
+#        -D api-token="${JELASTIC_ACCESS_TOKEN}" \
+#        -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
+#        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
+#        -D cluster-type="prod"
+#  artifacts:
+#    reports:
+#      junit:
+#        - ./features/test-reports/*.xml
+#    paths:
+#      - ./features/test-reports/*.xml
+
+publish pickles:
   stage: report
   image: softozor/pickles:2.21.1
   variables:
