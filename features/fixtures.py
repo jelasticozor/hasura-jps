@@ -98,7 +98,7 @@ def graphql_engine_image(context):
 
 def create_jelastic_environment(context, settings):
     control_client = context.jelastic_clients_factory.create_control_client()
-    context.current_env_name = get_new_random_env_name(
+    context.current_env_name = context.cluster_type + "-" + get_new_random_env_name(
         control_client, context.commit_sha, context.worker_id)
     main_manifest = os.path.join(
         context.project_root_folder, 'manifest.yml')
