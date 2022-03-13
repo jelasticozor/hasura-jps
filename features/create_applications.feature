@@ -3,17 +3,22 @@
 Feature: Create applications
 
   As an API developer,  
-  I want to add new applications,  
+  I want to create new applications,  
   so that clients can identify.
 
   An application is something a user can log into.
   It is characterized by an application id.
 
+  Application creation is made available through Jelastic
+  manifest [add_application](https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master/add-application.yml).
+  Its counterpart Jelastic manifest [remove_application](https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master/remove-application.yml)
+  allows to remove an application.
+
   Background: No application exists
 
     Given no application exists
 
-  @fixture.cleanup-applications
+  @fixture.remove-applications
   Scenario: The application id is automatically generated
 
     When the api developer adds application 'app-1' with roles
@@ -28,7 +33,7 @@ Feature: Create applications
     And 'role1' is the default role
     And the roles are granted permission to execute all user management actions except 'login'
 
-  @fixture.cleanup-applications
+  @fixture.remove-applications
   Scenario: The api developer provides the application id
 
   An application id is a version 4 uuid.
@@ -44,7 +49,7 @@ Feature: Create applications
     And 'role1' is the default role
     And the roles are granted permission to execute all user management actions except 'login'
 
-  @fixture.cleanup-applications
+  @fixture.remove-applications
   Scenario: The api developer adds two applications
 
     Given an application named 'app-1' has been added with roles

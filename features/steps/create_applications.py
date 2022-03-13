@@ -5,7 +5,7 @@ from behave import *
 
 @given("no application exists")
 def step_impl(context):
-    assert not context.api_developer.applications_exist()
+    assert context.api_developer.no_application_exists()
 
 
 @given("an application named '{app_name}' has been added with roles")
@@ -59,7 +59,7 @@ def step_impl(context):
 
 @then("the roles are defined on the application")
 def step_impl(context):
-    actual_application_roles = context.api_developer.get_application_roles(
+    actual_application_roles = context.api_developer.get_roles_from_application_with_id(
         context.actual_app_id)
     actual_application_role_names = [role['name']
                                      for role in actual_application_roles]
@@ -75,7 +75,7 @@ def step_impl(context, app_name):
 
 @then("'{role_name}' is the default role")
 def step_impl(context, role_name):
-    actual_application_roles = context.api_developer.get_application_roles(
+    actual_application_roles = context.api_developer.get_roles_from_application_with_id(
         context.actual_app_id)
     actual_default_application_role_names = [
         role['name'] for role in actual_application_roles if role['isDefault']]

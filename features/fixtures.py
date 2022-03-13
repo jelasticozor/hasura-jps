@@ -181,11 +181,12 @@ def registered_user_role(context):
 
 
 @fixture
-def cleanup_applications(context):
+def remove_applications(context):
     context.app_ids = []
     yield
     for app_id in context.app_ids:
         context.api_developer.delete_application(app_id)
+    assert context.api_developer.no_application_exists()
 
 
 @fixture
@@ -221,5 +222,5 @@ fixtures_registry = {
     'api-developer': api_developer,
     'auth-test-application': auth_test_application,
     'registered-user-on-test-application': registered_user_on_test_application,
-    'cleanup-applications': cleanup_applications
+    'remove-applications': remove_applications
 }

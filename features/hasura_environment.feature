@@ -20,6 +20,8 @@ Feature: Hasura environment is well-defined
 
     Then hasura is available
 
+  # TODO: test mailhog  
+
   Scenario: The IAM functions are well-defined
 
     Then the login function is ready

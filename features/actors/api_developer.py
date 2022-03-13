@@ -257,12 +257,16 @@ class ApiDeveloper:
                                      application['name'] == app_name]
         return application_ids_with_name[0] if len(application_ids_with_name) == 1 else None
 
-    def get_application_roles(self, app_id):
+    def get_roles_from_application_with_id(self, app_id):
         response = self.__fusionauth_client.retrieve_application(app_id)
         assert response.was_successful() is True, \
             f'cannot retrieve application with id {app_id}'
         application = response.success_response['application']
-        return application['roles']
+        return set(application['roles'])
+
+    def get_roles_from_application_with_name(self, app_name):
+        app_id = self.get_application_id(app_name)
+        return self.get_roles_from_application_with_id(app_id)
 
     def applications_exist(self):
         app_ids = self.retrieve_application_ids()
@@ -270,10 +274,19 @@ class ApiDeveloper:
         return len(app_ids) > 0 and len(jwt_secret['audience']) > 0 and len(
             self.get_role_names_from_user_management_actions()) > 0
 
+    def no_application_exists(self):
+        app_ids = self.retrieve_application_ids()
+        jwt_secret = self.get_hasura_graphql_jwt_secret()
+        return len(app_ids) == 0 and len(jwt_secret['audience']) == 0 and len(
+            self.get_role_names_from_user_management_actions()) == 0
+
     def application_exists(self, app_name):
         app_id = self.get_application_id(app_name)
         jwt_secret = self.get_hasura_graphql_jwt_secret()
-        return app_id is not None and app_id in jwt_secret['audience']
+        all_roles = self.get_role_names_from_user_management_actions()
+        app_roles = self.get_roles_from_application_with_name(app_name)
+        return app_id is not None and app_id in jwt_secret['audience'] \
+            and all_roles.intersection(app_roles) == app_roles
 
     def create_application(self, app_name, role_names=None, app_id=None):
         if role_names is None:
