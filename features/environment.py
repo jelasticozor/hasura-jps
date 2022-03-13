@@ -15,6 +15,7 @@ def before_all(context):
     use_fixture(commit_sha, context)
     use_fixture(project_root_folder, context)
     use_fixture(jelastic_region, context)
+    use_fixture(cluster_type, context)
     use_fixture(add_application_manifest_file, context)
     use_fixture(remove_application_manifest_file, context)
     use_fixture(jelastic_clients_factory, context)

@@ -42,6 +42,13 @@ def jelastic_region(context):
 
 
 @fixture
+def cluster_type(context):
+    userdata = context.config.userdata
+    context.cluster_type = userdata['cluster-type']
+    return context.cluster_type
+
+
+@fixture
 def jelastic_clients_factory(context):
     userdata = context.config.userdata
     api_url = userdata['api-url']
@@ -96,6 +103,8 @@ def create_jelastic_environment(context, settings):
     main_manifest = os.path.join(
         context.project_root_folder, 'manifest.yml')
     jps_client = context.jelastic_clients_factory.create_jps_client()
+    print(
+        f'installing environment {context.current_env_name} on region {context.jelastic_region} with settings: {settings}')
     success_text = jps_client.install_from_file(
         main_manifest, context.current_env_name, settings=settings, region=context.jelastic_region)
     context.current_env_info = control_client.get_env_info(
@@ -124,7 +133,7 @@ def default_jelastic_environment(context):
         'authAdminEmail': context.fusionauth_admin_email,
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
-        'clusterType': 'dev',
+        'clusterType': context.cluster_type,
     }
     yield create_jelastic_environment(
         context, settings)
@@ -141,7 +150,7 @@ def jelastic_environment_with_automatic_settings(context):
         'useJelasticEmailAsAuthAdminEmail': True,
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
-        'clusterType': 'dev',
+        'clusterType': context.cluster_type,
     }
     yield create_jelastic_environment(
         context, settings)
