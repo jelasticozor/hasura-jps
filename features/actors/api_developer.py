@@ -262,7 +262,8 @@ class ApiDeveloper:
         assert response.was_successful() is True, \
             f'cannot retrieve application with id {app_id}'
         application = response.success_response['application']
-        return set(application['roles'])
+        # cannot be a set, this is a dict
+        return application['roles']
 
     def get_roles_from_application_with_name(self, app_name):
         app_id = self.get_application_id(app_name)
