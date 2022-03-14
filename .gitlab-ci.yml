@@ -148,7 +148,7 @@ acceptance test dev:
   image: ${TEST_IMAGE_NAME}:latest
   script:
     - |
-      behave --junit --junit-directory ./features/test-reports --tags ~wip \
+      behave --junit --junit-directory ./features/test-reports --tags ~wip,~production \
         -D jelastic-region="${JELASTIC_REGION}" \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
