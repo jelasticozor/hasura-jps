@@ -1,4 +1,4 @@
-@fixture.default-jelastic-env
+@fixture.jelastic-env
 @fixture.api-developer
 @fixture.auth-test-application
 @fixture.registered-user-on-test-application

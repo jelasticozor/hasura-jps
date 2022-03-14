@@ -1,4 +1,4 @@
-@fixture.default-jelastic-env
+@fixture.jelastic-env
 @fixture.api-developer
 Feature: Create applications
 

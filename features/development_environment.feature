@@ -1,10 +1,11 @@
-@fixture.default-jelastic-env
+@development
+@fixture.jelastic-env
 @fixture.api-developer
-Feature: Hasura environment is well-defined
+Feature: Development Hasura environment
 
   As an API developer,  
-  I want to base on hasura  
-  to build my software.
+  I want a hasura environment optimized for development,  
+  so that I can test and monitor my API developments.
 
   The requirements for hasura are documented [here](https://hasura.io/docs/latest/graphql/core/deployment/postgres-requirements.html).
 
@@ -20,7 +21,7 @@ Feature: Hasura environment is well-defined
 
     Then hasura is available
 
-  # TODO: test mailhog  
+  # TODO: test mailhog
 
   Scenario: The IAM functions are well-defined
 
