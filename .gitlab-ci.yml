@@ -163,25 +163,25 @@ acceptance test dev:
     paths:
       - ./features/test-reports/*.xml
 
-acceptance test production:
-  stage: review
-  image: ${TEST_IMAGE_NAME}:latest
-  script:
-    - |
-      behave --junit --junit-directory ./features/test-reports --tags ~wip \
-        -D jelastic-region="${JELASTIC_REGION}" \
-        -D project-root-folder="${CI_PROJECT_DIR}" \
-        -D api-url="${JELASTIC_API_URL}" \
-        -D api-token="${JELASTIC_ACCESS_TOKEN}" \
-        -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
-        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
-        -D cluster-type="prod"
-  artifacts:
-    reports:
-      junit:
-        - ./features/test-reports/*.xml
-    paths:
-      - ./features/test-reports/*.xml
+#acceptance test production:
+#  stage: review
+#  image: ${TEST_IMAGE_NAME}:latest
+#  script:
+#    - |
+#      behave --junit --junit-directory ./features/test-reports --tags ~wip \
+#        -D jelastic-region="${JELASTIC_REGION}" \
+#        -D project-root-folder="${CI_PROJECT_DIR}" \
+#        -D api-url="${JELASTIC_API_URL}" \
+#        -D api-token="${JELASTIC_ACCESS_TOKEN}" \
+#        -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
+#        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
+#        -D cluster-type="prod"
+#  artifacts:
+#    reports:
+#      junit:
+#        - ./features/test-reports/*.xml
+#    paths:
+#      - ./features/test-reports/*.xml
 
 publish pickles:
   stage: report
