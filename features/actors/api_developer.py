@@ -398,8 +398,11 @@ class ApiDeveloper:
         yaml_data = yaml.load(yaml_content, yaml.Loader)
         actions = [action for action in yaml_data['actions']
                    if action['name'] != 'login']
-        role_names = set(
-            permission['role'] for action in actions for permission in action['permissions'] if 'permissions' in action)
+        role_names = set()
+        for action in actions:
+            if 'permissions' in action:
+                for permission in action['permissions']:
+                    role_names.add(permission['role'])
         return role_names
 
     def get_role_names_from_login_action(self):
