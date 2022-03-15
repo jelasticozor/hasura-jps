@@ -139,8 +139,8 @@ def jelastic_environment(context):
         settings_prod = {
             'mailServerHost': 'mail-server-host',
             'mailServerPort': 1025,
-            'mailServerUsername': '',
-            'mailServerPassword': '',
+            'mailServerUsername': 'username',
+            'mailServerPassword': 'password',
             'mailServerEnableSsl': False
         }
         settings.update(settings_prod)
@@ -161,6 +161,15 @@ def jelastic_environment_with_automatic_settings(context):
         'fncTag': context.commit_sha,
         'clusterType': context.cluster_type,
     }
+    if context.cluster_type == 'prod':
+        settings_prod = {
+            'mailServerHost': 'mail-server-host',
+            'mailServerPort': 1025,
+            'mailServerUsername': 'username',
+            'mailServerPassword': 'password',
+            'mailServerEnableSsl': False
+        }
+        settings.update(settings_prod)
     yield create_jelastic_environment(
         context, settings)
     delete_current_jelastic_environment(context)
