@@ -135,7 +135,7 @@ def jelastic_environment(context):
         'fncTag': context.commit_sha,
         'clusterType': context.cluster_type,
     }
-    if cluster_type == 'prod':
+    if context.cluster_type == 'prod':
         settings_prod = {
             'mailServerHost': 'mail-server-host',
             'mailServerPort': 1025,
