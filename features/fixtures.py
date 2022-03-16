@@ -145,10 +145,10 @@ def delete_current_jelastic_environment(context):
 
 def get_mail_server_settings(context):
     settings = {
-        'mailServerHost': context.current_mail_server.ip,
-        'mailServerPort': context.current_mail_server.port,
-        'mailServerUsername': context.current_mail_server.username,
-        'mailServerPassword': context.current_mail_server.password,
+        'mailServerHost': context.current_mail_server['ip'],
+        'mailServerPort': context.current_mail_server['port'],
+        'mailServerUsername': context.current_mail_server['username'],
+        'mailServerPassword': context.current_mail_server['password'],
         'mailServerEnableSsl': False
     }
     return settings
