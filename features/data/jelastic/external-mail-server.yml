@@ -1,6 +1,5 @@
 type: install
 name: External Mail Server for Production Tests
-baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
@@ -21,13 +20,13 @@ nodes:
   - displayName: Mailhog
     count: 1
     cloudlets: 16
-    nodeGroup: cp
+    nodeGroup: mail
     nodeType: docker
     image: mailhog/mailhog:latest
     env:
       MH_AUTH_FILE: ${globals.PASSWORD_FILE}
 
 onInstall:
-  - cmd [cp]:
+  - cmd [mail]:
       - echo "${settings.username}:$(MailHog bcrypt ${settings.password})" > ${globals.PASSWORD_FILE}
-  - restartContainers[cp]
+  - restartContainers[mail]

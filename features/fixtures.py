@@ -96,6 +96,19 @@ def graphql_engine_image(context):
     return context.graphql_engine_image
 
 
+def get_mail_server_definition(env_info, smtp_settings):
+    mail_server_nodes = env_info.get_nodes(node_group='mail')
+    assert len(mail_server_nodes) == 1, \
+        f'expected environment {env_info.env_name()} to have a node group \'mail\''
+    mail_server_node = mail_server_nodes[0]
+    mail_server_definition = {
+        'ip': mail_server_node.int_ip,
+        'port': 1025,
+    }
+    mail_server_definition.update(smtp_settings)
+    return mail_server_definition
+
+
 def create_jelastic_environment(context, settings):
     control_client = context.jelastic_clients_factory.create_control_client()
     context.current_env_name = context.cluster_type + "-" + get_new_random_env_name(
@@ -109,13 +122,16 @@ def create_jelastic_environment(context, settings):
         main_manifest, context.current_env_name, settings=settings, region=context.jelastic_region)
     context.current_env_info = control_client.get_env_info(
         context.current_env_name)
-    assert context.current_env_info.is_running()
+    assert context.current_env_info.is_running(), \
+        f'environment {context.current_env_name} is not running'
     context.manifest_data = get_manifest_data(success_text)
-    mail_server_node = context.current_env_info.get_nodes(node_group='mail')[0]
-    context.current_mail_server = {
-        'ip': mail_server_node.int_ip,
-        'port': 1025
-    }
+    if context.cluster_type == 'dev':
+        smtp_settings = {
+            'username': '',
+            'password': ''
+        }
+        context.current_mail_server = get_mail_server_definition(
+            context.current_env_info, smtp_settings)
     return context.current_env_name
 
 
@@ -125,6 +141,17 @@ def delete_current_jelastic_environment(context):
         context.current_env_name)
     if env_info.exists():
         control_client.delete_env(context.current_env_name)
+
+
+def get_mail_server_settings(context):
+    settings = {
+        'mailServerHost': context.current_mail_server.ip,
+        'mailServerPort': context.current_mail_server.port,
+        'mailServerUsername': context.current_mail_server.username,
+        'mailServerPassword': context.current_mail_server.password,
+        'mailServerEnableSsl': False
+    }
+    return settings
 
 
 @fixture
@@ -141,13 +168,7 @@ def jelastic_environment(context):
         'clusterType': context.cluster_type,
     }
     if context.cluster_type == 'prod':
-        settings_prod = {
-            'mailServerHost': 'mail-server-host',
-            'mailServerPort': 1025,
-            'mailServerUsername': 'username',
-            'mailServerPassword': 'password',
-            'mailServerEnableSsl': False
-        }
+        settings_prod = get_mail_server_settings(context)
         settings.update(settings_prod)
     yield create_jelastic_environment(
         context, settings)
@@ -167,13 +188,7 @@ def jelastic_environment_with_automatic_settings(context):
         'clusterType': context.cluster_type,
     }
     if context.cluster_type == 'prod':
-        settings_prod = {
-            'mailServerHost': 'mail-server-host',
-            'mailServerPort': 1025,
-            'mailServerUsername': 'username',
-            'mailServerPassword': 'password',
-            'mailServerEnableSsl': False
-        }
+        settings_prod = get_mail_server_settings(context)
         settings.update(settings_prod)
     yield create_jelastic_environment(
         context, settings)
@@ -265,12 +280,8 @@ def external_mail_server(context):
         manifest, env_name, settings=settings, region=context.jelastic_region)
     env_info = control_client.get_env_info(env_name)
     assert env_info.is_running()
-    mail_server_node = env_info.get_nodes(node_group='cp')[0]
-    context.current_mail_server = {
-        'ip': mail_server_node.int_ip,
-        'port': 1025
-    }
-    context.current_mail_server.update(settings)
+    context.current_mail_server = get_mail_server_definition(
+        env_info, settings)
     yield context.current_mail_server
     env_info = control_client.get_env_info(env_name)
     if env_info.exists():
@@ -284,5 +295,4 @@ fixtures_registry = {
     'auth-test-application': auth_test_application,
     'registered-user-on-test-application': registered_user_on_test_application,
     'remove-applications': remove_applications,
-    'external-mail-server': external_mail_server
 }

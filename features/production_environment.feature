@@ -1,5 +1,4 @@
 @production
-@fixture.external-mail-server
 @fixture.jelastic-env
 @fixture.api-developer
 Feature: Production Hasura environment
