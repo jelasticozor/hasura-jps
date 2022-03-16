@@ -111,6 +111,11 @@ def create_jelastic_environment(context, settings):
         context.current_env_name)
     assert context.current_env_info.is_running()
     context.manifest_data = get_manifest_data(success_text)
+    mail_server_node = context.current_env_info.get_nodes(node_group='mail')[0]
+    context.current_mail_server = {
+        'ip': mail_server_node.int_ip,
+        'port': 1025
+    }
     return context.current_env_name
 
 
@@ -189,6 +194,7 @@ def remove_application_manifest_file(context):
 
 @fixture
 def api_developer(context):
+    # TODO: use context.current_mail_server
     context.api_developer = ApiDeveloper(
         context.jelastic_clients_factory,
         context.current_env_info,
@@ -241,11 +247,42 @@ def registered_user_on_test_application(context):
     context.api_developer.delete_user(user_id)
 
 
+@fixture
+def external_mail_server(context):
+    control_client = context.jelastic_clients_factory.create_control_client()
+    env_name = "mail-server" + "-" + get_new_random_env_name(
+        control_client, context.commit_sha, context.worker_id)
+    manifest = os.path.join(
+        context.project_root_folder, 'features', 'data', 'jelastic', 'external-mail-server.yml')
+    jps_client = context.jelastic_clients_factory.create_jps_client()
+    settings = {
+        'username': 'smtp-user',
+        'password': 'smtp-password'
+    }
+    print(
+        f'installing environment {env_name} on region {context.jelastic_region} with settings: {settings}')
+    jps_client.install_from_file(
+        manifest, env_name, settings=settings, region=context.jelastic_region)
+    env_info = control_client.get_env_info(env_name)
+    assert env_info.is_running()
+    mail_server_node = env_info.get_nodes(node_group='cp')[0]
+    context.current_mail_server = {
+        'ip': mail_server_node.int_ip,
+        'port': 1025
+    }
+    context.current_mail_server.update(settings)
+    yield context.current_mail_server
+    env_info = control_client.get_env_info(env_name)
+    if env_info.exists():
+        control_client.delete_env(env_name)
+
+
 fixtures_registry = {
     'jelastic-env': jelastic_environment,
     'jelastic-env-with-automatic-settings': jelastic_environment_with_automatic_settings,
     'api-developer': api_developer,
     'auth-test-application': auth_test_application,
     'registered-user-on-test-application': registered_user_on_test_application,
-    'remove-applications': remove_applications
+    'remove-applications': remove_applications,
+    'external-mail-server': external_mail_server
 }

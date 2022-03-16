@@ -21,7 +21,8 @@ Feature: Development Hasura environment
 
     Then hasura is available
 
-  # TODO: test mailhog
+  # TODO: test mailhog is there, test mailhog works (send email through fusionauth)
+  # TODO: we only need a master postgres node, no slave
 
   Scenario: The IAM functions are well-defined
 

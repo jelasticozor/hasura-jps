@@ -1,6 +1,5 @@
 @production
-# TODO:  
-#@fixture.external-mail-server
+@fixture.external-mail-server
 @fixture.jelastic-env
 @fixture.api-developer
 Feature: Production Hasura environment
@@ -13,6 +12,8 @@ Feature: Production Hasura environment
   The recommended hasura setup for production is documented [here](https://hasura.io/docs/latest/graphql/core/deployment/production-checklist.html).
 
   # TODO: improve this setup
+
+  # TODO: test external server sends emails through fusionauth
 
   Scenario: Fusionauth is up
 
