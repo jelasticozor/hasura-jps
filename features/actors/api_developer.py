@@ -399,7 +399,7 @@ class ApiDeveloper:
             env_name, '/hasura-metadata/actions.yaml', node_group='cp')
         yaml_data = yaml.load(yaml_content, yaml.Loader)
         actions = [action for action in yaml_data['actions']
-                   if action['name'] != 'login']
+                   if action['name'] != 'sign_in']
         role_names = set()
         for action in actions:
             if 'permissions' in action:
@@ -413,7 +413,7 @@ class ApiDeveloper:
             env_name, '/hasura-metadata/actions.yaml', node_group='cp')
         yaml_data = yaml.load(yaml_content, yaml.Loader)
         actions = [action for action in yaml_data['actions']
-                   if action['name'] == 'login']
+                   if action['name'] == 'sign_in']
         role_names = set(
             permission['role'] for action in actions for permission in action['permissions'])
         return role_names
