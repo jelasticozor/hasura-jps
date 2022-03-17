@@ -60,14 +60,14 @@ actions:
         - method: environment.control.AddContainerEnvVars
           params:
             nodeGroup: faas
-            data:
+            vars:
               IMG_TAG: ${settings.fncTag}
   deployAuthFunctions:
     - api:
         - method: environment.control.AddContainerEnvVars
           params:
             nodeGroup: faas
-            data:
+            vars:
               AUTH_URL: ${settings.authUrl}
               HASURA_CLAIMS_NAMESPACE: https://hasura.io/jwt/claims
     - cmd[faas]:
@@ -81,7 +81,7 @@ actions:
         - method: environment.control.AddContainerEnvVars
           params:
             nodeGroup: faas
-            data:
+            vars:
               MAIL_SERVER_HOST: ${settings.mailServerHost}
               MAIL_SERVER_API_PORT: ${globals.MAIL_SERVER_API_PORT}
     - cmd[faas]:
