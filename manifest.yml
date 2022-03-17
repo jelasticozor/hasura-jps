@@ -194,6 +194,8 @@ actions:
         authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
         dataProtectionSecretKey: ${globals.DATA_PROTECTION_SECRET_KEY}
         fncTag: ${settings.fncTag}
+        clusterType: ${settings.clusterType}
+        mailServerHost: ${globals.MAIL_SERVER_HOST}
   installHasura:
     - install:
         jps: hasura/manifest.yml

@@ -22,12 +22,25 @@ settings:
       caption: Docker tag
       type: string
       required: true
+    - name: clusterType
+      type: string
+      required: true
+    - name: mailServerHost
+      caption: Host
+      type: string
+      required: true
+
+globals:
+  MAIL_SERVER_API_PORT: 8025
 
 onInstall:
   - installEngine
   - waitUntilEngineIsUp
   - pullTemplatesForFunctionDeployment
+  - setCommonEnvVars
   - deployAuthFunctions
+  - if ("${settings.clusterType}" == "dev"):
+      - deployMailhogFunctions
 
 actions:
   installEngine:
@@ -42,22 +55,39 @@ actions:
     - cmd[faas]:
         - faas-cli template pull
         - faas-cli template pull https://gitlab.hidora.com/softozor/faas-templates.git
+  setCommonEnvVars:
+    - api:
+        - method: environment.control.AddContainerEnvVars
+          params:
+            nodeGroup: faas
+            data:
+              IMG_TAG: ${settings.fncTag}
   deployAuthFunctions:
-    - forEach(nodes.faas):
-        - api:
-            - method: environment.control.SetContainerEnvVars
-              params:
-                nodeId: ${@i.id}
-                vars:
-                  AUTH_URL: ${settings.authUrl}
-                  HASURA_CLAIMS_NAMESPACE: https://hasura.io/jwt/claims
-                  IMG_TAG: ${settings.fncTag}
+    - api:
+        - method: environment.control.AddContainerEnvVars
+          params:
+            nodeGroup: faas
+            data:
+              AUTH_URL: ${settings.authUrl}
+              HASURA_CLAIMS_NAMESPACE: https://hasura.io/jwt/claims
     - cmd[faas]:
         - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
         - faas-cli secret create data-protection-secret --from-literal "${settings.dataProtectionSecretKey}"
         - wget -q ${baseUrl}/serverless/functions/fusionauth.yml
         - faas-cli deploy -f fusionauth.yml
+  deployMailhogFunctions:
+    - api:
+        - method: environment.control.AddContainerEnvVars
+          params:
+            nodeGroup: faas
+            data:
+              MAIL_SERVER_HOST: ${settings.mailServerHost}
+              MAIL_SERVER_API_PORT: ${globals.MAIL_SERVER_API_PORT}
+    - cmd[faas]:
+        - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
+        - wget -q ${baseUrl}/serverless/functions/mailhog.yml
+        - faas-cli deploy -f mailhog.yml
 
 description: |
   We install faasd, a lightweight & portable faas engine.

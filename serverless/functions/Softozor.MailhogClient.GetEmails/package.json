@@ -1,0 +1,31 @@
+{
+  "author": "softozor",
+  "dependencies": {
+    "http-errors": "^1.8.0",
+    "mailhog": "^4.14.0"
+  },
+  "description": "Client code to get all emails from mailhog server.",
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "jest-config": "^26.4.2",
+    "jest-junit": "^11.1.0",
+    "jest-when": "^2.7.2"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "handler.js",
+  "name": "mailhog-get-emails",
+  "repository": {
+    "url": "http://gitlab.hidora.com/softozor/hasura-jps"
+  },
+  "scripts": {
+    "test": "yarn test:unit",
+    "test:unit": "jest",
+    "test:unit:ci": "jest --ci --reporters=default --reporters=jest-junit",
+    "test:unit:coverage": "jest --coverage",
+    "test:unit:ui": "majestic --port 3001",
+    "test:unit:watch": "jest --watch",
+    "test:unit:watchAll": "jest --watchAll"
+  },
+  "version": "1.0.0"
+}

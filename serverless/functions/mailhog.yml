@@ -1,0 +1,33 @@
+version: 1.0
+provider:
+  name: openfaas
+functions:
+  delete-all-emails:
+    namespace: ${OPENFAAS_NAMESPACE:-dev}
+    lang: node-hasura
+    handler: ./Softozor.MailhogClient.DeleteAllEmails
+    image: softozor/mailhog-delete-all-emails:${IMG_TAG:-latest}
+    environment:
+      MAIL_SERVER_API_PORT: ${MAIL_SERVER_API_PORT:-8025}
+      MAIL_SERVER_HOST: ${MAIL_SERVER_HOST:-mailhog}
+  delete-email:
+    namespace: ${OPENFAAS_NAMESPACE:-dev}
+    lang: node-hasura
+    handler: ./Softozor.MailhogClient.DeleteEmail
+    image: softozor/mailhog-delete-email:${IMG_TAG:-latest}
+    environment:
+      MAIL_SERVER_API_PORT: ${MAIL_SERVER_API_PORT:-8025}
+      MAIL_SERVER_HOST: ${MAIL_SERVER_HOST:-mailhog}
+  get-emails:
+    namespace: ${OPENFAAS_NAMESPACE:-dev}
+    lang: node-hasura
+    handler: ./Softozor.MailhogClient.GetEmails
+    image: softozor/mailhog-get-emails:${IMG_TAG:-latest}
+    environment:
+      MAIL_SERVER_API_PORT: ${MAIL_SERVER_API_PORT:-8025}
+      MAIL_SERVER_HOST: ${MAIL_SERVER_HOST:-mailhog}
+configuration:
+  templates:
+    - name: node-hasura
+      source: https://gitlab.hidora.com/softozor/faas-templates.git
+  # TODO: try to include the common settings.js here
