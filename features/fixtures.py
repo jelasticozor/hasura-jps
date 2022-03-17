@@ -221,12 +221,6 @@ def api_developer(context):
 
 
 @fixture
-def registered_user_role(context):
-    context.registered_user_role = 'user'
-    return context.registered_user_role
-
-
-@fixture
 def remove_applications(context):
     context.app_ids = []
     yield
@@ -239,7 +233,7 @@ def remove_applications(context):
 @fixture
 def auth_test_application(context):
     context.auth_test_application = context.api_developer.create_application(
-        'test-application', [context.registered_user_role])
+        'test-application', ['user'])
     yield context.auth_test_application
     context.api_developer.delete_application(
         context.auth_test_application)
@@ -255,7 +249,7 @@ def registered_user_on_test_application(context):
     user_id = context.api_developer.create_user(
         context.registered_user_on_test_application)
     context.api_developer.register_user(user_id, test_application_id, [
-        context.registered_user_role
+        'user'
     ])
     yield context.registered_user_on_test_application
     context.api_developer.delete_registration(
