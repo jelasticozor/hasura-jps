@@ -3,9 +3,9 @@ namespace HasuraFunction;
 using AutoMapper;
 using io.fusionauth.domain.api.jwt;
 
-public class TokenValidationProfile : Profile
+public class MapperProfile : Profile
 {
-    public TokenValidationProfile()
+    public MapperProfile()
     {
         this.CreateMap<ValidateResponse, ValidateTokenOutput>().ConvertUsing<ValidateTokenOutputTypeConverter>();
     }

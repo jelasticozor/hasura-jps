@@ -23,7 +23,6 @@ def before_all(context):
     use_fixture(fusionauth_issuer, context)
     use_fixture(path_to_serverless_test_configuration, context)
     use_fixture(fusionauth_version, context)
-    use_fixture(registered_user_role, context)
     use_fixture(hasura_admin_secret, context)
     use_fixture(graphql_engine_image, context)
     if context.cluster_type == 'prod':
@@ -31,4 +30,4 @@ def before_all(context):
 
 
 def before_scenario(context, scenario):
-    pass
+    use_fixture(remove_applications, context)

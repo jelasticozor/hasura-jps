@@ -1,8 +1,8 @@
 actions:
-- name: login
+- name: sign_in
   definition:
     kind: synchronous
-    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/login
+    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/sign-in
   permissions:
   - role: anonymous
 - name: validate_token
@@ -14,6 +14,6 @@ custom_types:
   enums: []
   input_objects: []
   objects:
-  - name: login_response
+  - name: sign_in_response
   - name: validate_token_response
   scalars: []

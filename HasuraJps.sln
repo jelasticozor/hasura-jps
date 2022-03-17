@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31507.150
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softozor.FusionAuth.Login", "serverless\functions\Softozor.FusionAuth.Login\Softozor.FusionAuth.Login.csproj", "{2625208F-652F-486B-AC17-B22E6D2544E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softozor.FusionAuth.SignIn", "serverless\functions\Softozor.FusionAuth.SignIn\Softozor.FusionAuth.SignIn.csproj", "{2625208F-652F-486B-AC17-B22E6D2544E6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softozor.FusionAuth.TokenValidation", "serverless\functions\Softozor.FusionAuth.TokenValidation\Softozor.FusionAuth.TokenValidation.csproj", "{86D34A05-88D8-4662-AE9F-CD41E8D00924}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softozor.FusionAuth.Login.Tests", "serverless\functions\Softozor.FusionAuth.Login.Tests\Softozor.FusionAuth.Login.Tests.csproj", "{1A7BC23D-DF45-4DC6-B999-5503629B6938}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softozor.FusionAuth.SignIn.Tests", "serverless\functions\Softozor.FusionAuth.SignIn.Tests\Softozor.FusionAuth.SignIn.Tests.csproj", "{1A7BC23D-DF45-4DC6-B999-5503629B6938}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softozor.FusionAuth.TokenValidation.Tests", "serverless\functions\Softozor.FusionAuth.TokenValidation.Tests\Softozor.FusionAuth.TokenValidation.Tests.csproj", "{BD96BBF5-29B0-4717-ACAF-BD86C435F1EB}"
 EndProject

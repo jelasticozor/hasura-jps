@@ -18,7 +18,6 @@ Feature: Create applications
 
     Given no application exists
 
-  @fixture.remove-applications
   Scenario: The application id is automatically generated
 
     When the api developer adds application 'app-1' with roles
@@ -33,7 +32,6 @@ Feature: Create applications
     And 'role1' is the default role
     And the roles are granted permission to execute all user management actions except 'login'
 
-  @fixture.remove-applications
   Scenario: The api developer provides the application id
 
   An application id is a version 4 uuid.
@@ -49,7 +47,6 @@ Feature: Create applications
     And 'role1' is the default role
     And the roles are granted permission to execute all user management actions except 'login'
 
-  @fixture.remove-applications
   Scenario: The api developer adds two applications
 
     Given an application named 'app-1' has been added with roles

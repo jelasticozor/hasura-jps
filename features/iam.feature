@@ -8,13 +8,13 @@ Feature: Identity and Access Management
   I want to protect the relevant functionality
   with reliable identity and access management.
 
-  Scenario: Login can be validated
+  Scenario: Signin can be validated
 
     Given the user 'user@company.com' registered on the test application
     When she logs on with graphql mutation
     """
-    mutation Login($username: String!, $password: String!, $appId: uuid!) {
-      login(username: $username, password: $password, appId: $appId) {
+    mutation SignIn($username: String!, $password: String!, $appId: uuid!) {
+      sign_in(username: $username, password: $password, app_id: $appId) {
         token
       }
     }
@@ -23,7 +23,7 @@ Feature: Identity and Access Management
     """
     mutation ValidateToken {
       validate_token {
-        userId
+        user_id
       }
     }
     """

@@ -5,6 +5,7 @@
         <Authors>softozor</Authors>
         <Product>Softozor FusionAuth Login</Product>
         <Nullable>enable</Nullable>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -29,7 +30,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Softozor.FusionAuth.Login\Softozor.FusionAuth.Login.csproj" />
+        <ProjectReference Include="..\Softozor.FusionAuth.SignIn\Softozor.FusionAuth.SignIn.csproj" />
     </ItemGroup>
 
     <ItemGroup>

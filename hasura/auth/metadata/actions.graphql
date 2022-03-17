@@ -1,21 +1,21 @@
-type Mutation {
-  login(
+type Query {
+  sign_in(
     username: String!
     password: String!
-    appId: uuid!
-  ): login_response
+    app_id: uuid!
+  ): sign_in_response
 }
 
-type Mutation {
+type Query {
   validate_token: validate_token_response
 }
 
-type login_response {
+type sign_in_response {
   token: String!
-  userId: uuid!
+  user_id: uuid!
 }
 
 type validate_token_response {
-  userId: uuid!
+  user_id: uuid!
 }
 

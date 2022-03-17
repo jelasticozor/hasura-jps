@@ -1,4 +1,4 @@
-namespace Softozor.FusionAuth.Login.Tests;
+namespace Softozor.FusionAuth.SignIn.Tests;
 
 using System;
 using System.Threading.Tasks;
@@ -15,23 +15,23 @@ using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 using Xunit;
 
-public class LoginTests
+public class SignInTests
 {
     private readonly IFusionAuthAsyncClient authClient;
 
     private readonly IDataProtector dataProtector;
 
-    private readonly IActionHandler<LoginInput, (LoginOutput, string)> sut;
+    private readonly IActionHandler<SignInInput, (SignInOutput, string)> sut;
 
-    private readonly LoginInput validInput = new LoginInput("username", "password", Guid.NewGuid());
+    private readonly SignInInput validInput = new SignInInput("username", "password", Guid.NewGuid());
 
-    public LoginTests()
+    public SignInTests()
     {
         this.authClient = Mock.Of<IFusionAuthAsyncClient>();
         this.dataProtector = Mock.Of<IDataProtector>();
-        var logger = Mock.Of<ILogger<LoginHandler>>();
+        var logger = Mock.Of<ILogger<SignInHandler>>();
         var mapper = CreateMapper();
-        this.sut = new LoginHandler(this.dataProtector, this.authClient, logger, mapper);
+        this.sut = new SignInHandler(this.dataProtector, this.authClient, logger, mapper);
     }
 
     [Theory]
@@ -83,7 +83,7 @@ public class LoginTests
         var (actualLoginOutput, _) = await this.sut.Handle(this.validInput);
 
         // Assert
-        var expectedLoginOutput = new LoginOutput(expectedToken, expectedUserId);
+        var expectedLoginOutput = new SignInOutput(expectedToken, expectedUserId);
         actualLoginOutput.Should().BeEquivalentTo(expectedLoginOutput);
     }
 
@@ -144,7 +144,7 @@ public class LoginTests
 
     private static IMapper CreateMapper()
     {
-        var config = new MapperConfiguration(cfg => { cfg.AddProfile<LoginProfile>(); });
+        var config = new MapperConfiguration(cfg => { cfg.AddProfile<MapperProfile>(); });
         return config.CreateMapper();
     }
 }

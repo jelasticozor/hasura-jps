@@ -2,12 +2,12 @@ version: 1.0
 provider:
   name: openfaas
 functions:
-  login:
+  sign-in:
     lang: dotnet-hasura
-    handler: ./Softozor.FusionAuth.Login
-    image: softozor/fusionauth-login:${IMG_TAG:-latest}
+    handler: ./Softozor.FusionAuth.SignIn
+    image: softozor/fusionauth-signin:${IMG_TAG:-latest}
     build_args:
-      FUNCTION_NAME: Softozor.FusionAuth.Login
+      FUNCTION_NAME: Softozor.FusionAuth.SignIn
     environment:
       AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
       HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}

@@ -1,0 +1,5 @@
+query ValidateToken {
+  validate_token {
+    user_id
+  }
+}

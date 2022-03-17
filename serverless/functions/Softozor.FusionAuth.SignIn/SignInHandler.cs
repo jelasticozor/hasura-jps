@@ -10,20 +10,20 @@ using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 
-public class LoginHandler : IActionHandler<LoginInput, (LoginOutput, string)>
+public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
 {
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly ILogger<LoginHandler> logger;
+    private readonly ILogger<SignInHandler> logger;
 
     private readonly IMapper mapper;
 
     private readonly IDataProtector protector;
 
-    public LoginHandler(
+    public SignInHandler(
         IDataProtector protector,
         IFusionAuthAsyncClient authClient,
-        ILogger<LoginHandler> logger,
+        ILogger<SignInHandler> logger,
         IMapper mapper)
     {
         this.protector = protector;
@@ -32,9 +32,9 @@ public class LoginHandler : IActionHandler<LoginInput, (LoginOutput, string)>
         this.mapper = mapper;
     }
 
-    public async Task<(LoginOutput, string)> Handle(LoginInput input)
+    public async Task<(SignInOutput, string)> Handle(SignInInput input)
     {
-        var request = this.mapper.Map<LoginInput, LoginRequest>(input);
+        var request = this.mapper.Map<SignInInput, LoginRequest>(input);
 
         var response = await this.authClient.LoginAsync(request);
 
@@ -50,7 +50,7 @@ public class LoginHandler : IActionHandler<LoginInput, (LoginOutput, string)>
 
             var protectedRefreshToken = this.protector.Protect(response.successResponse.refreshToken);
 
-            return (this.mapper.Map<LoginResponse, LoginOutput>(response.successResponse), protectedRefreshToken);
+            return (this.mapper.Map<LoginResponse, SignInOutput>(response.successResponse), protectedRefreshToken);
         }
 
         throw new HasuraFunctionException(
