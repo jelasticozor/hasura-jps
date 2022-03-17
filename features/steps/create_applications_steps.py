@@ -86,12 +86,12 @@ def step_impl(context, role_name):
         f'expected default role name {context.expected_role_names[0]}, got {actual_default_application_role_name}'
 
 
-@then("the roles are granted permission to execute all user management actions except 'login'")
+@then("the roles are granted permission to execute all user management actions except 'sign_in'")
 def step_impl(context):
     actual_user_mgmt_actions_role_names = context.api_developer.get_role_names_from_user_management_actions()
     expected_role_names = set(context.expected_role_names)
     assert expected_role_names == expected_role_names.intersection(actual_user_mgmt_actions_role_names), \
         f'expected {expected_role_names} to be contained in {actual_user_mgmt_actions_role_names}'
-    actual_login_action_role_names = context.api_developer.get_role_names_from_login_action()
+    actual_login_action_role_names = context.api_developer.get_role_names_from_signin_action()
     assert len(expected_role_names.intersection(actual_login_action_role_names)) == 0, \
         f'expected {expected_role_names} not to be contained in {actual_login_action_role_names}'
