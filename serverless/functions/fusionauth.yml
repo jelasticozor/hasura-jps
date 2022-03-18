@@ -5,7 +5,7 @@ functions:
   sign-in:
     lang: dotnet-hasura
     handler: ./Softozor.FusionAuth.SignIn
-    image: softozor/fusionauth-signin:${IMG_TAG:-latest}
+    image: softozor/fusionauth-signin-fn:${IMG_TAG:-latest}
     build_args:
       FUNCTION_NAME: Softozor.FusionAuth.SignIn
     environment:
@@ -17,7 +17,7 @@ functions:
   validate-token:
     lang: dotnet-hasura
     handler: ./Softozor.FusionAuth.TokenValidation
-    image: softozor/fusionauth-validate-token:${IMG_TAG:-latest}
+    image: softozor/fusionauth-validate-token-fn:${IMG_TAG:-latest}
     build_args:
       FUNCTION_NAME: Softozor.FusionAuth.TokenValidation
     environment:

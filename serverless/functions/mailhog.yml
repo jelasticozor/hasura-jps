@@ -6,7 +6,7 @@ functions:
     namespace: ${OPENFAAS_NAMESPACE:-dev}
     lang: node-hasura
     handler: ./Softozor.MailhogClient.DeleteAllEmails
-    image: softozor/mailhog-delete-all-emails:${IMG_TAG:-latest}
+    image: softozor/mailhog-delete-all-emails-fn:${IMG_TAG:-latest}
     environment:
       MAIL_SERVER_API_PORT: ${MAIL_SERVER_API_PORT:-8025}
       MAIL_SERVER_HOST: ${MAIL_SERVER_HOST:-mailhog}
@@ -14,7 +14,7 @@ functions:
     namespace: ${OPENFAAS_NAMESPACE:-dev}
     lang: node-hasura
     handler: ./Softozor.MailhogClient.DeleteEmail
-    image: softozor/mailhog-delete-email:${IMG_TAG:-latest}
+    image: softozor/mailhog-delete-email-fn:${IMG_TAG:-latest}
     environment:
       MAIL_SERVER_API_PORT: ${MAIL_SERVER_API_PORT:-8025}
       MAIL_SERVER_HOST: ${MAIL_SERVER_HOST:-mailhog}
@@ -22,7 +22,7 @@ functions:
     namespace: ${OPENFAAS_NAMESPACE:-dev}
     lang: node-hasura
     handler: ./Softozor.MailhogClient.GetEmails
-    image: softozor/mailhog-get-emails:${IMG_TAG:-latest}
+    image: softozor/mailhog-get-emails-fn:${IMG_TAG:-latest}
     environment:
       MAIL_SERVER_API_PORT: ${MAIL_SERVER_API_PORT:-8025}
       MAIL_SERVER_HOST: ${MAIL_SERVER_HOST:-mailhog}
