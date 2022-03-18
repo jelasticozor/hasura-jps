@@ -13,7 +13,7 @@ Feature: Identity and Access Management
     Given the user 'user@company.com' registered on the test application
     When she logs on with graphql mutation
     """
-    mutation SignIn($username: String!, $password: String!, $appId: uuid!) {
+    query SignIn($username: String!, $password: String!, $appId: uuid!) {
       sign_in(username: $username, password: $password, app_id: $appId) {
         token
       }
@@ -21,7 +21,7 @@ Feature: Identity and Access Management
     """
     Then her token validates by calling the following graphql mutation with bearer token
     """
-    mutation ValidateToken {
+    query ValidateToken {
       validate_token {
         user_id
       }
