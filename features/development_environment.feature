@@ -27,7 +27,7 @@ Feature: Development Hasura environment
 
   Scenario: The IAM functions are well-defined
 
-    Then the login function is ready
+    Then the sign-in function is ready
     And the validate-token function is ready
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
     And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'

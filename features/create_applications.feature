@@ -30,6 +30,7 @@ Feature: Create applications
     And that application id is listed in the hasura jwt audience
     And the roles are defined on the application
     And 'role1' is the default role
+    # TODO: give a list of actions that receive the new permissions ('validate_token')
     And the roles are granted permission to execute all user management actions except 'sign_in'
 
   Scenario: The api developer provides the application id
@@ -45,6 +46,7 @@ Feature: Create applications
     And that application id is listed in the hasura jwt audience
     And the roles are defined on the application
     And 'role1' is the default role
+    # TODO: give a list of actions that receive the new permissions ('validate_token')
     And the roles are granted permission to execute all user management actions except 'sign_in'
 
   Scenario: The api developer adds two applications
@@ -60,4 +62,5 @@ Feature: Create applications
       | role4 |
     Then application 'app-2' exists
     And its application id is listed in the hasura jwt audience
+    # TODO: give a list of actions that receive the new permissions ('validate_token')
     And the roles are granted permission to execute all user management actions except 'sign_in'

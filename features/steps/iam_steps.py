@@ -14,13 +14,15 @@ def step_impl(context, user_email):
 @when('she logs on with graphql mutation')
 def step_impl(context):
     mutation = context.text
+    variables = {
+        'username': context.registered_user_on_test_application['email'],
+        'password': context.registered_user_on_test_application['password'],
+        'appId': context.auth_test_application
+    }
+    print('variables: ', variables)
     response = context.api_developer.post_graphql(
         query=mutation,
-        variables={
-            'username': context.registered_user_on_test_application['email'],
-            'password': context.registered_user_on_test_application['password'],
-            'appId': context.auth_test_application
-        },
+        variables=variables,
         run_as_admin=False)
     context.current_jwt = response['sign_in']['token']
 
