@@ -407,7 +407,7 @@ class ApiDeveloper:
                     role_names.add(permission['role'])
         return role_names
 
-    def get_role_names_from_login_action(self):
+    def get_role_names_from_signin_action(self):
         env_name = self.__env_info.env_name()
         yaml_content = self.__file_client.read(
             env_name, '/hasura-metadata/actions.yaml', node_group='cp')
