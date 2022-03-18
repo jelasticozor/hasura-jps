@@ -2,7 +2,7 @@
 
 const createError = require('http-errors')
 
-const mailhog = require('./settings').function
+const mailhog = require('./common-mailhog/settings').function
 
 exports.function = async input => {
   validateInput(input)

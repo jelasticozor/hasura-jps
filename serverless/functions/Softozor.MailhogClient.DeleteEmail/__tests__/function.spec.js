@@ -1,4 +1,4 @@
-jest.mock('../settings', () => {
+jest.mock('../common-mailhog/settings', () => {
   return {
     function: {
       deleteMessage: jest.fn(),
@@ -7,8 +7,8 @@ jest.mock('../settings', () => {
 })
 
 const createError = require('http-errors')
-const mailhog = require('../settings').function
-const deleteMessage = require('../deleteMessage').function
+const mailhog = require('../common-mailhog/settings').function
+const deleteMessage = require('../function').function
 
 describe('Softozor.MailhogClient.DeleteEmail', () => {
   beforeEach(() => {

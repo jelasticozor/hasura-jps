@@ -24,7 +24,8 @@ functions:
       MAIL_SERVER_API_PORT: ${MAIL_SERVER_API_PORT:-8025}
       MAIL_SERVER_HOST: ${MAIL_SERVER_HOST:-mailhog}
 configuration:
+  copy:
+    - ./common-mailhog
   templates:
     - name: node-hasura
       source: https://gitlab.hidora.com/softozor/faas-templates.git
-  # TODO: try to include the common settings.js here

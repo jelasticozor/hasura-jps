@@ -1,4 +1,4 @@
-jest.mock('../settings', () => {
+jest.mock('../common-mailhog/settings', () => {
   return {
     function: {
       messages: jest.fn()
@@ -7,8 +7,8 @@ jest.mock('../settings', () => {
 })
 
 const createError = require('http-errors')
-const mailhog = require('../settings').function
-const getMessages = require('../getMessages').function
+const mailhog = require('../common-mailhog/settings').function
+const getMessages = require('../function').function
 
 describe('Softozor.MailhogClient.GetEmails', () => {
   beforeEach(() => {

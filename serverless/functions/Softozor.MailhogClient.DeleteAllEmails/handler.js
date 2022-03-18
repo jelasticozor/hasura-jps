@@ -1,7 +1,7 @@
 'use strict'
 
 const bodyParser = require('body-parser')
-const deleteAllMessages = require('./deleteAllMessages').function
+const deleteAllMessages = require('./function').function
 
 module.exports = ({ app }, wrap) => {
   app.use(bodyParser.json())
