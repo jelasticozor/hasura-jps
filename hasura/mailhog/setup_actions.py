@@ -21,7 +21,7 @@ def main(actions_yaml):
                 'name': action_name,
                 'definition': {
                     'kind': 'synchronous',
-                    'handler': f"http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/{action_name.replace('_', '-')}"
+                    'handler': 'http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/' + action_name.replace('_', '-')
                 }
             })
 
