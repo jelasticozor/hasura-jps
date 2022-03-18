@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-  delete_all_emails(): delete_all_emails_response
+  delete_all_emails: delete_all_emails_response
 }
 
 type Mutation {
@@ -14,7 +14,7 @@ type get_emails_response {
   total: Int!
   count: Int!
   start: Int!
-  items: '[json]!'
+  items: [json]!
 }
 
 type delete_all_emails_response {
