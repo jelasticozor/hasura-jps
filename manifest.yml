@@ -187,15 +187,29 @@ actions:
             MAIL_SERVER_SSL: "True"
             MAIL_SERVER_SUCCESS_TEXT: ""
   installFaas:
-    install:
-      jps: serverless/manifest.yml
-      settings:
-        authApiKey: ${globals.SERVERLESS_API_KEY}
-        authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
-        dataProtectionSecretKey: ${globals.DATA_PROTECTION_SECRET_KEY}
-        fncTag: ${settings.fncTag}
-        clusterType: ${settings.clusterType}
-        mailServerHost: ${globals.MAIL_SERVER_HOST}
+    - install:
+        jps: serverless/manifest.yml
+        settings:
+          authApiKey: ${globals.SERVERLESS_API_KEY}
+          authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
+          dataProtectionSecretKey: ${globals.DATA_PROTECTION_SECRET_KEY}
+          fncTag: ${settings.fncTag}
+          clusterType: ${settings.clusterType}
+          mailServerHost: ${globals.MAIL_SERVER_HOST}
+    - api:
+        - method: environment.file.Read
+          params:
+            nodeGroup: faas
+            path: /var/lib/faasd/secrets/basic-auth-user
+    - setGlobals:
+        FAAS_USER: ${response.body}
+    - api:
+        - method: environment.file.Read
+          params:
+            nodeGroup: faas
+            path: /var/lib/faasd/secrets/basic-auth-password
+        - setGlobals:
+            FAAS_PASSWORD: ${response.body}
   installHasura:
     - install:
         jps: hasura/manifest.yml
@@ -263,6 +277,8 @@ success:
     **Auth Database Password**: ${globals.DB_AUTH_PASSWORD}  
     **Auth Admin Email**: ${globals.USER_EMAIL}  
     **Auth Admin Password**: ${globals.AUTH_ADMIN_PASSWORD}  
+    **Faas Admin User**: ${globals.FAAS_USER}  
+    **Faas Admin Password**: ${globals.FAAS_PASSWORD}  
     **Auth Almighty API Key**: ${globals.ALMIGHTY_API_KEY}  
     **Auth Serverless API Key**: ${globals.SERVERLESS_API_KEY}  
     **Data Protection Secret Key**: ${globals.DATA_PROTECTION_SECRET_KEY}
