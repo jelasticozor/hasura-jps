@@ -22,7 +22,7 @@ def step_impl(context):
             'appId': context.auth_test_application
         },
         run_as_admin=False)
-    context.current_jwt = response['login']['token']
+    context.current_jwt = response['sign_in']['token']
 
 
 @then('her token validates by calling the following graphql mutation with bearer token')
@@ -33,4 +33,4 @@ def step_impl(context):
         auth_token=context.current_jwt,
         run_as_admin=False
     )
-    assert context.current_user_id == response['validate_token']['userId']
+    assert context.current_user_id == response['validate_token']['user_id']
