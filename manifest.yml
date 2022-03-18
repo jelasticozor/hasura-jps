@@ -200,6 +200,7 @@ actions:
     - install:
         jps: hasura/manifest.yml
         settings:
+          clusterType: ${settings.clusterType}
           dbAdminUsername: ${globals.DB_ADMIN_USERNAME}
           dbAdminPassword: ${nodes.sqldb.password}
           dbUsername: ${globals.DB_USERNAME}

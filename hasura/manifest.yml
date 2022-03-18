@@ -1,10 +1,14 @@
 type: update
 name: hasura
-
 baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
+    - type: space
+      caption: General
+    - name: clusterType
+      type: string
+      required: true
     - type: spacer
       caption: Faas
     - name: faasHostname
@@ -85,6 +89,8 @@ settings:
 onInstall:
   - setupDatabase
   - setupAppContainer
+  - if ("${settings.clusterType}" == "dev"):
+      - setupMailhogActions
   - restartContainers[cp]
 
 actions:
@@ -98,10 +104,10 @@ actions:
         - psql -U ${settings.dbAdminUsername} -d ${settings.dbName} -f setup.sql
   setupAppContainer:
       - api:
-          - method: environment.control.SetContainerEnvVarsByGroup
+          - method: environment.control.AddContainerEnvVars
             params:
               nodeGroup: cp
-              data:
+              vars:
                 HASURA_GRAPHQL_DATABASE_URL: postgres://${settings.dbUsername}:${settings.dbPassword}@${nodes.sqldb.master.intIP}:5432/${settings.dbName}
                 HASURA_GRAPHQL_ENABLE_CONSOLE: ${settings.enableConsole}
                 HASURA_GRAPHQL_ADMIN_SECRET: ${settings.adminSecret}
@@ -110,3 +116,10 @@ actions:
                 FAAS_HOSTNAME: ${settings.faasHostname}
                 FAAS_PORT: ${settings.faasPort}
                 HASURA_GRAPHQL_JWT_SECRET: '{"type": "${settings.jwtKeyAlgorithm}", "jwk_url": "http://${nodes.auth.master.intIP}:${settings.authPort}/.well-known/jwks.json", "audience": [], "claims_namespace": "${settings.hasuraClaimsNamespace}", "claims_format": "json", "issuer": "${settings.authIssuer}"}'
+  setupMailhogActions:
+    - cmd[cp]:
+        - wget ${baseUrl}/hasura/mailhog/actions.graphql -O actions.graphql
+        - cat actions.graphql >> /metadata/actions.graphql
+    - cmd[cp]:
+      - wget ${baseUrl}/hasura/mailhog/setup_actions.py -O setup_actions.py
+      - python3 ./setup_actions.py --actions-yaml /metadata/actions.yaml

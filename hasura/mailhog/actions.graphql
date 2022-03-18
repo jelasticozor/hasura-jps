@@ -1,0 +1,27 @@
+type Query {
+  get_emails(start: Int, limit: Int): get_emails_response
+}
+
+type Mutation {
+  delete_all_emails(): delete_all_emails_response
+}
+
+type Mutation {
+  delete_email(id: String!): delete_email_response
+}
+
+type get_emails_response {
+  total: Int!
+  count: Int!
+  start: Int!
+  items: '[json]!'
+}
+
+type delete_all_emails_response {
+  deleted: Int!
+}
+
+type delete_email_response {
+  id: String!
+}
+
