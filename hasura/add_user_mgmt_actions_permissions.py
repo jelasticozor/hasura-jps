@@ -2,6 +2,8 @@ import argparse
 
 import yaml
 
+relevant_user_mgmt_actions = ['validate_token']
+
 
 class NoAliasDumper(yaml.SafeDumper):
     def ignore_aliases(self, data):
@@ -17,9 +19,10 @@ def main(roles, path_to_actions_file):
         } for role in roles.split(';')]
 
         yaml_data = yaml.load(original_yaml_content, yaml.Loader)
-        actions = [action for action in yaml_data['actions']
-                   if action['name'] != 'sign_in']
+        actions = yaml_data['actions']
         for action in actions:
+            if action['name'] not in relevant_user_mgmt_actions:
+                continue
             if 'permissions' not in action:
                 action['permissions'] = permissions
             else:
