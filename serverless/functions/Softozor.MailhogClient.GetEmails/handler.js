@@ -1,9 +1,7 @@
 'use strict'
 
 const bodyParser = require('body-parser')
-const {
-  getMessages,
-} = require('./functions')
+const getMessages = require('./getMessages').function
 
 module.exports = ({ app }, wrap) => {
   app.use(bodyParser.json())

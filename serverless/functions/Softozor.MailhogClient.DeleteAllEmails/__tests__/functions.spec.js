@@ -9,9 +9,7 @@ jest.mock('../settings', () => {
 
 const createError = require('http-errors')
 const mailhog = require('../settings').function
-const {
-  deleteAllMessages,
-} = require('../functions')
+const deleteAllMessages = require('../deleteAllMessages').function
 
 describe('Softozor.MailhogClient.DeleteAllEmails', () => {
   beforeEach(() => {
