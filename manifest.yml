@@ -208,8 +208,8 @@ actions:
           params:
             nodeGroup: faas
             path: /var/lib/faasd/secrets/basic-auth-password
-        - setGlobals:
-            FAAS_PASSWORD: ${response.body}
+    - setGlobals:
+        FAAS_PASSWORD: ${response.body}
   installHasura:
     - install:
         jps: hasura/manifest.yml
