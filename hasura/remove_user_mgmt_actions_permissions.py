@@ -16,7 +16,7 @@ def main(roles_to_keep, path_to_actions_file):
 
         yaml_data = yaml.load(original_yaml_content, yaml.Loader)
         actions = [action for action in yaml_data['actions']
-                   if action['name'] != 'login']
+                   if action['name'] != 'sign_in']
         for action in actions:
             if 'permissions' in action:
                 current_roles = set(permission['role']
