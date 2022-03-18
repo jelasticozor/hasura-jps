@@ -119,7 +119,7 @@ actions:
   setupMailhogActions:
     - cmd[cp]:
         - wget ${baseUrl}/hasura/mailhog/actions.graphql -O actions.graphql
-        - cat actions.graphql >> /metadata/actions.graphql
+        - cat actions.graphql >> /hasura-metadata/actions.graphql
     - cmd[cp]:
       - wget ${baseUrl}/hasura/mailhog/setup_actions.py -O setup_actions.py
-      - python3 ./setup_actions.py --actions-yaml /metadata/actions.yaml
+      - python3 ./setup_actions.py --actions-yaml /hasura-metadata/actions.yaml
