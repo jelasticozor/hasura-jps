@@ -5,4 +5,4 @@ using Newtonsoft.Json;
 
 public record SignInOutput(
     [property: JsonProperty("token")] string Token,
-    [property: JsonProperty("user_id")] Guid UserId);
+    [property: JsonProperty("userId")] Guid UserId);

@@ -12,7 +12,7 @@ type Query {
 
 type sign_in_response {
   token: String!
-  user_id: uuid!
+  userId: uuid!
 }
 
 type validate_token_response {
