@@ -40,7 +40,7 @@ public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
 
         if (response.WasSuccessful())
         {
-            this.logger.LogInformation($"Successful login for user {input.Username} on application {input.AppId}");
+            this.logger.LogInformation($"Successful signin for user {input.Username} on application {input.AppId}");
 
             if (response.successResponse.refreshToken is null)
             {
@@ -54,6 +54,6 @@ public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
         }
 
         throw new HasuraFunctionException(
-            $"Unable to log in user {input.Username} on application {input.AppId}", response.statusCode, response.exception);
+            $"Unable to sign user {input.Username} on application {input.AppId}", response.statusCode, response.exception);
     }
 }

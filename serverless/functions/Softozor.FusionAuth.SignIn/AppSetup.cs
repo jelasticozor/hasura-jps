@@ -25,8 +25,8 @@ public static class AppSetup
 
                 try
                 {
-                    var (loginOutput, refreshToken) = await handler.Handle(input);
-                    await http.Response.WriteAsJsonAsync(loginOutput);
+                    var (signInOutput, refreshToken) = await handler.Handle(input);
+                    await http.Response.WriteAsJsonAsync(signInOutput);
                     http.Response.Cookies.Append(
                         "refresh-token",
                         refreshToken,

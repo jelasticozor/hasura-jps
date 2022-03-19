@@ -2,7 +2,7 @@ type Query {
   sign_in(
     username: String!
     password: String!
-    app_id: uuid!
+    appId: uuid!
   ): sign_in_response
 }
 

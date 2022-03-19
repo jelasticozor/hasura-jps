@@ -6,4 +6,4 @@ using Newtonsoft.Json;
 public record SignInInput(
     [property: JsonProperty("username")] string Username,
     [property: JsonProperty("password")] string Password,
-    [property: JsonProperty("app_id")] Guid AppId);
+    [property: JsonProperty("appId")] Guid AppId);
