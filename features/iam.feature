@@ -23,7 +23,7 @@ Feature: Identity and Access Management
     """
     query ValidateToken {
       validate_token {
-        user_id
+        userId
       }
     }
     """

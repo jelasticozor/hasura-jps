@@ -16,6 +16,6 @@ type sign_in_response {
 }
 
 type validate_token_response {
-  user_id: uuid!
+  userId: uuid!
 }
 
