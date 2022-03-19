@@ -35,4 +35,4 @@ def step_impl(context):
         auth_token=context.current_jwt,
         run_as_admin=False
     )
-    assert context.current_user_id == response['validate_token']['user_id']
+    assert context.current_user_id == response['validate_token']['userId']
