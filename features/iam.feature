@@ -14,7 +14,7 @@ Feature: Identity and Access Management
     When she logs on with graphql mutation
     """
     query SignIn($username: String!, $password: String!, $appId: uuid!) {
-      sign_in(username: $username, password: $password, app_id: $appId) {
+      sign_in(username: $username, password: $password, appId: $appId) {
         token
       }
     }
