@@ -21,14 +21,15 @@ Feature: Development Hasura environment
 
     Then hasura is available
 
-  # TODO: test mailhog is there, test mailhog works (send email through fusionauth)
   # TODO: we only need a master postgres node, no slave
-  # TODO: test mailhog functions are ready
 
   Scenario: The IAM functions are well-defined
 
     Then the sign-in function is ready
     And the validate-token function is ready
+    And the get-emails function is ready
+    And the delete-all-emails function is ready
+    And the delete-email function is ready
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
     And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'
 
@@ -38,6 +39,7 @@ Feature: Development Hasura environment
     And there are 2 postgres13 nodes in the sqldb node group
     And there is 1 docker node in the cp node group
     And there is 1 nginx-dockerized node in the bl node group
+    And there is 1 docker node in the mail node group
 
   Scenario: The database meets the relevant preconditions
 
