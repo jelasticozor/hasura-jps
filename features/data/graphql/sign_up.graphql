@@ -1,0 +1,6 @@
+mutation SignUp($email: String!, $role: String!, $appId: uuid!) {
+  sign_up(email: $email, role: $role, appId: $appId) {
+    token
+    userId
+  }
+}

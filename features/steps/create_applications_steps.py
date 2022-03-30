@@ -12,19 +12,19 @@ def step_impl(context):
 @when("the api developer adds application '{app_name}' with roles")
 def step_impl(context, app_name):
     context.expected_role_names = [row['role'] for row in context.table]
-    context.actual_app_id = context.api_developer.create_application(
+    context.current_app_id = context.api_developer.create_application(
         app_name, context.expected_role_names)
-    context.app_ids.append(context.actual_app_id)
+    context.app_ids.append(context.current_app_id)
 
 
 @when("the api developer adds application '{app_name}' with id '{app_id}' and roles")
 def step_impl(context, app_name, app_id):
     context.expected_role_names = [row['role'] for row in context.table]
-    context.actual_app_id = context.api_developer.create_application(
+    context.current_app_id = context.api_developer.create_application(
         app_name, context.expected_role_names, app_id=app_id)
-    assert app_id == context.actual_app_id, \
-        f'expected application id {app_id}, got {context.actual_app_id}'
-    context.app_ids.append(context.actual_app_id)
+    assert app_id == context.current_app_id, \
+        f'expected application id {app_id}, got {context.current_app_id}'
+    context.app_ids.append(context.current_app_id)
 
 
 def is_uuid4(app_id):
@@ -37,15 +37,15 @@ def is_uuid4(app_id):
 
 @then("its application id is generated automatically")
 def step_impl(context):
-    assert is_uuid4(context.actual_app_id), \
-        f'expected {context.actual_app_id} to be a version 4 uuid'
+    assert is_uuid4(context.current_app_id), \
+        f'expected {context.current_app_id} to be a version 4 uuid'
 
 
 @then("application '{app_name}' is associated with that id on the iam service")
 def step_impl(context, app_name):
     app_id = context.api_developer.get_application_id(app_name)
-    assert context.actual_app_id == app_id, \
-        f'expected application id {context.actual_app_id} to be associated with application name {app_name}, got {app_id}'
+    assert context.current_app_id == app_id, \
+        f'expected application id {context.current_app_id} to be associated with application name {app_name}, got {app_id}'
 
 
 @then("its application id is listed in the hasura jwt audience")
@@ -53,14 +53,14 @@ def step_impl(context, app_name):
 def step_impl(context):
     jwt_secret = context.api_developer.get_hasura_graphql_jwt_secret()
     jwt_audience = jwt_secret['audience']
-    assert context.actual_app_id in jwt_audience, \
-        f'expected {context.actual_app_id} to be contained in {jwt_audience}'
+    assert context.current_app_id in jwt_audience, \
+        f'expected {context.current_app_id} to be contained in {jwt_audience}'
 
 
 @then("the roles are defined on the application")
 def step_impl(context):
     actual_application_roles = context.api_developer.get_roles_from_application_with_id(
-        context.actual_app_id)
+        context.current_app_id)
     actual_application_role_names = [role['name']
                                      for role in actual_application_roles]
     assert set(context.expected_role_names) == set(actual_application_role_names), \
@@ -76,7 +76,7 @@ def step_impl(context, app_name):
 @then("'{role_name}' is the default role")
 def step_impl(context, role_name):
     actual_application_roles = context.api_developer.get_roles_from_application_with_id(
-        context.actual_app_id)
+        context.current_app_id)
     actual_default_application_role_names = [
         role['name'] for role in actual_application_roles if role['isDefault']]
     assert len(actual_default_application_role_names) == 1, \

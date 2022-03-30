@@ -5,6 +5,19 @@ actions:
     handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/sign-in
   permissions:
   - role: anonymous
+- name: sign_up
+  definition:
+    kind: synchronous
+    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/sign-up
+  permissions:
+  - role: anonymous
+- name: set_password
+  definition:
+    kind: synchronous
+    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/set-password
+    forward_client_headers: true
+  permissions:
+  - role: anonymous
 - name: validate_token
   definition:
     kind: synchronous
@@ -15,5 +28,6 @@ custom_types:
   input_objects: []
   objects:
   - name: sign_in_response
+  - name: sign_up_response
   - name: validate_token_response
   scalars: []

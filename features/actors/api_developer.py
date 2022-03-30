@@ -6,7 +6,6 @@ import yaml
 from faas_client import FaasClientFactory
 from fusionauth.fusionauth_client import FusionAuthClient
 from hasura_client import HasuraClientFactory
-from softozor_graphql_client import GraphQLClient
 from softozor_test_utils import host_has_port_open
 from softozor_test_utils.timing import fail_after_timeout
 from test_utils.manifest_data import get_manifest_data
@@ -21,12 +20,6 @@ def create_hasura_client(env_info, admin_secret):
     factory = HasuraClientFactory('default')
 
     return factory.create(endpoint, admin_secret)
-
-
-def create_graphql_client(env_info, admin_secret):
-    endpoint = f'https://{env_info.domain()}/v1/graphql'
-
-    return GraphQLClient(endpoint, admin_secret)
 
 
 def create_database_connections(env_info, admin_user, admin_password):
@@ -122,8 +115,6 @@ class ApiDeveloper:
         self.__fusionauth_client = create_fusionauth_client(
             env_info, manifest_data['Auth Almighty API Key'])
         self.__hasura_client = create_hasura_client(
-            env_info, manifest_data['Hasura Admin Secret'])
-        self.__graphql_client = create_graphql_client(
             env_info, manifest_data['Hasura Admin Secret'])
 
     def __del__(self):
@@ -314,52 +305,6 @@ class ApiDeveloper:
         })
         assert self.hasura_is_up()
 
-    def create_user(self, user):
-        response = self.__fusionauth_client.create_user({
-            'sendSetPasswordEmail': False,
-            'user': {
-                'email': user['email'],
-                'password': user['password']
-            }
-        })
-        assert response.was_successful() is True, \
-            f'unable to create user: {response.exception} ({response.status})'
-        return response.success_response['user']['id']
-
-    def register_user(self, user_id, app_id, roles):
-        response = self.__fusionauth_client.register({
-            'registration': {
-                'applicationId': app_id,
-                'roles': roles
-            }
-        }, user_id)
-        assert response.was_successful() is True, \
-            f'cannot register user with id <{user_id}> on application <{app_id}>: {response.exception} ({response.status})'
-
-    def delete_registration(self, user_id, app_id):
-        response = self.__fusionauth_client.delete_registration(
-            user_id, app_id)
-        assert response.was_successful() is True, \
-            f'cannot unregister user id <{user_id}> from app id <{app_id}>: {response.exception} ({response.status})'
-
-    def retrieve_user(self, user_id):
-        response = self.__fusionauth_client.retrieve_user(user_id)
-        assert response.was_successful() is True, \
-            f'cannot retrieve user with id <{user_id}>: {response.exception} ({response.status})'
-        return response.success_response['user']
-
-    def retrieve_user_by_email(self, email):
-        response = self.__fusionauth_client.retrieve_user_by_email(email)
-        assert response.was_successful() is True, \
-            f'cannot find user with email {email}'
-        return response.success_response['user']
-
-    def check_user_is_registered_on_application(self, user_id, app_id):
-        response = self.__fusionauth_client.retrieve_registration(
-            user_id, app_id)
-        assert response.was_successful() is True, \
-            f'cannot find registration of user {user_id} on application {app_id}'
-
     def delete_user(self, user_id):
         response = self.__fusionauth_client.delete_user(user_id)
         assert response.was_successful() is True, \
@@ -379,12 +324,6 @@ class ApiDeveloper:
                 return False
 
         return fail_after_timeout(lambda: test_is_up(), timeout_in_sec, period_in_sec)
-
-    def post_graphql(self, query, variables=None, auth_token=None, run_as_admin=True):
-        response, _ = self.__graphql_client.execute(
-            query=query, variables=variables, auth_token=auth_token, run_as_admin=run_as_admin)
-        assert 'errors' not in response, f'errors: {response}'
-        return response['data']
 
     def get_hasura_graphql_jwt_secret(self):
         env_name = self.__env_info.env_name()

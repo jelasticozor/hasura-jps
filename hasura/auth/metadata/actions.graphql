@@ -10,8 +10,32 @@ type Query {
   validate_token: validate_token_response
 }
 
+type Mutation {
+  sign_up(
+    email: String!
+    role: String!
+    appId: uuid!
+  ): sign_up_response
+}
+
+type Mutation {
+  set_password(
+    changePasswordId: String!
+    password: $password
+  ): set_password_response
+}
+
 type sign_in_response {
   token: String!
+  userId: uuid!
+}
+
+type sign_up_response {
+  token: String!
+  userId: uuid!
+}
+
+type set_password_response {
   userId: uuid!
 }
 

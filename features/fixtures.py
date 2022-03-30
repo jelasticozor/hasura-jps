@@ -7,6 +7,7 @@ from test_utils import get_new_random_env_name
 from test_utils.manifest_data import get_manifest_data
 
 from features.actors.api_developer import ApiDeveloper
+from features.actors.api_user import ApiUser
 
 
 @fixture
@@ -229,6 +230,19 @@ def api_developer(context):
 
 
 @fixture
+def api_user(context):
+    endpoint = f'https://{context.current_env_info.domain()}/v1/graphql'
+    path_to_graphql_folder = os.path.join(
+        context.project_root_folder, 'features', 'data', 'graphql')
+    context.api_user = ApiUser(endpoint, path_to_graphql_folder)
+    yield context.api_user
+    user_id = context.api_user.user_id
+    if user_id is not None:
+        context.api_developer.delete_user(user_id)
+        del context.api_user
+
+
+@fixture
 def remove_applications(context):
     context.app_ids = []
     yield
@@ -236,33 +250,6 @@ def remove_applications(context):
         for app_id in context.app_ids:
             context.api_developer.delete_application(app_id)
         assert context.api_developer.no_application_exists()
-
-
-@fixture
-def auth_test_application(context):
-    context.auth_test_application = context.api_developer.create_application(
-        'test-application', ['user'])
-    yield context.auth_test_application
-    context.api_developer.delete_application(
-        context.auth_test_application)
-
-
-@fixture
-def registered_user_on_test_application(context):
-    test_application_id = context.auth_test_application
-    context.registered_user_on_test_application = {
-        'email': 'user@company.com',
-        'password': 'password'
-    }
-    user_id = context.api_developer.create_user(
-        context.registered_user_on_test_application)
-    context.api_developer.register_user(user_id, test_application_id, [
-        'user'
-    ])
-    yield context.registered_user_on_test_application
-    context.api_developer.delete_registration(
-        user_id, test_application_id)
-    context.api_developer.delete_user(user_id)
 
 
 @fixture
@@ -295,6 +282,5 @@ fixtures_registry = {
     'jelastic-env': jelastic_environment,
     'jelastic-env-with-automatic-settings': jelastic_environment_with_automatic_settings,
     'api-developer': api_developer,
-    'auth-test-application': auth_test_application,
-    'registered-user-on-test-application': registered_user_on_test_application,
+    'api-user': api_user,
 }
