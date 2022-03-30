@@ -6,12 +6,23 @@ targetNodes:
   nodeGroup:
     - bl
 
+settings:
+  fields:
+    - name: externalDomains
+      caption: External domain names (;-separated list)
+      type: string
+      vtype: domainlist
+      required: true
+
+
 globals:
   DHPARAM_FILENAME: /var/lib/nginx/dhparam.pem
 
 onInstall:
   - installAddon:
       id: letsencrypt
+      settings:
+        customDomains: ${settings.externalDomains}
   - configureSSL
   - restartContainers[bl]
 
@@ -31,8 +42,9 @@ addons:
   - id: letsencrypt
     name: letsencrypt
     onInstall:
-      - install [bl]:
+      - install:
           envName: ${env.envName}
+          nodeGroup: bl
           jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
           settings:
             customDomains: ${env.domain}

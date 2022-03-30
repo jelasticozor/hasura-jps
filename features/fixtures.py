@@ -166,6 +166,10 @@ def jelastic_environment(context):
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
         'clusterType': context.cluster_type,
+        # if we don't set this optional parameter to True,
+        # we need an external domain name, which we don't provide
+        # just for the sake of testing
+        'useDefaultExternalDomain': True,
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
@@ -186,6 +190,10 @@ def jelastic_environment_with_automatic_settings(context):
         'authIssuer': context.fusionauth_issuer,
         'fncTag': context.commit_sha,
         'clusterType': context.cluster_type,
+        # if we don't set this optional parameter to True,
+        # we need an external domain name, which we don't provide
+        # just for the sake of testing
+        'useDefaultExternalDomain': True,
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
