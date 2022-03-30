@@ -22,12 +22,13 @@ Feature: Identity and Access Management
     When the api user signs in the application
     Then she gets an error that the user was not found or the password was incorrect
 
-  @wip  
+  @wip
   Scenario Outline: Sign in as registered user with one single role
 
     Given the api user signed up on the application with role <user role>
     And she has received the email to setup her password
     # TODO: determine what permission should be set on the set_password mutation!
+    #  --> see what roles come in the access token received by the sign_up mutation
     And she set her password
     When she signs in the application
     Then her JWT is valid

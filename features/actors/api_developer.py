@@ -1,4 +1,5 @@
 import json
+import os
 
 import psycopg2
 import requests
@@ -6,6 +7,7 @@ import yaml
 from faas_client import FaasClientFactory
 from fusionauth.fusionauth_client import FusionAuthClient
 from hasura_client import HasuraClientFactory
+from softozor_graphql_client import GraphQLClient
 from softozor_test_utils import host_has_port_open
 from softozor_test_utils.timing import fail_after_timeout
 from test_utils.manifest_data import get_manifest_data
@@ -100,7 +102,7 @@ def can_invoke_function(url, timeout_in_sec=120, period_in_sec=5):
 
 class ApiDeveloper:
     def __init__(self, jelastic_clients_factory, env_info, manifest_data, add_application_manifest_file,
-                 remove_application_manifest_file):
+                 remove_application_manifest_file, path_to_graphql_folder):
         self.__env_info = env_info
         self.__add_application_manifest_file = add_application_manifest_file
         self.__remove_application_manifest_file = remove_application_manifest_file
@@ -114,8 +116,12 @@ class ApiDeveloper:
             env_info, self.__file_client)
         self.__fusionauth_client = create_fusionauth_client(
             env_info, manifest_data['Auth Almighty API Key'])
+        hasura_admin_secret = manifest_data['Hasura Admin Secret']
         self.__hasura_client = create_hasura_client(
-            env_info, manifest_data['Hasura Admin Secret'])
+            env_info, hasura_admin_secret)
+        self.__path_to_graphql_folder = path_to_graphql_folder
+        self.__graphql_client = GraphQLClient(
+            endpoint=f'https://{env_info.domain()}/v1/graphql', admin_secret=hasura_admin_secret)
 
     def __del__(self):
         self.__close_database_connections()
@@ -329,7 +335,7 @@ class ApiDeveloper:
         env_name = self.__env_info.env_name()
         env_vars = self.__control_client.get_container_env_vars_by_group(
             env_name, 'cp')
-        jwt_secret = env_vars["HASURA_GRAPHQL_JWT_SECRET"]
+        jwt_secret = env_vars['HASURA_GRAPHQL_JWT_SECRET']
         return json.loads(jwt_secret)
 
     def get_role_names_from_user_management_actions(self):
@@ -338,7 +344,7 @@ class ApiDeveloper:
             env_name, '/hasura-metadata/actions.yaml', node_group='cp')
         yaml_data = yaml.load(yaml_content, yaml.Loader)
         actions = [action for action in yaml_data['actions']
-                   if action['name'] != 'sign_in']
+                   if action['name'] != 'sign_in' or action['name'] == 'sign_up']
         role_names = set()
         for action in actions:
             if 'permissions' in action:
@@ -356,5 +362,45 @@ class ApiDeveloper:
         role_names = set(
             permission['role'] for action in actions for permission in action['permissions'])
         return role_names
+
+    # endregion
+
+    # region GraphQL
+
+    def get_emails(self):
+        graphql_response = self.__execute_graphql_query(
+            query_name='get_emails')
+        assert 200 == graphql_response.status_code, \
+            f'expected status code 200, got {graphql_response.status_code}'
+        return graphql_response
+
+    def get_email_to_setup_password_for_user(self, username, timeout_in_sec=60, period_in_sec=1):
+        def test_get_emails(developer):
+            all_emails = developer.get_emails()['get_emails']['items']
+            emails_to_setup_password = [
+                email for email in all_emails
+                if email['subject'] == 'Setup your password' and email['to'][0] == username]
+            return 1 == len(emails_to_setup_password) > 0
+
+        assert fail_after_timeout(
+            lambda: test_get_emails(self), timeout_in_sec, period_in_sec) is True
+
+        all_emails = self.get_emails()['get_emails']['items']
+        emails_to_setup_password = [
+            email for email in all_emails
+            if email['subject'] == 'Setup your password' and email['to'] == username]
+        return emails_to_setup_password[0]
+
+    def __execute_graphql_query(self, query_name, variables=None):
+        query = self.__get_query_from_file(query_name)
+        graphql_response = self.__graphql_client.execute(
+            query=query, variables=variables, auth_token=None, run_as_admin=True)
+        return graphql_response
+
+    def __get_query_from_file(self, query_name):
+        path_to_query = os.path.join(
+            self.__path_to_graphql_folder, f'{query_name}.graphql')
+        with open(path_to_query, 'r') as file:
+            return file.read().replace('\n', '')
 
     # endregion

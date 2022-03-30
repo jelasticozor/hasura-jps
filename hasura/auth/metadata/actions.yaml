@@ -16,8 +16,6 @@ actions:
     kind: synchronous
     handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/set-password
     forward_client_headers: true
-  permissions:
-  - role: anonymous
 - name: validate_token
   definition:
     kind: synchronous

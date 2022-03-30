@@ -8,33 +8,35 @@ class ApiUser:
         self.user_id = None
         self.jwt = None
         self.__client = GraphQLClient(endpoint)
-        self.__username = 'test-user@example.com'
+        self.username = 'test-user@example.com'
         self.__password = 'password'
         self.__path_to_graphql_folder = path_to_graphql_folder
 
+    # region authentication
+
     def sign_in(self, app_id):
         variables = {
-            'username': self.__username,
+            'username': self.username,
             'password': self.__password,
             'appId': app_id
         }
         graphql_response = self.__execute_graphql_query(
             query_name='sign_in', variables=variables)
         if graphql_response.status_code == 200:
-            self.jwt = graphql_response.data['token']
+            self.jwt = graphql_response.data['sign_in']['token']
         return graphql_response
 
     def sign_up(self, role, app_id):
         variables = {
-            'email': self.__username,
+            'email': self.username,
             'role': role,
             'appId': app_id
         }
         graphql_response = self.__execute_graphql_query(
             query_name='sign_up', variables=variables)
         if graphql_response.status_code == 200:
-            self.jwt = graphql_response.data['token']
-            self.user_id = graphql_response.data['userId']
+            self.jwt = graphql_response.data['sign_up']['token']
+            self.user_id = graphql_response.data['sign_up']['userId']
         return graphql_response
 
     def set_password(self, change_password_id):
@@ -50,6 +52,8 @@ class ApiUser:
         graphql_response = self.__execute_graphql_query(
             query_name='validate_token')
         return graphql_response
+
+    # endregion
 
     def __execute_graphql_query(self, query_name, variables=None):
         query = self.__get_query_from_file(query_name)

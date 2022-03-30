@@ -46,9 +46,9 @@
     {
       "body": {
         "emailTemplate": {
-          "defaultHtmlTemplate": "To change your password use the following token:\n\n<p>${changePasswordId}</p>",
+          "defaultHtmlTemplate": "To change your password use the following token:\n\n<p>changePasswordId=${changePasswordId}</p>",
           "defaultSubject": "Reset your password",
-          "defaultTextTemplate": "To change your password use the following token: \n\n${changePasswordId}",
+          "defaultTextTemplate": "To change your password use the following token: \n\nchangePasswordId=${changePasswordId}",
           "name": "Forgot Password"
         }
       },
@@ -58,9 +58,9 @@
     {
       "body": {
         "emailTemplate": {
-          "defaultHtmlTemplate": "Your account has been created and you must setup a password. Use the following token to setup your password:\n\n<p>${changePasswordId}</p>",
+          "defaultHtmlTemplate": "Your account has been created and you must setup a password. Use the following token to setup your password:\n\n<p>changePasswordId=${changePasswordId}</p>",
           "defaultSubject": "Setup your password",
-          "defaultTextTemplate": "Your account has been created and you must setup a password. Use the following token to setup your password: \n\n${changePasswordId}",
+          "defaultTextTemplate": "Your account has been created and you must setup a password. Use the following token to setup your password: \n\nchangePasswordId=${changePasswordId}",
           "name": "Setup Password"
         }
       },

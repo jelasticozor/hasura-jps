@@ -33,6 +33,7 @@ Feature: Development Hasura environment
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
     And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'
 
+  # TODO: this should be reworded in a less imperative style  
   Scenario: The Jelastic environment is well-defined
 
     Then there is 1 docker node in the faas node group

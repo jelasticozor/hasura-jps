@@ -1,0 +1,6 @@
+query GetEmails($start: Int, $limit: Int) {
+  get_emails(start: $start, limit: $limit) {
+    total
+    items
+  }
+}
