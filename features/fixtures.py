@@ -216,6 +216,11 @@ def remove_application_manifest_file(context):
         context.project_root_folder, 'remove-application.yml')
 
 
+def path_to_graphql_folder(context):
+    return os.path.join(
+        context.project_root_folder, 'features', 'data', 'graphql')
+
+
 @fixture
 def api_developer(context):
     context.api_developer = ApiDeveloper(
@@ -224,7 +229,7 @@ def api_developer(context):
         context.manifest_data,
         context.add_application_manifest_file,
         context.remove_application_manifest_file,
-        context.path_to_graphql_folder)
+        path_to_graphql_folder(context))
     yield context.api_developer
     del context.api_developer
 
@@ -232,9 +237,7 @@ def api_developer(context):
 @fixture
 def api_user(context):
     endpoint = f'https://{context.current_env_info.domain()}/v1/graphql'
-    path_to_graphql_folder = os.path.join(
-        context.project_root_folder, 'features', 'data', 'graphql')
-    context.api_user = ApiUser(endpoint, path_to_graphql_folder)
+    context.api_user = ApiUser(endpoint, path_to_graphql_folder(context))
     yield context.api_user
     user_id = context.api_user.user_id
     if user_id is not None:
