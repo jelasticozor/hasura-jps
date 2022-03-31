@@ -9,5 +9,5 @@ pytest-xdist==2.3.0
 pyyaml==6.0
 requests==2.26.0
 sh==1.14.2
-softozor-graphql-client==1.0.14
+softozor-graphql-client==1.0.15
 softozor-test-utils==1.0.13

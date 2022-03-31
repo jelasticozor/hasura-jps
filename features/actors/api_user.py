@@ -23,8 +23,8 @@ class ApiUser:
         graphql_response = self.__execute_graphql_query(
             query_name='sign_in', variables=variables)
         if graphql_response.status_code == 200:
-            print('graphql response data = ', graphql_response.data)
-            self.jwt = graphql_response.data['data']['sign_in']['token']
+            print('graphql response data = ', graphql_response.payload)
+            self.jwt = graphql_response.payload['data']['sign_in']['token']
         return graphql_response
 
     def sign_up(self, role, app_id):
@@ -36,8 +36,8 @@ class ApiUser:
         graphql_response = self.__execute_graphql_query(
             query_name='sign_up', variables=variables)
         if graphql_response.status_code == 200:
-            self.jwt = graphql_response.data['data']['sign_up']['token']
-            self.user_id = graphql_response.data['data']['sign_up']['userId']
+            self.jwt = graphql_response.payload['data']['sign_up']['token']
+            self.user_id = graphql_response.payload['data']['sign_up']['userId']
         return graphql_response
 
     def set_password(self, change_password_id):

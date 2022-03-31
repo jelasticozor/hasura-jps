@@ -351,15 +351,18 @@ class ApiDeveloper:
         return role_names
 
     def get_role_names_from_action(self, action_name):
+        print('action name: ', action_name)
         env_name = self.__env_info.env_name()
         yaml_content = self.__file_client.read(
             env_name, '/hasura-metadata/actions.yaml', node_group='cp')
         yaml_data = yaml.load(yaml_content, yaml.Loader)
         actions = yaml_data['actions']
+        print('actions: ', actions)
         role_names = set(permission['role']
                          for action in actions
                          if action['name'] == action_name
                          for permission in action.get('permissions', []))
+        print('role names: ', role_names)
         return role_names
 
     # endregion
@@ -371,7 +374,7 @@ class ApiDeveloper:
             query_name='get_emails')
         assert 200 == graphql_response.status_code, \
             f'expected status code 200, got {graphql_response.status_code}'
-        return graphql_response.data['data']
+        return graphql_response.payload['data']
 
     def get_email_to_setup_password_for_user(self, username, timeout_in_sec=60, period_in_sec=1):
         def test_get_emails(developer):

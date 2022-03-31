@@ -15,8 +15,8 @@ def step_impl(context, role):
         role, context.current_app_id)
     assert 200 == graphql_response.status_code, \
         f'expected status code 200, got {graphql_response.status_code}'
-    assert 'errors' not in graphql_response.data, \
-        f'expected no error in graphql response, got {graphql_response.data}'
+    assert 'errors' not in graphql_response.payload, \
+        f'expected no error in graphql response, got {graphql_response.payload}'
     assert context.api_user.user_id is not None
 
 
@@ -51,7 +51,7 @@ def step_impl(context):
     actual_status_code = context.current_graphql_response.status_code
     assert 404 == actual_status_code, \
         f'expected status code 404, got {actual_status_code}'
-    actual_data = context.current_graphql_response.data
+    actual_data = context.current_graphql_response.payload
     assert 'errors' in actual_data, \
         f'expected errors in graphql response, got none: {actual_data}'
 
