@@ -86,6 +86,7 @@ def step_impl(context, role_name):
         f'expected default role name {context.expected_role_names[0]}, got {actual_default_application_role_name}'
 
 
+# TODO: fix this!
 @then("the roles are granted permission to execute all user management actions except 'sign_in'")
 def step_impl(context):
     actual_user_mgmt_actions_role_names = context.api_developer.get_role_names_from_user_management_actions()

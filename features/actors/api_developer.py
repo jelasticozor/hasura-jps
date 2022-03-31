@@ -373,7 +373,7 @@ class ApiDeveloper:
             query_name='get_emails')
         assert 200 == graphql_response.status_code, \
             f'expected status code 200, got {graphql_response.status_code}'
-        return graphql_response
+        return graphql_response.data['data']
 
     def get_email_to_setup_password_for_user(self, username, timeout_in_sec=60, period_in_sec=1):
         def test_get_emails(developer):
