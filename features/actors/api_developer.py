@@ -338,30 +338,28 @@ class ApiDeveloper:
         jwt_secret = env_vars['HASURA_GRAPHQL_JWT_SECRET']
         return json.loads(jwt_secret)
 
-    # TODO: here we should take all roles except "anonymous"
     def get_role_names_from_user_management_actions(self):
         env_name = self.__env_info.env_name()
         yaml_content = self.__file_client.read(
             env_name, '/hasura-metadata/actions.yaml', node_group='cp')
         yaml_data = yaml.load(yaml_content, yaml.Loader)
-        actions = [action for action in yaml_data['actions']
-                   if action['name'] != 'sign_in' and action['name'] != 'sign_up']
-        role_names = set()
-        for action in actions:
-            if 'permissions' in action:
-                for permission in action['permissions']:
-                    role_names.add(permission['role'])
+        actions = yaml_data['actions']
+        role_names = set(permission['role']
+                         for action in actions
+                         for permission in action.get('permissions', [])
+                         if permission['role'] != 'anonymous')
         return role_names
 
-    def get_role_names_from_signin_action(self):
+    def get_role_names_from_action(self, action_name):
         env_name = self.__env_info.env_name()
         yaml_content = self.__file_client.read(
             env_name, '/hasura-metadata/actions.yaml', node_group='cp')
         yaml_data = yaml.load(yaml_content, yaml.Loader)
-        actions = [action for action in yaml_data['actions']
-                   if action['name'] == 'sign_in']
-        role_names = set(
-            permission['role'] for action in actions for permission in action['permissions'])
+        actions = yaml_data['actions']
+        role_names = set(permission['role']
+                         for action in actions
+                         if action['name'] == action_name
+                         for permission in action.get('permissions', []))
         return role_names
 
     # endregion

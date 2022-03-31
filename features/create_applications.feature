@@ -2,8 +2,8 @@
 @fixture.api-developer
 Feature: Create applications
 
-  As an API developer,  
-  I want to create new applications,  
+  As an API developer,
+  I want to create new applications,
   so that clients can identify.
 
   An application is something a user can log into.
@@ -30,8 +30,14 @@ Feature: Create applications
     And that application id is listed in the hasura jwt audience
     And the roles are defined on the application
     And 'role1' is the default role
-    # TODO: give a list of actions that receive the new permissions ('validate_token')
-    And the roles are granted permission to execute all user management actions except 'sign_in'
+    And the roles are granted permission to execute the following user management actions
+      | action         |
+      | validate-token |
+      | set-password   |
+    But they are not granted permission to execute the following user management actions
+      | action  |
+      | sign-in |
+      | sign-up |
 
   Scenario: The api developer provides the application id
 
@@ -46,8 +52,14 @@ Feature: Create applications
     And that application id is listed in the hasura jwt audience
     And the roles are defined on the application
     And 'role1' is the default role
-    # TODO: give a list of actions that receive the new permissions ('validate_token')
-    And the roles are granted permission to execute all user management actions except 'sign_in'
+    And the roles are granted permission to execute the following user management actions
+      | action         |
+      | validate-token |
+      | set-password   |
+    But they are not granted permission to execute the following user management actions
+      | action  |
+      | sign-in |
+      | sign-up |
 
   Scenario: The api developer adds two applications
 
@@ -62,5 +74,11 @@ Feature: Create applications
       | role4 |
     Then application 'app-2' exists
     And its application id is listed in the hasura jwt audience
-    # TODO: give a list of actions that receive the new permissions ('validate_token')
-    And the roles are granted permission to execute all user management actions except 'sign_in'
+    And the roles are granted permission to execute the following user management actions
+      | action         |
+      | validate-token |
+      | set-password   |
+    But they are not granted permission to execute the following user management actions
+      | action  |
+      | sign-in |
+      | sign-up |

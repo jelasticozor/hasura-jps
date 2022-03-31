@@ -86,13 +86,23 @@ def step_impl(context, role_name):
         f'expected default role name {context.expected_role_names[0]}, got {actual_default_application_role_name}'
 
 
-# TODO: fix this!
-@then("the roles are granted permission to execute all user management actions except 'sign_in'")
+@then("the roles are granted permission to execute the following user management actions")
 def step_impl(context):
-    actual_user_mgmt_actions_role_names = context.api_developer.get_role_names_from_user_management_actions()
+    action_names = [row['action'] for row in context.table]
     expected_role_names = set(context.expected_role_names)
-    assert expected_role_names == expected_role_names.intersection(actual_user_mgmt_actions_role_names), \
-        f'expected {expected_role_names} to be contained in {actual_user_mgmt_actions_role_names}'
-    actual_login_action_role_names = context.api_developer.get_role_names_from_signin_action()
-    assert len(expected_role_names.intersection(actual_login_action_role_names)) == 0, \
-        f'expected {expected_role_names} not to be contained in {actual_login_action_role_names}'
+    for action_name in action_names:
+        actual_role_names = context.api_developer.get_role_names_from_action(
+            action_name)
+        assert expected_role_names.intersection(actual_role_names) == expected_role_names, \
+            f'expected roles {expected_role_names} to be granted permission to perform action {action_name}, got {actual_role_names} granted instead'
+
+
+@then("they are not granted permission to execute the following user management actions")
+def step_impl(context):
+    action_names = [row['action'] for row in context.table]
+    expected_role_names = set(context.expected_role_names)
+    for action_name in action_names:
+        actual_role_names = context.api_developer.get_role_names_from_action(
+            action_name)
+        assert len(expected_role_names.intersection(actual_role_names)) == 0, \
+            f'expected roles {expected_role_names} not to be granted permission to perform action {action_name}, got {actual_role_names} granted anyway'
