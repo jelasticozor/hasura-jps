@@ -54,6 +54,6 @@ public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
         }
 
         throw new HasuraFunctionException(
-            $"Unable to sign user {input.Username} on application {input.AppId}", response.statusCode, response.exception);
+            $"Unable to sign user {input.Username} on application {input.AppId} (status code = {response.statusCode})", response.statusCode, response.exception);
     }
 }
