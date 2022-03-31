@@ -218,13 +218,13 @@ def remove_application_manifest_file(context):
 
 @fixture
 def api_developer(context):
-    # TODO: use context.current_mail_server
     context.api_developer = ApiDeveloper(
         context.jelastic_clients_factory,
         context.current_env_info,
         context.manifest_data,
         context.add_application_manifest_file,
-        context.remove_application_manifest_file)
+        context.remove_application_manifest_file,
+        context.path_to_graphql_folder)
     yield context.api_developer
     del context.api_developer
 
