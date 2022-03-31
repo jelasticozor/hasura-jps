@@ -32,12 +32,12 @@ Feature: Create applications
     And 'role1' is the default role
     And the roles are granted permission to execute the following user management actions
       | action         |
-      | validate-token |
-      | set-password   |
+      | validate_token |
+      | set_password   |
     But they are not granted permission to execute the following user management actions
       | action  |
-      | sign-in |
-      | sign-up |
+      | sign_in |
+      | sign_up |
 
   Scenario: The api developer provides the application id
 
@@ -54,12 +54,12 @@ Feature: Create applications
     And 'role1' is the default role
     And the roles are granted permission to execute the following user management actions
       | action         |
-      | validate-token |
-      | set-password   |
+      | validate_token |
+      | set_password   |
     But they are not granted permission to execute the following user management actions
       | action  |
-      | sign-in |
-      | sign-up |
+      | sign_in |
+      | sign_up |
 
   Scenario: The api developer adds two applications
 
@@ -76,9 +76,9 @@ Feature: Create applications
     And its application id is listed in the hasura jwt audience
     And the roles are granted permission to execute the following user management actions
       | action         |
-      | validate-token |
-      | set-password   |
+      | validate_token |
+      | set_password   |
     But they are not granted permission to execute the following user management actions
       | action  |
-      | sign-in |
-      | sign-up |
+      | sign_in |
+      | sign_up |
