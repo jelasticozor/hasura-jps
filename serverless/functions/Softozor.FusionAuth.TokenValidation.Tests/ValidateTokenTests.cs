@@ -72,11 +72,11 @@ public class ValidateTokenTests
         // Act
         const string token = "my-valid-token";
         var input = new BearerTokenAuthorizationHeader(token);
-        var actualResponse = await this.sut.Handle(input);
+        var actualOutput = await this.sut.Handle(input);
 
         // Assert
-        var expectedResponse = new ValidateTokenOutput(userId);
-        actualResponse.Should().BeEquivalentTo(expectedResponse);
+        var expectedOutput = new ValidateTokenOutput(userId);
+        actualOutput.Should().BeEquivalentTo(expectedOutput);
     }
 
     private static IMapper CreateMapper()

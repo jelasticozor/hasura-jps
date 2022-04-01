@@ -22,8 +22,6 @@ public class SignInTests
 
     private readonly SignInHandler sut;
 
-    private readonly SignInInput validInput = new SignInInput("username", "password", Guid.NewGuid());
-
     public SignInTests()
     {
         this.authClient = Mock.Of<IFusionAuthAsyncClient>();
@@ -31,6 +29,40 @@ public class SignInTests
         var logger = Mock.Of<ILogger<SignInHandler>>();
         var mapper = CreateMapper();
         this.sut = new SignInHandler(this.dataProtector, this.authClient, logger, mapper);
+    }
+
+    [Fact]
+    public async Task ShouldSignInWithProvidedCredentials()
+    {
+        // Arrange
+        var successResponseStub = new LoginResponse
+        {
+            refreshToken = "refresh-token", token = "token", user = new User { id = Guid.NewGuid() }
+        };
+        var clientResponseStub = new ClientResponse<LoginResponse>
+        {
+            statusCode = 200, successResponse = successResponseStub
+        };
+        clientResponseStub.WasSuccessful().Should().BeTrue();
+
+        var authClientMock = Mock.Get(this.authClient);
+        authClientMock.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
+
+        const string expectedUsername = "expected-username";
+        const string expectedPassword = "expected-password";
+        var expectedAppId = Guid.NewGuid();
+        var validInput = new SignInInput(expectedUsername, expectedPassword, expectedAppId);
+
+        // Act
+        await this.sut.Handle(validInput);
+
+        // Assert
+        authClientMock.Verify(
+            client => client.LoginAsync(
+                It.Is<LoginRequest>(
+                    r => r.loginId == expectedUsername && r.password == expectedPassword &&
+                         r.applicationId == expectedAppId)),
+            Times.Once);
     }
 
     [Theory]
@@ -49,8 +81,10 @@ public class SignInTests
         var authClientStub = Mock.Get(this.authClient);
         authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
 
+        var validInput = new SignInInput("username", "password", Guid.NewGuid());
+
         // Act
-        Func<Task> act = async () => await this.sut.Handle(this.validInput);
+        Func<Task> act = async () => await this.sut.Handle(validInput);
 
         // Assert
         var actualException = await act.Should().ThrowAsync<HasuraFunctionException>();
@@ -59,7 +93,7 @@ public class SignInTests
     }
 
     [Fact]
-    public async Task ShouldReturnLoginCredentialsUponSuccess()
+    public async Task ShouldReturnSignInCredentialsUponSuccess()
     {
         // Arrange
         const string expectedRefreshToken = "refresh-token";
@@ -78,12 +112,14 @@ public class SignInTests
         var authClientStub = Mock.Get(this.authClient);
         authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
 
+        var validInput = new SignInInput("username", "password", Guid.NewGuid());
+
         // Act
-        var (actualLoginOutput, _) = await this.sut.Handle(this.validInput);
+        var (actualOutput, _) = await this.sut.Handle(validInput);
 
         // Assert
-        var expectedLoginOutput = new SignInOutput(expectedToken, expectedUserId);
-        actualLoginOutput.Should().BeEquivalentTo(expectedLoginOutput);
+        var expectedOutput = new SignInOutput(expectedToken, expectedUserId);
+        actualOutput.Should().BeEquivalentTo(expectedOutput);
     }
 
     [Fact]
@@ -108,8 +144,10 @@ public class SignInTests
         var authClientStub = Mock.Get(this.authClient);
         authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
 
+        var validInput = new SignInInput("username", "password", Guid.NewGuid());
+
         // Act
-        var (_, actualProtectedRefreshToken) = await this.sut.Handle(this.validInput);
+        var (_, actualProtectedRefreshToken) = await this.sut.Handle(validInput);
 
         // Assert
         var expectedProtectedRefreshToken = this.dataProtector.Protect(expectedRefreshToken);
@@ -133,8 +171,10 @@ public class SignInTests
         var authClientStub = Mock.Get(this.authClient);
         authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
 
+        var validInput = new SignInInput("username", "password", Guid.NewGuid());
+
         // Act
-        Func<Task> act = async () => await this.sut.Handle(this.validInput);
+        Func<Task> act = async () => await this.sut.Handle(validInput);
 
         // Assert
         var exception = await act.Should().ThrowAsync<HasuraFunctionException>();

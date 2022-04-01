@@ -7,12 +7,10 @@ using FluentAssertions;
 using HasuraFunction;
 using io.fusionauth;
 using io.fusionauth.domain;
-using io.fusionauth.domain.api;
-using Microsoft.AspNetCore.DataProtection;
+using io.fusionauth.domain.api.user;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Softozor.HasuraHandling.Exceptions;
-using Softozor.HasuraHandling.Interfaces;
 using Xunit;
 
 public class SignUpTests
@@ -20,8 +18,6 @@ public class SignUpTests
     private readonly IFusionAuthAsyncClient authClient;
 
     private readonly SignUpHandler sut;
-
-    // private readonly SignUpInput validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
 
     public SignUpTests()
     {
@@ -33,24 +29,141 @@ public class SignUpTests
 
     // TODO: check that input is email
 
-    /*[Theory]
+    [Fact]
+    public async Task ShouldRegisterUserOnApplicationWithProvidedAppId()
+    {
+        // Arrange
+        var successResponseStub = new RegistrationResponse { token = "the-access-token" };
+        var clientResponseStub = new ClientResponse<RegistrationResponse>
+        {
+            statusCode = 200, successResponse = successResponseStub
+        };
+
+        var authClientMock = Mock.Get(this.authClient);
+        authClientMock.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
+            .ReturnsAsync(clientResponseStub);
+
+        var expectedAppId = Guid.NewGuid();
+        var validInput = new SignUpInput("user@example.com", "user-role", expectedAppId);
+
+        // Act
+        await this.sut.Handle(validInput);
+
+        // Assert
+        authClientMock.Verify(
+            client => client.RegisterAsync(
+                null,
+                It.Is<RegistrationRequest>(r => r.registration.applicationId == expectedAppId)),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task ShouldRegisterUserWithProvidedRole()
+    {
+        // Arrange
+        var successResponseStub = new RegistrationResponse { token = "the-access-token" };
+        var clientResponseStub = new ClientResponse<RegistrationResponse>
+        {
+            statusCode = 200, successResponse = successResponseStub
+        };
+
+        var authClientMock = Mock.Get(this.authClient);
+        authClientMock.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
+            .ReturnsAsync(clientResponseStub);
+
+        const string expectedRole = "expected-role";
+        var validInput = new SignUpInput("user@example.com", expectedRole, Guid.NewGuid());
+
+        // Act
+        await this.sut.Handle(validInput);
+
+        // Assert
+        authClientMock.Verify(
+            client => client.RegisterAsync(
+                null,
+                It.Is<RegistrationRequest>(
+                    r => r.registration.roles.Count == 1 && r.registration.roles.Contains(expectedRole))),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task ShouldRegisterUserWithProvidedEmail()
+    {
+        // Arrange
+        var successResponseStub = new RegistrationResponse{ token = "the-access-token" };
+        var clientResponseStub = new ClientResponse<RegistrationResponse>
+        {
+            statusCode = 200, successResponse = successResponseStub
+        };
+
+        var authClientMock = Mock.Get(this.authClient);
+        authClientMock.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
+            .ReturnsAsync(clientResponseStub);
+
+        const string expectedEmail = "expected-user@example.com";
+        var validInput = new SignUpInput(expectedEmail, "user-role", Guid.NewGuid());
+
+        // Act
+        await this.sut.Handle(validInput);
+
+        // Assert
+        authClientMock.Verify(
+            client => client.RegisterAsync(
+                null,
+                It.Is<RegistrationRequest>(
+                    r => r.user.email == expectedEmail)),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task ShouldSendSetPasswordEmail()
+    {
+        // Arrange
+        var successResponseStub = new RegistrationResponse { token = "the-access-token" };
+        var clientResponseStub = new ClientResponse<RegistrationResponse>
+        {
+            statusCode = 200, successResponse = successResponseStub
+        };
+
+        var authClientMock = Mock.Get(this.authClient);
+        authClientMock.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
+            .ReturnsAsync(clientResponseStub);
+
+        var validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
+
+        // Act
+        await this.sut.Handle(validInput);
+
+        // Assert
+        authClientMock.Verify(
+            client => client.RegisterAsync(
+                null,
+                It.Is<RegistrationRequest>(
+                    r => r.sendSetPasswordEmail == true)),
+            Times.Once);
+    }
+
+    [Theory]
     [InlineData(400)]
     [InlineData(401)]
     public async Task ShouldThrowExceptionWithStatusCodeUponFailure(int expectedStatusCode)
     {
         // Arrange
         var expectedException = Mock.Of<Exception>();
-        var clientResponseStub = new ClientResponse<LoginResponse>
+        var clientResponseStub = new ClientResponse<RegistrationResponse>
         {
             statusCode = expectedStatusCode, exception = expectedException
         };
         clientResponseStub.WasSuccessful().Should().BeFalse();
 
         var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
+        authClientStub.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
+            .ReturnsAsync(clientResponseStub);
+
+        var validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
 
         // Act
-        Func<Task> act = async () => await this.sut.Handle(this.validInput);
+        Func<Task> act = async () => await this.sut.Handle(validInput);
 
         // Assert
         var actualException = await act.Should().ThrowAsync<HasuraFunctionException>();
@@ -59,87 +172,34 @@ public class SignUpTests
     }
 
     [Fact]
-    public async Task ShouldReturnLoginCredentialsUponSuccess()
+    public async Task ShouldReturnRegistrationDataUponSuccess()
     {
         // Arrange
-        const string expectedRefreshToken = "refresh-token";
         const string expectedToken = "token";
         var expectedUserId = Guid.NewGuid();
-        var successResponseStub = new LoginResponse
+        var successResponseStub = new RegistrationResponse
         {
-            refreshToken = expectedRefreshToken, token = expectedToken, user = new User { id = expectedUserId }
+            token = expectedToken, user = new User { id = expectedUserId }
         };
-        var clientResponseStub = new ClientResponse<LoginResponse>
+        var clientResponseStub = new ClientResponse<RegistrationResponse>
         {
             statusCode = 200, successResponse = successResponseStub
         };
         clientResponseStub.WasSuccessful().Should().BeTrue();
 
         var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
+        authClientStub.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
+            .ReturnsAsync(clientResponseStub);
+
+        var validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
 
         // Act
-        var (actualLoginOutput, _) = await this.sut.Handle(this.validInput);
+        var actualOutput = await this.sut.Handle(validInput);
 
         // Assert
-        var expectedLoginOutput = new SignUpOutput(expectedToken, expectedUserId);
-        actualLoginOutput.Should().BeEquivalentTo(expectedLoginOutput);
+        var expectedOutput = new SignUpOutput(expectedToken, expectedUserId);
+        actualOutput.Should().BeEquivalentTo(expectedOutput);
     }
-
-    [Fact]
-    public async Task ShouldReturnProtectedRefreshTokenInCookieUponSuccess()
-    {
-        // Arrange
-        const string expectedRefreshToken = "refresh-token";
-        const string expectedToken = "token";
-        var expectedUserId = Guid.NewGuid();
-        var successResponseStub = new LoginResponse
-        {
-            refreshToken = expectedRefreshToken, token = expectedToken, user = new User { id = expectedUserId }
-        };
-        var clientResponseStub = new ClientResponse<LoginResponse>
-        {
-            statusCode = 200, successResponse = successResponseStub
-        };
-        var dataProtectorMock = Mock.Get(this.dataProtector);
-        dataProtectorMock.Setup(protector => protector.Protect(It.IsAny<byte[]>())).Returns<byte[]>(token => token);
-        clientResponseStub.WasSuccessful().Should().BeTrue();
-
-        var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
-
-        // Act
-        var (_, actualProtectedRefreshToken) = await this.sut.Handle(this.validInput);
-
-        // Assert
-        var expectedProtectedRefreshToken = this.dataProtector.Protect(expectedRefreshToken);
-        actualProtectedRefreshToken.Should().NotBe(expectedRefreshToken).And.Be(expectedProtectedRefreshToken);
-    }
-
-    [Fact]
-    public async Task ShouldThrowWhenRefreshTokenIsNull()
-    {
-        // Arrange
-        var successResponseStub = new LoginResponse
-        {
-            refreshToken = null, token = "token", user = new User { id = Guid.NewGuid() }
-        };
-        var clientResponseStub = new ClientResponse<LoginResponse>
-        {
-            statusCode = 200, successResponse = successResponseStub
-        };
-        clientResponseStub.WasSuccessful().Should().BeTrue();
-
-        var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
-
-        // Act
-        Func<Task> act = async () => await this.sut.Handle(this.validInput);
-
-        // Assert
-        var exception = await act.Should().ThrowAsync<HasuraFunctionException>();
-        exception.Which.ErrorCode.Should().Be(401);
-    }*/
 
     private static IMapper CreateMapper()
     {
