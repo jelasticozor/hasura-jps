@@ -22,8 +22,7 @@ class ApiUser:
         }
         graphql_response = self.__execute_graphql_query(
             query_name='sign_in', variables=variables)
-        if graphql_response.status_code == 200:
-            print('graphql response data = ', graphql_response.payload)
+        if 'errors' not in graphql_response.payload:
             self.jwt = graphql_response.payload['data']['sign_in']['token']
         return graphql_response
 
@@ -35,7 +34,7 @@ class ApiUser:
         }
         graphql_response = self.__execute_graphql_query(
             query_name='sign_up', variables=variables)
-        if graphql_response.status_code == 200:
+        if 'errors' not in graphql_response.payload:
             self.jwt = graphql_response.payload['data']['sign_up']['token']
             self.user_id = graphql_response.payload['data']['sign_up']['userId']
         return graphql_response

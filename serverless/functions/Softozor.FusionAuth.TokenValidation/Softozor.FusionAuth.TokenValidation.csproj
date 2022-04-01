@@ -37,7 +37,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
         <PackageReference Include="NullGuard.Fody" Version="3.0.0" />
         <PackageReference Include="Softozor.FusionAuth" Version="1.0.1" />
-        <PackageReference Include="Softozor.HasuraHandling" Version="1.2.1" />
+        <PackageReference Include="Softozor.HasuraHandling" Version="1.2.2" />
     </ItemGroup>
 
 </Project>

@@ -48,12 +48,12 @@ def step_impl(context):
 
 @then("she gets an error that the user was not found or the password was incorrect")
 def step_impl(context):
-    actual_status_code = context.current_graphql_response.status_code
+    payload = context.current_graphql_response.payload
+    assert 'errors' in payload, \
+        f'expected errors in graphql response, got none: {payload}'
+    actual_status_code = int(payload['extensions']['code'])
     assert 404 == actual_status_code, \
         f'expected status code 404, got {actual_status_code}'
-    actual_data = context.current_graphql_response.payload
-    assert 'errors' in actual_data, \
-        f'expected errors in graphql response, got none: {actual_data}'
 
 
 @then("her JWT is valid")
