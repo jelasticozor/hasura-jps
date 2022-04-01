@@ -51,7 +51,7 @@ def step_impl(context):
     payload = context.current_graphql_response.payload
     assert 'errors' in payload, \
         f'expected errors in graphql response, got none: {payload}'
-    actual_status_code = int(payload['extensions']['code'])
+    actual_status_code = int(payload['errors']['extensions']['code'])
     assert 404 == actual_status_code, \
         f'expected status code 404, got {actual_status_code}'
 
