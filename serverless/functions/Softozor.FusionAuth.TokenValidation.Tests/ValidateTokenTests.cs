@@ -11,7 +11,6 @@ using io.fusionauth.jwt.domain;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Softozor.HasuraHandling.Exceptions;
-using Softozor.HasuraHandling.Interfaces;
 using Xunit;
 
 public class ValidateTokenTests
@@ -20,7 +19,7 @@ public class ValidateTokenTests
 
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly IActionHandler<BearerTokenAuthorizationHeader, ValidateTokenOutput> sut;
+    private readonly ValidateTokenHandler sut;
 
     public ValidateTokenTests()
     {
@@ -50,7 +49,6 @@ public class ValidateTokenTests
         Func<Task> act = async () => await this.sut.Handle(input);
 
         // Assert
-
         var actualException = await act.Should().ThrowAsync<HasuraFunctionException>();
         actualException.Which.ErrorCode.Should().Be(expectedStatusCode);
         actualException.Which.InnerException.Should().Be(expectedException);

@@ -14,6 +14,28 @@ functions:
     secrets:
       - auth-secret
       - data-protection-secret
+  sign-up:
+    lang: dotnet-hasura
+    handler: ./Softozor.FusionAuth.SignUp
+    image: softozor/fusionauth-sign-up-fn:${IMG_TAG:-latest}
+    build_args:
+      FUNCTION_NAME: Softozor.FusionAuth.SignUp
+    environment:
+      AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
+    secrets:
+      - auth-secret
+  set-password:
+    lang: dotnet-hasura
+    handler: ./Softozor.FusionAuth.SetPassword
+    image: softozor/fusionauth-validate-token-fn:${IMG_TAG:-latest}
+    build_args:
+      FUNCTION_NAME: Softozor.FusionAuth.SetPassword
+    environment:
+      AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
+    secrets:
+      - auth-secret
   validate-token:
     lang: dotnet-hasura
     handler: ./Softozor.FusionAuth.TokenValidation

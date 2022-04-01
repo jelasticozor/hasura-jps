@@ -1,4 +1,4 @@
-namespace Softozor.FusionAuth.SignIn.Tests;
+namespace Softozor.FusionAuth.SetPassword.Tests;
 
 using System;
 using System.Threading.Tasks;
@@ -14,26 +14,23 @@ using Moq;
 using Softozor.HasuraHandling.Exceptions;
 using Xunit;
 
-public class SignInTests
+public class SetPasswordTests
 {
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly IDataProtector dataProtector;
+    private readonly SetPasswordHandler sut;
 
-    private readonly SignInHandler sut;
+    // private readonly SetPasswordInput validInput = new SetPasswordInput("change-password-id", "password");
 
-    private readonly SignInInput validInput = new SignInInput("username", "password", Guid.NewGuid());
-
-    public SignInTests()
+    public SetPasswordTests()
     {
         this.authClient = Mock.Of<IFusionAuthAsyncClient>();
-        this.dataProtector = Mock.Of<IDataProtector>();
-        var logger = Mock.Of<ILogger<SignInHandler>>();
+        var logger = Mock.Of<ILogger<SetPasswordHandler>>();
         var mapper = CreateMapper();
-        this.sut = new SignInHandler(this.dataProtector, this.authClient, logger, mapper);
+        this.sut = new SetPasswordHandler(this.authClient, logger, mapper);
     }
 
-    [Theory]
+    /*[Theory]
     [InlineData(400)]
     [InlineData(401)]
     public async Task ShouldThrowExceptionWithStatusCodeUponFailure(int expectedStatusCode)
@@ -82,7 +79,7 @@ public class SignInTests
         var (actualLoginOutput, _) = await this.sut.Handle(this.validInput);
 
         // Assert
-        var expectedLoginOutput = new SignInOutput(expectedToken, expectedUserId);
+        var expectedLoginOutput = new SetPasswordOutput(expectedToken, expectedUserId);
         actualLoginOutput.Should().BeEquivalentTo(expectedLoginOutput);
     }
 
@@ -139,7 +136,7 @@ public class SignInTests
         // Assert
         var exception = await act.Should().ThrowAsync<HasuraFunctionException>();
         exception.Which.ErrorCode.Should().Be(401);
-    }
+    }*/
 
     private static IMapper CreateMapper()
     {

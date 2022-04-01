@@ -20,6 +20,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitlab-ci.yml = .gitlab-ci.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softozor.FusionAuth.SetPassword", "serverless\functions\Softozor.FusionAuth.SetPassword\Softozor.FusionAuth.SetPassword.csproj", "{DF0A0779-2D35-40E5-99EC-816853B439ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softozor.FusionAuth.SignUp", "serverless\functions\Softozor.FusionAuth.SignUp\Softozor.FusionAuth.SignUp.csproj", "{986A400D-92AE-4932-A95A-5FE7DBF010A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softozor.FusionAuth.SetPassword.Tests", "serverless\functions\Softozor.FusionAuth.SetPassword.Tests\Softozor.FusionAuth.SetPassword.Tests.csproj", "{0610A1E8-069B-431E-94F1-26D294D0C2D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softozor.FusionAuth.SignUp.Tests", "serverless\functions\Softozor.FusionAuth.SignUp.Tests\Softozor.FusionAuth.SignUp.Tests.csproj", "{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +50,22 @@ Global
 		{BD96BBF5-29B0-4717-ACAF-BD86C435F1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD96BBF5-29B0-4717-ACAF-BD86C435F1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD96BBF5-29B0-4717-ACAF-BD86C435F1EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF0A0779-2D35-40E5-99EC-816853B439ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF0A0779-2D35-40E5-99EC-816853B439ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF0A0779-2D35-40E5-99EC-816853B439ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF0A0779-2D35-40E5-99EC-816853B439ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{986A400D-92AE-4932-A95A-5FE7DBF010A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{986A400D-92AE-4932-A95A-5FE7DBF010A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{986A400D-92AE-4932-A95A-5FE7DBF010A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{986A400D-92AE-4932-A95A-5FE7DBF010A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0610A1E8-069B-431E-94F1-26D294D0C2D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0610A1E8-069B-431E-94F1-26D294D0C2D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0610A1E8-069B-431E-94F1-26D294D0C2D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0610A1E8-069B-431E-94F1-26D294D0C2D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +73,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1A7BC23D-DF45-4DC6-B999-5503629B6938} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
 		{BD96BBF5-29B0-4717-ACAF-BD86C435F1EB} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
+		{0610A1E8-069B-431E-94F1-26D294D0C2D1} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
+		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE5E768A-ACB5-4B49-A123-859E9ED6C96E}

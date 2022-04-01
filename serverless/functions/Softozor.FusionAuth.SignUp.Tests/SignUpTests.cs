@@ -1,4 +1,4 @@
-namespace Softozor.FusionAuth.SignIn.Tests;
+namespace Softozor.FusionAuth.SignUp.Tests;
 
 using System;
 using System.Threading.Tasks;
@@ -12,28 +12,28 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Softozor.HasuraHandling.Exceptions;
+using Softozor.HasuraHandling.Interfaces;
 using Xunit;
 
-public class SignInTests
+public class SignUpTests
 {
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly IDataProtector dataProtector;
+    private readonly SignUpHandler sut;
 
-    private readonly SignInHandler sut;
+    // private readonly SignUpInput validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
 
-    private readonly SignInInput validInput = new SignInInput("username", "password", Guid.NewGuid());
-
-    public SignInTests()
+    public SignUpTests()
     {
         this.authClient = Mock.Of<IFusionAuthAsyncClient>();
-        this.dataProtector = Mock.Of<IDataProtector>();
-        var logger = Mock.Of<ILogger<SignInHandler>>();
+        var logger = Mock.Of<ILogger<SignUpHandler>>();
         var mapper = CreateMapper();
-        this.sut = new SignInHandler(this.dataProtector, this.authClient, logger, mapper);
+        this.sut = new SignUpHandler(this.authClient, logger, mapper);
     }
 
-    [Theory]
+    // TODO: check that input is email
+
+    /*[Theory]
     [InlineData(400)]
     [InlineData(401)]
     public async Task ShouldThrowExceptionWithStatusCodeUponFailure(int expectedStatusCode)
@@ -82,7 +82,7 @@ public class SignInTests
         var (actualLoginOutput, _) = await this.sut.Handle(this.validInput);
 
         // Assert
-        var expectedLoginOutput = new SignInOutput(expectedToken, expectedUserId);
+        var expectedLoginOutput = new SignUpOutput(expectedToken, expectedUserId);
         actualLoginOutput.Should().BeEquivalentTo(expectedLoginOutput);
     }
 
@@ -139,7 +139,7 @@ public class SignInTests
         // Assert
         var exception = await act.Should().ThrowAsync<HasuraFunctionException>();
         exception.Which.ErrorCode.Should().Be(401);
-    }
+    }*/
 
     private static IMapper CreateMapper()
     {
