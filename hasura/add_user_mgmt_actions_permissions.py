@@ -2,7 +2,7 @@ import argparse
 
 import yaml
 
-relevant_user_mgmt_actions = ['validate_token', 'set-password']
+relevant_user_mgmt_actions = ['validate_token', 'set_password']
 
 
 class NoAliasDumper(yaml.SafeDumper):
