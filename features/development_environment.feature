@@ -9,19 +9,13 @@ Feature: Development Hasura environment
 
   The requirements for hasura are documented [here](https://hasura.io/docs/latest/graphql/core/deployment/postgres-requirements.html).
 
-  Scenario: Fusionauth is up
+  Scenario: The Jelastic environment is well-defined
 
-    Then fusionauth is available
-
-  Scenario: The faas engine is up  
-
-    Then the faas engine is available
-
-  Scenario: Hasura is up  
-
-    Then hasura is available
-
-  # TODO: we only need a master postgres node, no slave
+    Then the iam engine is up
+    And the faas engine is up
+    And hasura is up
+    And the database has postgres version 13
+    And the test mail server is up
 
   Scenario: The IAM functions are well-defined
 
@@ -32,15 +26,6 @@ Feature: Development Hasura environment
     And the delete-email function is ready
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
     And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'
-
-  # TODO: this should be reworded in a less imperative style  
-  Scenario: The Jelastic environment is well-defined
-
-    Then there is 1 docker node in the faas node group
-    And there are 2 postgres13 nodes in the sqldb node group
-    And there is 1 docker node in the cp node group
-    And there is 1 nginx-dockerized node in the bl node group
-    And there is 1 docker node in the mail node group
 
   Scenario: The database meets the relevant preconditions
 
@@ -59,6 +44,8 @@ Feature: Development Hasura environment
       | hdb_catalog |
       | hdb_views   |
 
+  # TODO: we only need a master postgres node, no slave
+
   Scenario: Any change done on primary database gets reflected on secondary database
 
     When the api developer creates table 'primary_table' on the primary database
@@ -71,7 +58,3 @@ Feature: Development Hasura environment
     """
     cannot execute CREATE TABLE in a read-only transaction
     """
-
-  Scenario: Postgres is at least version 10
-
-    Then the postgres version is 13

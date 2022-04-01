@@ -367,6 +367,17 @@ class ApiDeveloper:
 
     # endregion
 
+    # region Mail Server
+
+    def mailhog_is_up(self, timeout_in_sec=300, period_in_sec=15):
+        ip = self.__env_info.get_node_ips(
+            node_group='mail', node_type='docker')[0]
+        port = 1025
+        return host_has_port_open(
+            ip, port, timeout_in_sec=timeout_in_sec, period_in_sec=period_in_sec)
+
+    # endregion
+
     # region GraphQL
 
     def get_emails(self):

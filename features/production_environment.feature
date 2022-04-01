@@ -12,19 +12,12 @@ Feature: Production Hasura environment
 
   # TODO: improve this setup
 
-  # TODO: test external server sends emails through fusionauth
+  Scenario: The Jelastic environment is well-defined
 
-  Scenario: Fusionauth is up
-
-    Then fusionauth is available
-
-  Scenario: The faas engine is up  
-
-    Then the faas engine is available
-
-  Scenario: Hasura is up  
-
-    Then hasura is available
+    Then the iam engine is up
+    And the faas engine is up
+    And hasura is up
+    And the database has postgres version 13
 
   Scenario: The IAM functions are well-defined
 
@@ -32,13 +25,6 @@ Feature: Production Hasura environment
     And the validate-token function is ready
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
     And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'
-
-  Scenario: The Jelastic environment is well-defined
-
-    Then there is 1 docker node in the faas node group
-    And there are 2 postgres13 nodes in the sqldb node group
-    And there is 1 docker node in the cp node group
-    And there is 1 nginx-dockerized node in the bl node group
 
   Scenario: The database meets the relevant preconditions
 
@@ -69,7 +55,3 @@ Feature: Production Hasura environment
     """
     cannot execute CREATE TABLE in a read-only transaction
     """
-
-  Scenario: Postgres is at least version 10
-
-    Then the postgres version is 13
