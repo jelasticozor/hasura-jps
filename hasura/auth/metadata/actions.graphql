@@ -31,7 +31,6 @@ type sign_in_response {
 }
 
 type sign_up_response {
-  token: String!
   userId: uuid!
 }
 

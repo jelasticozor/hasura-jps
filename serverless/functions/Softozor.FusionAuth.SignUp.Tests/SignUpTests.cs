@@ -175,11 +175,10 @@ public class SignUpTests
     public async Task ShouldReturnRegistrationDataUponSuccess()
     {
         // Arrange
-        const string expectedToken = "token";
         var expectedUserId = Guid.NewGuid();
         var successResponseStub = new RegistrationResponse
         {
-            token = expectedToken, user = new User { id = expectedUserId }
+            user = new User { id = expectedUserId }
         };
         var clientResponseStub = new ClientResponse<RegistrationResponse>
         {
@@ -197,7 +196,7 @@ public class SignUpTests
         var actualOutput = await this.sut.Handle(validInput);
 
         // Assert
-        var expectedOutput = new SignUpOutput(expectedToken, expectedUserId);
+        var expectedOutput = new SignUpOutput(expectedUserId);
         actualOutput.Should().BeEquivalentTo(expectedOutput);
     }
 
