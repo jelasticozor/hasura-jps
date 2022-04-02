@@ -39,3 +39,11 @@ Feature: Identity and Access Management
       | user role    |
       | default-role |
       | other-role   |
+
+  # TODO: test 1 sign up with role that does not exist on application
+
+  # TODO: test 2 sign up with same user on same app with same role
+
+  # TODO: test 2 sign up with same user on same app with different roles
+
+  # TODO: test 2 set password with same changePasswordId --> should fail

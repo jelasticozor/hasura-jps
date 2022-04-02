@@ -33,11 +33,11 @@ Feature: Create applications
     And the roles are granted permission to execute the following user management actions
       | action         |
       | validate_token |
-      | set_password   |
     But they are not granted permission to execute the following user management actions
-      | action  |
-      | sign_in |
-      | sign_up |
+      | action       |
+      | sign_in      |
+      | sign_up      |
+      | set_password |
 
   Scenario: The api developer provides the application id
 
@@ -55,11 +55,11 @@ Feature: Create applications
     And the roles are granted permission to execute the following user management actions
       | action         |
       | validate_token |
-      | set_password   |
     But they are not granted permission to execute the following user management actions
-      | action  |
-      | sign_in |
-      | sign_up |
+      | action       |
+      | sign_in      |
+      | sign_up      |
+      | set_password |
 
   Scenario: The api developer adds two applications
 
@@ -77,8 +77,8 @@ Feature: Create applications
     And the roles are granted permission to execute the following user management actions
       | action         |
       | validate_token |
-      | set_password   |
     But they are not granted permission to execute the following user management actions
-      | action  |
-      | sign_in |
-      | sign_up |
+      | action       |
+      | sign_in      |
+      | sign_up      |
+      | set_password |
