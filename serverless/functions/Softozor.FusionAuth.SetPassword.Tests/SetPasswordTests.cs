@@ -1,18 +1,10 @@
 namespace Softozor.FusionAuth.SetPassword.Tests;
 
-using System;
-using System.Threading.Tasks;
 using AutoMapper;
-using FluentAssertions;
 using HasuraFunction;
 using io.fusionauth;
-using io.fusionauth.domain;
-using io.fusionauth.domain.api;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Softozor.HasuraHandling.Exceptions;
-using Xunit;
 
 public class SetPasswordTests
 {

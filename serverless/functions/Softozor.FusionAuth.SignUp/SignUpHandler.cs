@@ -3,10 +3,7 @@ namespace HasuraFunction;
 using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
-using io.fusionauth.domain.api;
 using io.fusionauth.domain.api.user;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
@@ -40,6 +37,8 @@ public class SignUpHandler : IActionHandler<SignUpInput, SignUpOutput>
         }
 
         throw new HasuraFunctionException(
-            $"Unable to sign up user {input.Email} on application {input.AppId}", response.statusCode, response.exception);
+            $"Unable to sign up user {input.Email} on application {input.AppId} with role {input.Role}",
+            response.statusCode,
+            response.exception);
     }
 }

@@ -96,7 +96,7 @@ publish-feature-test-image:
     DOCKER_IMAGE: ${TEST_IMAGE_NAME}
     DOCKERFILE_FOLDER: ./ci/feature-tests
   before_script:
-   - *docker-login
+    - *docker-login
   script:
     - |
       docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest \

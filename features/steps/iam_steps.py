@@ -9,26 +9,24 @@ def step_impl(context):
     assert context.api_user.user_id is None
 
 
-@given("the api user signed up on the application with role {role}")
+@given("the api user has signed up on the application with role {role}")
 def step_impl(context, role):
     graphql_response = context.api_user.sign_up(
         role, context.current_app_id)
-    assert 200 == graphql_response.status_code, \
-        f'expected status code 200, got {graphql_response.status_code}'
     assert 'errors' not in graphql_response.payload, \
-        f'expected no error in graphql response, got {graphql_response.payload}'
+        f'expected no error, got {graphql_response.payload}'
     assert context.api_user.user_id is not None
 
 
-@given("she set her password")
+@given("she has set her password")
 def step_impl(context):
     graphql_response = context.api_user.set_password(
         context.current_change_password_id)
-    assert 200 == graphql_response.status_code, \
-        f'expected status code 200, got {graphql_response.status_code}'
+    assert 'errors' not in graphql_response.payload, \
+        f'expected no error, got {graphql_response.payload}'
 
 
-@given("she has received the email to setup her password")
+@given("she has received the email to set up her password")
 def step_impl(context):
     email = context.api_developer.get_email_to_setup_password_for_user(
         context.api_user.username)
@@ -39,7 +37,6 @@ def step_impl(context):
     context.current_change_password_id = match.group(1)
 
 
-@when("the api user signs in the application")
 @when("she signs in the application")
 def step_impl(context):
     context.current_graphql_response = context.api_user.sign_in(
@@ -60,8 +57,8 @@ def step_impl(context):
 @then("her JWT is valid")
 def step_impl(context):
     graphql_response = context.api_user.validate_token()
-    assert 200 == graphql_response.status_code, \
-        f'expected status code 200, got {graphql_response.status_code}'
+    assert 'errors' not in graphql_response.payload, \
+        f'expected no error, got {graphql_response.payload}'
 
 
 @then("she has a cookie with a refresh token")

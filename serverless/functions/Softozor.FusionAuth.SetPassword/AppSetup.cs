@@ -1,12 +1,9 @@
 ﻿namespace HasuraFunction;
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Softozor.HasuraHandling;
-using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 
 public static class AppSetup
@@ -22,7 +19,7 @@ public static class AppSetup
             "/",
             async (HttpContext http, IActionHandler<SetPasswordInput, SetPasswordOutput> handler) =>
             {
-                Func<SetPasswordInput, Task<SetPasswordOutput>> handleFn = handler.Handle;
+                var handleFn = handler.Handle;
                 await ActionHandlerWrapper.HandleAsync(http, handleFn);
             });
     }

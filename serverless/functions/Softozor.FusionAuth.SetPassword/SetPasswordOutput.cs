@@ -1,7 +1,6 @@
 namespace HasuraFunction;
 
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
-public record SetPasswordOutput(
-    [property: JsonProperty("userId")] Guid UserId);
+public record SetPasswordOutput([property: JsonPropertyName("userId")] Guid UserId);

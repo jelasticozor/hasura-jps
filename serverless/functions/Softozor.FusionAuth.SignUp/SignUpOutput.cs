@@ -1,7 +1,6 @@
 namespace HasuraFunction;
 
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
-public record SignUpOutput(
-    [property: JsonProperty("userId")] Guid UserId);
+public record SignUpOutput([property: JsonPropertyName("userId")] Guid UserId);

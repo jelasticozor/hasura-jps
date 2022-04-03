@@ -1,10 +1,10 @@
 namespace HasuraFunction;
 
 using System;
-using Newtonsoft.Json;
+using System.Net.Mail;
+using System.Text.Json.Serialization;
 
-// TODO: try to use type MailAddress
 public record SignUpInput(
-    [property: JsonProperty("email")] string Email,
-    [property: JsonProperty("role")] string Role,
-    [property: JsonProperty("appId")] Guid AppId);
+    [property: JsonPropertyName("email")] [property: JsonConverter(typeof(EmailConverter))] MailAddress Email,
+    [property: JsonPropertyName("role")] string Role,
+    [property: JsonPropertyName("appId")] Guid AppId);

@@ -1,7 +1,6 @@
 ﻿namespace HasuraFunction;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Softozor.FusionAuth;
 using Softozor.HasuraHandling.Interfaces;
@@ -16,7 +15,6 @@ public static class BuilderSetup
 
         builder.Services.AddFusionAuthClient();
 
-        builder.Services
-            .AddTransient<IActionHandler<SetPasswordInput, SetPasswordOutput>, SetPasswordHandler>();
+        builder.Services.AddTransient<IActionHandler<SetPasswordInput, SetPasswordOutput>, SetPasswordHandler>();
     }
 }

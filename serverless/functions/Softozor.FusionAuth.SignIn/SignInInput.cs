@@ -1,9 +1,9 @@
 namespace HasuraFunction;
 
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 public record SignInInput(
-    [property: JsonProperty("username")] string Username,
-    [property: JsonProperty("password")] string Password,
-    [property: JsonProperty("appId")] Guid AppId);
+    [property: JsonPropertyName("username")] string Username,
+    [property: JsonPropertyName("password")] string Password,
+    [property: JsonPropertyName("appId")] Guid AppId);

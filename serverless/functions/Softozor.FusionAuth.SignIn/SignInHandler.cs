@@ -45,7 +45,8 @@ public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
             if (response.successResponse.refreshToken is null)
             {
                 throw new HasuraFunctionException(
-                    $"No refresh token for user {input.Username} on application {input.AppId}", StatusCodes.Status401Unauthorized);
+                    $"No refresh token for user {input.Username} on application {input.AppId}",
+                    StatusCodes.Status401Unauthorized);
             }
 
             var protectedRefreshToken = this.protector.Protect(response.successResponse.refreshToken);
@@ -54,6 +55,8 @@ public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
         }
 
         throw new HasuraFunctionException(
-            $"Unable to sign user {input.Username} on application {input.AppId}", response.statusCode, response.exception);
+            $"Unable to sign user {input.Username} on application {input.AppId}",
+            response.statusCode,
+            response.exception);
     }
 }

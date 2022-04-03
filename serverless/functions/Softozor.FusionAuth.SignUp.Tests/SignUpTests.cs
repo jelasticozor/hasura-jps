@@ -1,6 +1,7 @@
 namespace Softozor.FusionAuth.SignUp.Tests;
 
 using System;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
@@ -27,8 +28,6 @@ public class SignUpTests
         this.sut = new SignUpHandler(this.authClient, logger, mapper);
     }
 
-    // TODO: check that input is email
-
     [Fact]
     public async Task ShouldRegisterUserOnApplicationWithProvidedAppId()
     {
@@ -43,8 +42,9 @@ public class SignUpTests
         authClientMock.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
             .ReturnsAsync(clientResponseStub);
 
+        var email = new MailAddress("user@example.com");
         var expectedAppId = Guid.NewGuid();
-        var validInput = new SignUpInput("user@example.com", "user-role", expectedAppId);
+        var validInput = new SignUpInput(email, "user-role", expectedAppId);
 
         // Act
         await this.sut.Handle(validInput);
@@ -71,8 +71,9 @@ public class SignUpTests
         authClientMock.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
             .ReturnsAsync(clientResponseStub);
 
+        var email = new MailAddress("user@example.com");
         const string expectedRole = "expected-role";
-        var validInput = new SignUpInput("user@example.com", expectedRole, Guid.NewGuid());
+        var validInput = new SignUpInput(email, expectedRole, Guid.NewGuid());
 
         // Act
         await this.sut.Handle(validInput);
@@ -90,7 +91,7 @@ public class SignUpTests
     public async Task ShouldRegisterUserWithProvidedEmail()
     {
         // Arrange
-        var successResponseStub = new RegistrationResponse{ token = "the-access-token" };
+        var successResponseStub = new RegistrationResponse { token = "the-access-token" };
         var clientResponseStub = new ClientResponse<RegistrationResponse>
         {
             statusCode = 200, successResponse = successResponseStub
@@ -101,17 +102,15 @@ public class SignUpTests
             .ReturnsAsync(clientResponseStub);
 
         const string expectedEmail = "expected-user@example.com";
-        var validInput = new SignUpInput(expectedEmail, "user-role", Guid.NewGuid());
+        var email = new MailAddress(expectedEmail);
+        var validInput = new SignUpInput(email, "user-role", Guid.NewGuid());
 
         // Act
         await this.sut.Handle(validInput);
 
         // Assert
         authClientMock.Verify(
-            client => client.RegisterAsync(
-                null,
-                It.Is<RegistrationRequest>(
-                    r => r.user.email == expectedEmail)),
+            client => client.RegisterAsync(null, It.Is<RegistrationRequest>(r => r.user.email == expectedEmail)),
             Times.Once);
     }
 
@@ -129,17 +128,15 @@ public class SignUpTests
         authClientMock.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
             .ReturnsAsync(clientResponseStub);
 
-        var validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
+        var email = new MailAddress("user@example.com");
+        var validInput = new SignUpInput(email, "user-role", Guid.NewGuid());
 
         // Act
         await this.sut.Handle(validInput);
 
         // Assert
         authClientMock.Verify(
-            client => client.RegisterAsync(
-                null,
-                It.Is<RegistrationRequest>(
-                    r => r.sendSetPasswordEmail == true)),
+            client => client.RegisterAsync(null, It.Is<RegistrationRequest>(r => r.sendSetPasswordEmail == true)),
             Times.Once);
     }
 
@@ -160,7 +157,8 @@ public class SignUpTests
         authClientStub.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
             .ReturnsAsync(clientResponseStub);
 
-        var validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
+        var email = new MailAddress("user@example.com");
+        var validInput = new SignUpInput(email, "user-role", Guid.NewGuid());
 
         // Act
         Func<Task> act = async () => await this.sut.Handle(validInput);
@@ -176,10 +174,7 @@ public class SignUpTests
     {
         // Arrange
         var expectedUserId = Guid.NewGuid();
-        var successResponseStub = new RegistrationResponse
-        {
-            user = new User { id = expectedUserId }
-        };
+        var successResponseStub = new RegistrationResponse { user = new User { id = expectedUserId } };
         var clientResponseStub = new ClientResponse<RegistrationResponse>
         {
             statusCode = 200, successResponse = successResponseStub
@@ -190,7 +185,8 @@ public class SignUpTests
         authClientStub.Setup(client => client.RegisterAsync(null, It.IsAny<RegistrationRequest>()))
             .ReturnsAsync(clientResponseStub);
 
-        var validInput = new SignUpInput("user@example.com", "user-role", Guid.NewGuid());
+        var email = new MailAddress("user@example.com");
+        var validInput = new SignUpInput(email, "user-role", Guid.NewGuid());
 
         // Act
         var actualOutput = await this.sut.Handle(validInput);

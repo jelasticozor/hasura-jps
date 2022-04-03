@@ -3,9 +3,6 @@ namespace HasuraFunction;
 using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
-using io.fusionauth.domain.api;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
@@ -18,10 +15,7 @@ public class SetPasswordHandler : IActionHandler<SetPasswordInput, SetPasswordOu
 
     private readonly IMapper mapper;
 
-    public SetPasswordHandler(
-        IFusionAuthAsyncClient authClient,
-        ILogger<SetPasswordHandler> logger,
-        IMapper mapper)
+    public SetPasswordHandler(IFusionAuthAsyncClient authClient, ILogger<SetPasswordHandler> logger, IMapper mapper)
     {
         this.authClient = authClient;
         this.logger = logger;
@@ -51,6 +45,6 @@ public class SetPasswordHandler : IActionHandler<SetPasswordInput, SetPasswordOu
 
         // throw new HasuraFunctionException(
         //     $"Unable to sign user {input.Username} on application {input.AppId}", response.statusCode, response.exception);
-        throw new HasuraFunctionException($"Unable to set password");
+        throw new HasuraFunctionException("Unable to set password");
     }
 }

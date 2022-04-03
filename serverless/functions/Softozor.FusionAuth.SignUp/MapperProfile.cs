@@ -12,7 +12,7 @@ public class MapperProfile : Profile
         // TODO: can this be made in a simpler way?
         this.CreateMap<SignUpInput, RegistrationRequest>()
             .ForMember(dest => dest.sendSetPasswordEmail, opt => opt.MapFrom(_ => true))
-            .ForMember(dest => dest.user, opt => opt.MapFrom(src => new User { email = src.Email }))
+            .ForMember(dest => dest.user, opt => opt.MapFrom(src => new User { email = src.Email.Address }))
             .ForMember(
                 dest => dest.registration,
                 opt => opt.MapFrom(

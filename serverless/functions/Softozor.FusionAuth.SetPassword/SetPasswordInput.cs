@@ -1,8 +1,7 @@
 namespace HasuraFunction;
 
-using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 public record SetPasswordInput(
-    [property: JsonProperty("changePasswordId")] string ChangePasswordId,
-    [property: JsonProperty("password")] string Password);
+    [property: JsonPropertyName("changePasswordId")] string ChangePasswordId,
+    [property: JsonPropertyName("password")] string Password);

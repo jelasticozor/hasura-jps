@@ -383,26 +383,27 @@ class ApiDeveloper:
     def get_emails(self):
         graphql_response = self.__execute_graphql_query(
             query_name='get_emails')
-        assert 200 == graphql_response.status_code, \
-            f'expected status code 200, got {graphql_response.status_code}'
+        assert 'errors' not in graphql_response.payload, \
+            f'expected no errors, got {graphql_response.payload}'
         return graphql_response.payload['data']
 
     def get_email_to_setup_password_for_user(self, username, timeout_in_sec=60, period_in_sec=1):
         def test_get_emails(developer):
-            all_emails = developer.get_emails()['get_emails']['items']
-            emails_to_setup_password = [
-                email for email in all_emails
-                if email['subject'] == 'Setup your password' and email['to'][0] == username]
-            return 1 == len(emails_to_setup_password) > 0
+            return 1 == len(developer.__get_emails_to_setup_password_for_user(username)) > 0
 
         assert fail_after_timeout(
             lambda: test_get_emails(self), timeout_in_sec, period_in_sec) is True
 
+        emails_to_setup_password = self.__get_emails_to_setup_password_for_user(
+            username)
+        return emails_to_setup_password[0]
+
+    def __get_emails_to_setup_password_for_user(self, username):
         all_emails = self.get_emails()['get_emails']['items']
         emails_to_setup_password = [
             email for email in all_emails
-            if email['subject'] == 'Setup your password' and email['to'] == username]
-        return emails_to_setup_password[0]
+            if email['subject'] == 'Setup your password' and email['to'][0] == username]
+        return emails_to_setup_password
 
     def __execute_graphql_query(self, query_name, variables=None):
         query = self.__get_query_from_file(query_name)
