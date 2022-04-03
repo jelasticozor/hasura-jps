@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentAssertions;
 using HasuraFunction;
+using Softozor.HasuraHandling.Exceptions;
 using Xunit;
 
 public class EmailConverterTests
@@ -36,7 +37,7 @@ public class EmailConverterTests
         Action act = () => JsonSerializer.Deserialize<JsonData>(jsonData);
 
         // Assert
-        act.Should().Throw<FormatException>();
+        act.Should().Throw<HasuraFunctionException>().Where(e => e.ErrorCode == 400);
     }
 
     [SuppressMessage(

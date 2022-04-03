@@ -1,11 +1,9 @@
 ﻿namespace HasuraFunction;
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Softozor.HasuraHandling;
-using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 
 public static class AppSetup
@@ -21,21 +19,8 @@ public static class AppSetup
             "/",
             async (HttpContext http, IActionHandler<SignUpInput, SignUpOutput> handler) =>
             {
-                var input = await ActionHandlerWrapper.ExtractInput<SignUpInput>(http);
-
-                try
-                {
-                    var signUpOutput = await handler.Handle(input);
-                    await http.Response.WriteAsJsonAsync(signUpOutput);
-                }
-                catch (HasuraFunctionException ex)
-                {
-                    await ActionHandlerWrapper.IssueError(http, ex);
-                }
-                catch (Exception ex)
-                {
-                    await ActionHandlerWrapper.IssueInternalServerError(http, ex);
-                }
+                var handleFn = handler.Handle;
+                await ActionHandlerWrapper.HandleAsync(http, handleFn);
             });
     }
 }
