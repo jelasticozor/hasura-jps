@@ -12,3 +12,6 @@ behave.ini
 
 # faas
 template
+
+# resharper
+*.DotSettings.user
