@@ -31,13 +31,27 @@ public class EmailConverterTests
     public void ShouldThrowWhenProvidedWithInvalidEmail()
     {
         // Arrange
-        var jsonData = @"{""email"": ""invalid""}";
+        const string jsonData = @"{""email"": ""invalid""}";
 
         // Act
         Action act = () => JsonSerializer.Deserialize<JsonData>(jsonData);
 
         // Assert
         act.Should().Throw<HasuraFunctionException>().Where(e => e.ErrorCode == 400);
+    }
+
+    [Fact]
+    public void ShouldReturnNullEmailWhenProvidedWithNoEmail()
+    {
+        // Arrange
+        const string jsonData = @"{""other-prop"": ""some-value""}";
+
+        // Act
+        var actual = JsonSerializer.Deserialize<JsonData>(jsonData);
+
+        // Assert
+        actual.Should().NotBeNull();
+        actual!.Email.Should().BeNull();
     }
 
     [SuppressMessage(
