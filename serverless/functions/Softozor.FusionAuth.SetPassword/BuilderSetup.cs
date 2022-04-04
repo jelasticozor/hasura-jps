@@ -15,6 +15,6 @@ public static class BuilderSetup
 
         builder.Services.AddFusionAuthClient();
 
-        builder.Services.AddTransient<IActionHandler<SetPasswordInput, SetPasswordOutput>, SetPasswordHandler>();
+        builder.Services.AddTransient<SetPasswordHandler, SetPasswordHandler>();
     }
 }

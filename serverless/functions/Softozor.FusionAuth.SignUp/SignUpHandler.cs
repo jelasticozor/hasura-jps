@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 
-public class SignUpHandler : IActionHandler<SignUpInput, SignUpOutput>
+public class SignUpHandler
 {
     private readonly IFusionAuthAsyncClient authClient;
 
@@ -29,16 +29,16 @@ public class SignUpHandler : IActionHandler<SignUpInput, SignUpOutput>
 
         var response = await this.authClient.RegisterAsync(null, request);
 
-        if (response.WasSuccessful())
+        if (!response.WasSuccessful())
         {
-            this.logger.LogInformation($"Successful signup for user {input.Email} on application {input.AppId}");
-
-            return this.mapper.Map<RegistrationResponse, SignUpOutput>(response.successResponse);
+            throw new HasuraFunctionException(
+                $"Unable to sign up user {input.Email} on application {input.AppId} with role {input.Role}",
+                response.statusCode,
+                response.exception);
         }
 
-        throw new HasuraFunctionException(
-            $"Unable to sign up user {input.Email} on application {input.AppId} with role {input.Role}",
-            response.statusCode,
-            response.exception);
+        this.logger.LogInformation($"Successful signup for user {input.Email} on application {input.AppId}");
+
+        return this.mapper.Map<RegistrationResponse, SignUpOutput>(response.successResponse);
     }
 }

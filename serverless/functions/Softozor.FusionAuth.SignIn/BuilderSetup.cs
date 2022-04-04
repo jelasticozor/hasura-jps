@@ -24,6 +24,6 @@ public static class BuilderSetup
                     var dataProtectionSecret = secretReader!.GetSecret(FaasKeys.DataProtectionSecret);
                     return provider!.CreateProtector(dataProtectionSecret);
                 })
-            .AddTransient<IActionHandler<SignInInput, (SignInOutput, string)>, SignInHandler>();
+            .AddTransient<SignInHandler, SignInHandler>();
     }
 }

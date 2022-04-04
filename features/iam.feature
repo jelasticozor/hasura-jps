@@ -19,17 +19,14 @@ Feature: Identity and Access Management
   The error codes provided by fusionauth are documented [here](https://fusionauth.io/docs/v1/tech/apis/login#authenticate-a-user).
 
     Given the api user has no account on the application
-    When the api user signs in the application
+    When she signs in the application
     Then she gets an error that the user was not found or the password was incorrect
 
-  @wip
   Scenario Outline: Sign in as registered user with one single role
 
-    Given the api user signed up on the application with role <user role>
-    And she has received the email to setup her password
-    # TODO: determine what permission should be set on the set_password mutation!
-    #  --> see what roles come in the access token received by the sign_up mutation
-    And she set her password
+    Given the api user has signed up on the application with role <user role>
+    And she has received the email to set up her password
+    And she has set her password
     When she signs in the application
     Then her JWT is valid
     And it contains the role <user role>
@@ -40,10 +37,14 @@ Feature: Identity and Access Management
       | default-role |
       | other-role   |
 
-  # TODO: test 1 sign up with role that does not exist on application
+  # TODO: test with email argument that is not an email --> should fail
 
-  # TODO: test 2 sign up with same user on same app with same role
+  # TODO: test 1 sign up with role that does not exist on application --> should fail
 
-  # TODO: test 2 sign up with same user on same app with different roles
+  # TODO: test 2 sign up with same user on same app with same role --> should fail
+
+  # TODO: test 2 sign up with same user on same app with different roles --> should succeed, the function should grab the userId if it exists
 
   # TODO: test 2 set password with same changePasswordId --> should fail
+
+  # TODO: sign up, set password, sign in, modify token, validate token ---> invalid token

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 
-public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
+public class SignInHandler
 {
     private readonly IFusionAuthAsyncClient authClient;
 
@@ -38,25 +38,25 @@ public class SignInHandler : IActionHandler<SignInInput, (SignInOutput, string)>
 
         var response = await this.authClient.LoginAsync(request);
 
-        if (response.WasSuccessful())
+        if (!response.WasSuccessful())
         {
-            this.logger.LogInformation($"Successful signin for user {input.Username} on application {input.AppId}");
-
-            if (response.successResponse.refreshToken is null)
-            {
-                throw new HasuraFunctionException(
-                    $"No refresh token for user {input.Username} on application {input.AppId}",
-                    StatusCodes.Status401Unauthorized);
-            }
-
-            var protectedRefreshToken = this.protector.Protect(response.successResponse.refreshToken);
-
-            return (this.mapper.Map<LoginResponse, SignInOutput>(response.successResponse), protectedRefreshToken);
+            throw new HasuraFunctionException(
+                $"Unable to sign user {input.Username} on application {input.AppId}",
+                response.statusCode,
+                response.exception);
         }
 
-        throw new HasuraFunctionException(
-            $"Unable to sign user {input.Username} on application {input.AppId}",
-            response.statusCode,
-            response.exception);
+        this.logger.LogInformation($"Successful signin for user {input.Username} on application {input.AppId}");
+
+        if (response.successResponse.refreshToken is null)
+        {
+            throw new HasuraFunctionException(
+                $"No refresh token for user {input.Username} on application {input.AppId}",
+                StatusCodes.Status401Unauthorized);
+        }
+
+        var protectedRefreshToken = this.protector.Protect(response.successResponse.refreshToken);
+
+        return (this.mapper.Map<LoginResponse, SignInOutput>(response.successResponse), protectedRefreshToken);
     }
 }

@@ -19,7 +19,7 @@ public static class AppSetup
     {
         app.MapPost(
             "/",
-            async (HttpContext http, IActionHandler<SignInInput, (SignInOutput, string)> handler) =>
+            async (HttpContext http, SignInHandler handler) =>
             {
                 var input = await ActionHandlerWrapper.ExtractInput<SignInInput>(http);
 

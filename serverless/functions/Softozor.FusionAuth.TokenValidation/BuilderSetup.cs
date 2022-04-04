@@ -14,6 +14,6 @@ public static class BuilderSetup
         builder.Services.AddFusionAuthClient();
 
         builder.Services
-            .AddTransient<IActionHandler<BearerTokenAuthorizationHeader, ValidateTokenOutput>, ValidateTokenHandler>();
+            .AddTransient<ValidateTokenHandler, ValidateTokenHandler>();
     }
 }

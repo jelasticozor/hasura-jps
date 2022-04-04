@@ -13,6 +13,6 @@ public static class BuilderSetup
 
         builder.Services.AddFusionAuthClient();
 
-        builder.Services.AddTransient<IActionHandler<SignUpInput, SignUpOutput>, SignUpHandler>();
+        builder.Services.AddTransient<SignUpHandler, SignUpHandler>();
     }
 }

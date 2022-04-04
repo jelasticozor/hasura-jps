@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 
-public class ValidateTokenHandler : IActionHandler<BearerTokenAuthorizationHeader, ValidateTokenOutput>
+public class ValidateTokenHandler
 {
     private readonly IFusionAuthAsyncClient authClient;
 
@@ -29,14 +29,13 @@ public class ValidateTokenHandler : IActionHandler<BearerTokenAuthorizationHeade
 
         var response = await this.authClient.ValidateJWTAsync(token);
 
-        if (response.WasSuccessful())
+        if (!response.WasSuccessful())
         {
-            this.logger.LogInformation($"Token {token} is valid");
-
-            return this.mapper.Map<ValidateResponse, ValidateTokenOutput>(response.successResponse);
+            throw new HasuraFunctionException($"Unable to validate token {token}", response.statusCode, response.exception);
         }
 
-        var errorMsg = $"Unable to validate token {token}";
-        throw new HasuraFunctionException(errorMsg, response.statusCode, response.exception);
+        this.logger.LogInformation($"Token {token} is valid");
+
+        return this.mapper.Map<ValidateResponse, ValidateTokenOutput>(response.successResponse);
     }
 }

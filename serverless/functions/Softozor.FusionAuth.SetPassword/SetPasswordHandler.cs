@@ -3,11 +3,14 @@ namespace HasuraFunction;
 using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
+using io.fusionauth.domain.api;
+using io.fusionauth.domain.api.user;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling.Exceptions;
 using Softozor.HasuraHandling.Interfaces;
 
-public class SetPasswordHandler : IActionHandler<SetPasswordInput, SetPasswordOutput>
+public class SetPasswordHandler
 {
     private readonly IFusionAuthAsyncClient authClient;
 
@@ -22,29 +25,18 @@ public class SetPasswordHandler : IActionHandler<SetPasswordInput, SetPasswordOu
         this.mapper = mapper;
     }
 
-    public Task<SetPasswordOutput> Handle(SetPasswordInput input)
+    public async Task Handle(SetPasswordInput input)
     {
-        // var request = this.mapper.Map<SetPasswordInput, LoginRequest>(input);
-        //
-        // var response = await this.authClient.LoginAsync(request);
-        //
-        // if (response.WasSuccessful())
-        // {
-        //     this.logger.LogInformation($"Successful signin for user {input.Username} on application {input.AppId}");
-        //
-        //     if (response.successResponse.refreshToken is null)
-        //     {
-        //         throw new HasuraFunctionException(
-        //             $"No refresh token for user {input.Username} on application {input.AppId}", StatusCodes.Status401Unauthorized);
-        //     }
-        //
-        //     var protectedRefreshToken = this.protector.Protect(response.successResponse.refreshToken);
-        //
-        //     return (this.mapper.Map<LoginResponse, SetPasswordOutput>(response.successResponse), protectedRefreshToken);
-        // }
+        var request = this.mapper.Map<SetPasswordInput, ChangePasswordRequest>(input);
 
-        // throw new HasuraFunctionException(
-        //     $"Unable to sign user {input.Username} on application {input.AppId}", response.statusCode, response.exception);
-        throw new HasuraFunctionException("Unable to set password");
+        var response = await this.authClient.ChangePasswordAsync(input.ChangePasswordId, request);
+
+        if (!response.WasSuccessful())
+        {
+            throw new HasuraFunctionException(
+                $"Unable to set password with change password id {input.ChangePasswordId}", response.statusCode, response.exception);
+        }
+
+        this.logger.LogInformation($"Successfully set password");
     }
 }

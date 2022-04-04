@@ -37,7 +37,7 @@
         <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.0" />
         <PackageReference Include="NullGuard.Fody" Version="3.0.0" />
         <PackageReference Include="Softozor.FusionAuth" Version="1.0.1" />
-        <PackageReference Include="Softozor.HasuraHandling" Version="2.0.1" />
+        <PackageReference Include="Softozor.HasuraHandling" Version="2.0.2" />
     </ItemGroup>
 
 </Project>
