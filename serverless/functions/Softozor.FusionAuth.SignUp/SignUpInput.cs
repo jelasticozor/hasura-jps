@@ -7,4 +7,4 @@ using System.Text.Json.Serialization;
 public record SignUpInput(
     [property: JsonPropertyName("email")] [property: JsonConverter(typeof(EmailConverter))] MailAddress Email,
     [property: JsonPropertyName("role")] string Role,
-    [property: JsonPropertyName("appId")] Guid AppId);
+    [property: JsonPropertyName("app_id")] Guid AppId);

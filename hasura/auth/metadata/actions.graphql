@@ -2,7 +2,7 @@ type Query {
   sign_in(
     username: String!
     password: String!
-    appId: uuid!
+    app_id: uuid!
   ): sign_in_response
 }
 
@@ -14,24 +14,24 @@ type Mutation {
   sign_up(
     email: String!
     role: String!
-    appId: uuid!
+    app_id: uuid!
   ): sign_up_response
 }
 
 type Mutation {
   set_password(
-    changePasswordId: String!
+    change_password_id: String!
     password: String!
   ): set_password_response
 }
 
 type sign_in_response {
   token: String!
-  userId: uuid!
+  user_id: uuid!
 }
 
 type sign_up_response {
-  userId: uuid!
+  user_id: uuid!
 }
 
 type set_password_response {
@@ -39,6 +39,6 @@ type set_password_response {
 }
 
 type validate_token_response {
-  userId: uuid!
+  user_id: uuid!
 }
 
