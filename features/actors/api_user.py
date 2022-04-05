@@ -35,7 +35,6 @@ class ApiUser:
         graphql_response = self.__execute_graphql_query(
             query_name='sign_up', variables=variables)
         if 'errors' not in graphql_response.payload:
-            self.jwt = graphql_response.payload['data']['sign_up']['token']
             self.user_id = graphql_response.payload['data']['sign_up']['user_id']
         return graphql_response
 

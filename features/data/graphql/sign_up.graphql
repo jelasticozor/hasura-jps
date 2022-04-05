@@ -1,6 +1,5 @@
 mutation SignUp($email: String!, $role: String!, $appId: uuid!) {
   sign_up(email: $email, role: $role, app_id: $appId) {
-    token
-    userId
+    user_id
   }
 }
