@@ -195,8 +195,8 @@ actions:
           hasuraEnableConsole: "${settings.clusterType}" == "dev" ? "true" : "false",
           externalDomains: ${settings.useDefaultExternalDomain} ? "${env.domain}" : "${settings.externalDomains}",
           graylog: {
-            host: ${settings.useExternalGraylog} ? ${settings.graylogServerHost} : "",
-            port: ${settings.useExternalGraylog} ? ${settings.graylogServerPort} : "",
+            host: ${settings.useExternalGraylog} ? "${settings.graylogServerHost}" : "",
+            port: ${settings.useExternalGraylog} ? "${settings.graylogServerPort}" : "",
           }
         };
     - setGlobals:
