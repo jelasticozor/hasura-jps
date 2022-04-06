@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Sinks.Graylog;
+using Serilog.Sinks.Graylog.Core.Transport;
 using Softozor.FusionAuth;
 using Softozor.HasuraHandling;
 using Softozor.HasuraHandling.ConfigurationManagement;
@@ -44,7 +45,7 @@ public static class BuilderSetup
                 out var logsAggregatorPort))
         {
             configuration.WriteTo.Graylog(
-                new GraylogSinkOptions { HostnameOrAddress = logsAggregatorHost, Port = logsAggregatorPort });
+                new GraylogSinkOptions { HostnameOrAddress = logsAggregatorHost, Port = logsAggregatorPort, TransportType = TransportType.Udp });
         }
 
         var logger = configuration.CreateLogger();
