@@ -4,6 +4,8 @@ baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
+    - type: spacer
+      caption: IAM Service
     - name: authApiKey
       caption: Auth API Key
       inputType: password
@@ -18,6 +20,8 @@ settings:
       caption: Auth URL
       type: string
       required: true
+    - type: spacer
+      caption: Misc
     - name: fncTag
       caption: Docker tag
       type: string
@@ -25,10 +29,20 @@ settings:
     - name: clusterType
       type: string
       required: true
+    - type: spacer
+      caption: Mail Server
     - name: mailServerHost
       caption: Host
       type: string
       required: true
+    - type: spacer
+      caption: Logs Aggregation
+    - name: logsAggregatorHost
+      caption: Host
+      type: string
+    - name: logsAggregatorPort
+      caption: Port
+      type: string
 
 globals:
   MAIL_SERVER_API_PORT: 8025
@@ -62,6 +76,8 @@ actions:
             nodeGroup: faas
             vars:
               IMG_TAG: ${settings.fncTag}
+              LOGS_AGGREGATOR_HOST: ${settings.logsAggregatorHost}
+              LOGS_AGGREGATOR_PORT: ${settings.logsAggregatorPort}
   deployAuthFunctions:
     - api:
         - method: environment.control.AddContainerEnvVars

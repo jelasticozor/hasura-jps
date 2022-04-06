@@ -6,11 +6,10 @@ using AutoMapper;
 using FluentAssertions;
 using HasuraFunction;
 using io.fusionauth;
-using io.fusionauth.domain.api;
 using io.fusionauth.domain.api.user;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Softozor.HasuraHandling.Exceptions;
+using Softozor.HasuraHandling;
 using Xunit;
 
 public class SetPasswordTests
@@ -38,7 +37,8 @@ public class SetPasswordTests
         };
 
         var authClientMock = Mock.Get(this.authClient);
-        authClientMock.Setup(client => client.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<ChangePasswordRequest>()))
+        authClientMock
+            .Setup(client => client.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<ChangePasswordRequest>()))
             .ReturnsAsync(clientResponseStub);
 
         const string expectedChangePasswordId = "change-password-id";
@@ -49,7 +49,10 @@ public class SetPasswordTests
         await this.sut.Handle(validInput);
 
         // Assert
-        authClientMock.Verify(client => client.ChangePasswordAsync(expectedChangePasswordId, It.Is<ChangePasswordRequest>(r => r.password == expectedPassword)));
+        authClientMock.Verify(
+            client => client.ChangePasswordAsync(
+                expectedChangePasswordId,
+                It.Is<ChangePasswordRequest>(r => r.password == expectedPassword)));
     }
 
     [Theory]
@@ -66,7 +69,9 @@ public class SetPasswordTests
         clientResponseStub.WasSuccessful().Should().BeFalse();
 
         var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<ChangePasswordRequest>())).ReturnsAsync(clientResponseStub);
+        authClientStub
+            .Setup(client => client.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<ChangePasswordRequest>()))
+            .ReturnsAsync(clientResponseStub);
 
         var input = new SetPasswordInput("change-password-id", "password");
 

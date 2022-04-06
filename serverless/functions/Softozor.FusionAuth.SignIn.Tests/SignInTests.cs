@@ -11,7 +11,7 @@ using io.fusionauth.domain.api;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Softozor.HasuraHandling.Exceptions;
+using Softozor.HasuraHandling;
 using Xunit;
 
 public class SignInTests

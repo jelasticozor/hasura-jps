@@ -5,7 +5,7 @@ using System.Net.Mail;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
-using Softozor.HasuraHandling.Exceptions;
+using Softozor.HasuraHandling;
 
 public class EmailConverter : JsonConverter<MailAddress>
 {

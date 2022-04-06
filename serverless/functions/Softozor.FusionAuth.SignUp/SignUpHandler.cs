@@ -5,8 +5,7 @@ using AutoMapper;
 using io.fusionauth;
 using io.fusionauth.domain.api.user;
 using Microsoft.Extensions.Logging;
-using Softozor.HasuraHandling.Exceptions;
-using Softozor.HasuraHandling.Interfaces;
+using Softozor.HasuraHandling;
 
 public class SignUpHandler
 {
@@ -37,7 +36,10 @@ public class SignUpHandler
                 response.exception);
         }
 
-        this.logger.LogInformation($"Successful signup for user {input.Email} on application {input.AppId}");
+        this.logger.LogInformation(
+            "Successful signup for user {Email} on application {AppId}",
+            input.Email,
+            input.AppId);
 
         return this.mapper.Map<RegistrationResponse, SignUpOutput>(response.successResponse);
     }

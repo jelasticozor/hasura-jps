@@ -10,6 +10,8 @@ functions:
       FUNCTION_NAME: Softozor.FusionAuth.SignIn
     environment:
       AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      LOGS_AGGREGATOR_HOST: ${LOGS_AGGREGATOR_HOST}
+      LOGS_AGGREGATOR_PORT: ${LOGS_AGGREGATOR_PORT}
     secrets:
       - auth-secret
       - data-protection-secret
@@ -21,6 +23,8 @@ functions:
       FUNCTION_NAME: Softozor.FusionAuth.SignUp
     environment:
       AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      LOGS_AGGREGATOR_HOST: ${LOGS_AGGREGATOR_HOST}
+      LOGS_AGGREGATOR_PORT: ${LOGS_AGGREGATOR_PORT}
     secrets:
       - auth-secret
   set-password:
@@ -31,6 +35,8 @@ functions:
       FUNCTION_NAME: Softozor.FusionAuth.SetPassword
     environment:
       AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      LOGS_AGGREGATOR_HOST: ${LOGS_AGGREGATOR_HOST}
+      LOGS_AGGREGATOR_PORT: ${LOGS_AGGREGATOR_PORT}
     secrets:
       - auth-secret
   validate-token:
@@ -42,6 +48,8 @@ functions:
     environment:
       AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
       HASURA_CLAIMS_NAMESPACE: ${HASURA_CLAIMS_NAMESPACE:-https://hasura.io/jwt/claims}
+      LOGS_AGGREGATOR_HOST: ${LOGS_AGGREGATOR_HOST}
+      LOGS_AGGREGATOR_PORT: ${LOGS_AGGREGATOR_PORT}
     secrets:
       - auth-secret
 configuration:

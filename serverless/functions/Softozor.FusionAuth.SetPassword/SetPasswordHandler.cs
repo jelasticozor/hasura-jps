@@ -3,12 +3,9 @@ namespace HasuraFunction;
 using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
-using io.fusionauth.domain.api;
 using io.fusionauth.domain.api.user;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Softozor.HasuraHandling.Exceptions;
-using Softozor.HasuraHandling.Interfaces;
+using Softozor.HasuraHandling;
 
 public class SetPasswordHandler
 {
@@ -34,9 +31,11 @@ public class SetPasswordHandler
         if (!response.WasSuccessful())
         {
             throw new HasuraFunctionException(
-                $"Unable to set password with change password id {input.ChangePasswordId}", response.statusCode, response.exception);
+                $"Unable to set password with change password id {input.ChangePasswordId}",
+                response.statusCode,
+                response.exception);
         }
 
-        this.logger.LogInformation($"Successfully set password");
+        this.logger.LogInformation("Successfully set password");
     }
 }

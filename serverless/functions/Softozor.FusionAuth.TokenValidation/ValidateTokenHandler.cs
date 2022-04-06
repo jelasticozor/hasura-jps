@@ -5,8 +5,7 @@ using AutoMapper;
 using io.fusionauth;
 using io.fusionauth.domain.api.jwt;
 using Microsoft.Extensions.Logging;
-using Softozor.HasuraHandling.Exceptions;
-using Softozor.HasuraHandling.Interfaces;
+using Softozor.HasuraHandling;
 
 public class ValidateTokenHandler
 {
@@ -31,10 +30,13 @@ public class ValidateTokenHandler
 
         if (!response.WasSuccessful())
         {
-            throw new HasuraFunctionException($"Unable to validate token {token}", response.statusCode, response.exception);
+            throw new HasuraFunctionException(
+                $"Unable to validate token {token}",
+                response.statusCode,
+                response.exception);
         }
 
-        this.logger.LogInformation($"Token {token} is valid");
+        this.logger.LogInformation("Token {Token} is valid", token);
 
         return this.mapper.Map<ValidateResponse, ValidateTokenOutput>(response.successResponse);
     }

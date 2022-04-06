@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentAssertions;
 using HasuraFunction;
-using Softozor.HasuraHandling.Exceptions;
+using Softozor.HasuraHandling;
 using Xunit;
 
 public class EmailConverterTests

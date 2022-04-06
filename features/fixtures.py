@@ -171,6 +171,7 @@ def jelastic_environment(context):
         # we need an external domain name, which we don't provide
         # just for the sake of testing
         'useDefaultExternalDomain': True,
+        'useExternalGraylog': False,
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
@@ -195,6 +196,8 @@ def jelastic_environment_with_automatic_settings(context):
         # we need an external domain name, which we don't provide
         # just for the sake of testing
         'useDefaultExternalDomain': True,
+        # TODO: describe this
+        'useExternalGraylog': False,
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)

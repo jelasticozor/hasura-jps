@@ -7,8 +7,7 @@ using io.fusionauth.domain.api;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Softozor.HasuraHandling.Exceptions;
-using Softozor.HasuraHandling.Interfaces;
+using Softozor.HasuraHandling;
 
 public class SignInHandler
 {
@@ -46,7 +45,10 @@ public class SignInHandler
                 response.exception);
         }
 
-        this.logger.LogInformation($"Successful signin for user {input.Username} on application {input.AppId}");
+        this.logger.LogInformation(
+            "Successful signin for user {Username} on application {AppId}",
+            input.Username,
+            input.AppId);
 
         if (response.successResponse.refreshToken is null)
         {

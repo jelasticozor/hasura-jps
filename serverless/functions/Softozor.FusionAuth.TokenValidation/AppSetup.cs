@@ -5,9 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using Softozor.HasuraHandling;
-using Softozor.HasuraHandling.Exceptions;
-using Softozor.HasuraHandling.Interfaces;
 
 public static class AppSetup
 {
@@ -20,10 +20,13 @@ public static class AppSetup
             "That's the last step before outputting to the user, therefore we need to catch everything and return a useful error message")]
     public static void Configure(WebApplication app)
     {
+        app.UseSerilogRequestLogging();
+
         app.MapPost(
             "/",
-            async (HttpContext http, ValidateTokenHandler handler) =>
+            async (HttpContext http, ILoggerFactory loggerFactory, ValidateTokenHandler handler) =>
             {
+                var logger = loggerFactory.CreateLogger("root");
                 var input = ExtractInput(http);
 
                 try
@@ -33,11 +36,17 @@ public static class AppSetup
                 }
                 catch (HasuraFunctionException ex)
                 {
-                    await ActionHandlerWrapper.IssueError(http, ex);
+                    logger.LogError(ex, "an error occurred");
+                    await ErrorReporter.ReportError(http, ex);
                 }
                 catch (Exception ex)
                 {
-                    await ActionHandlerWrapper.IssueInternalServerError(http, ex);
+                    logger.LogError(ex, "an unexpected error occurred");
+                    await ErrorReporter.ReportUnexpectedError(http, ex);
+                }
+                finally
+                {
+                    Log.CloseAndFlush();
                 }
             });
     }
