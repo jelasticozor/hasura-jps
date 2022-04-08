@@ -29,6 +29,7 @@ public static class AppSetup
                 try
                 {
                     await handler.Handle(input);
+                    await http.Response.WriteAsJsonAsync(new SetPasswordOutput(true));
                 }
                 catch (HasuraFunctionException ex)
                 {
