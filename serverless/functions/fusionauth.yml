@@ -30,7 +30,7 @@ functions:
   set-password:
     lang: dotnet-hasura
     handler: ./Softozor.FusionAuth.SetPassword
-    image: softozor/fusionauth-validate-token-fn:${IMG_TAG:-latest}
+    image: softozor/fusionauth-set-password-fn:${IMG_TAG:-latest}
     build_args:
       FUNCTION_NAME: Softozor.FusionAuth.SetPassword
     environment:

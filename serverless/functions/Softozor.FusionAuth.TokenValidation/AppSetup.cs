@@ -27,10 +27,10 @@ public static class AppSetup
             async (HttpContext http, ILoggerFactory loggerFactory, ValidateTokenHandler handler) =>
             {
                 var logger = loggerFactory.CreateLogger("root");
-                var input = ExtractInput(http);
 
                 try
                 {
+                    var input = ExtractInput(http);
                     var output = await handler.Handle(input);
                     await http.Response.WriteAsJsonAsync(output);
                 }

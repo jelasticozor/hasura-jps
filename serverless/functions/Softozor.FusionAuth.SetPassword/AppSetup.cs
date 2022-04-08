@@ -24,10 +24,10 @@ public static class AppSetup
             async (HttpContext http, ILoggerFactory loggerFactory, SetPasswordHandler handler) =>
             {
                 var logger = loggerFactory.CreateLogger("root");
-                var input = await InputHandling.ExtractActionRequestPayloadFrom<SetPasswordInput>(http);
 
                 try
                 {
+                    var input = await InputHandling.ExtractActionRequestPayloadFrom<SetPasswordInput>(http);
                     await handler.Handle(input);
                     await http.Response.WriteAsJsonAsync(new SetPasswordOutput(true));
                 }

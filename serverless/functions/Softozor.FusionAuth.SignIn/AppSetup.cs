@@ -24,10 +24,10 @@ public static class AppSetup
             async (HttpContext http, ILoggerFactory loggerFactory, SignInHandler handler) =>
             {
                 var logger = loggerFactory.CreateLogger("root");
-                var input = await InputHandling.ExtractActionRequestPayloadFrom<SignInInput>(http);
 
                 try
                 {
+                    var input = await InputHandling.ExtractActionRequestPayloadFrom<SignInInput>(http);
                     var (signInOutput, refreshToken) = await handler.Handle(input);
                     await http.Response.WriteAsJsonAsync(signInOutput);
                     http.Response.Cookies.Append(

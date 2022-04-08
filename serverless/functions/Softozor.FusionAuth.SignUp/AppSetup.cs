@@ -24,10 +24,10 @@ public static class AppSetup
             async (HttpContext http, ILoggerFactory loggerFactory, SignUpHandler handler) =>
             {
                 var logger = loggerFactory.CreateLogger("root");
-                var input = await InputHandling.ExtractActionRequestPayloadFrom<SignUpInput>(http);
 
                 try
                 {
+                    var input = await InputHandling.ExtractActionRequestPayloadFrom<SignUpInput>(http);
                     var output = await handler.Handle(input);
                     await http.Response.WriteAsJsonAsync(output);
                 }
