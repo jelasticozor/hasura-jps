@@ -163,7 +163,9 @@ acceptance test dev:
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
         -D fusionauth-version="${FUSIONAUTH_VERSION}" \
-        -D cluster-type="dev"
+        -D cluster-type="dev" \
+        -D graylog-host="${GRAYLOG_HOST}" \
+        -D graylog-port="${GRAYLOG_PORT}"
   artifacts:
     reports:
       junit:
@@ -183,7 +185,9 @@ acceptance test production:
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
         -D fusionauth-version="${FUSIONAUTH_VERSION}" \
-        -D cluster-type="prod"
+        -D cluster-type="prod" \
+        -D graylog-host="${GRAYLOG_HOST}" \
+        -D graylog-port="${GRAYLOG_PORT}"
   artifacts:
     reports:
       junit:

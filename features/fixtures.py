@@ -97,6 +97,20 @@ def graphql_engine_image(context):
     return context.graphql_engine_image
 
 
+@fixture
+def graylog_host(context):
+    userdata = context.config.userdata
+    context.graylog_host = userdata['graylog-host']
+    return context.graylog_host
+
+
+@fixture
+def graylog_port(context):
+    userdata = context.config.userdata
+    context.graylog_port = userdata['graylog-port']
+    return context.graylog_port
+
+
 def get_mail_server_definition(env_info, smtp_settings):
     mail_server_nodes = env_info.get_nodes(node_group='mail')
     assert len(mail_server_nodes) == 1, \
@@ -171,7 +185,9 @@ def jelastic_environment(context):
         # we need an external domain name, which we don't provide
         # just for the sake of testing
         'useDefaultExternalDomain': True,
-        'useExternalGraylog': False,
+        'useExternalGraylog': True,
+        'graylogServerHost': context.graylog_host,
+        'graylogServerPort': context.graylog_port
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
@@ -196,8 +212,9 @@ def jelastic_environment_with_automatic_settings(context):
         # we need an external domain name, which we don't provide
         # just for the sake of testing
         'useDefaultExternalDomain': True,
-        # TODO: describe this
-        'useExternalGraylog': False,
+        'useExternalGraylog': True,
+        'graylogServerHost': context.graylog_host,
+        'graylogServerPort': context.graylog_port
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
