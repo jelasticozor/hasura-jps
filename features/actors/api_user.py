@@ -1,6 +1,18 @@
 import os
+import random
+import string
 
 from softozor_graphql_client import GraphQLClient
+
+
+def create_random_email():
+    name = "".join(random.choice(string.ascii_lowercase) for _ in range(7))
+    domain = "".join(random.choice(string.ascii_lowercase) for _ in range(4))
+    return f'{name}@{domain}.com'
+
+
+def create_random_password():
+    return "".join(random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(20))
 
 
 class ApiUser:
@@ -8,8 +20,8 @@ class ApiUser:
         self.user_id = None
         self.jwt = None
         self.__client = GraphQLClient(endpoint)
-        self.username = 'test-user@example.com'
-        self.__password = 'password'
+        self.username = create_random_email()
+        self.password = create_random_password()
         self.__path_to_graphql_folder = path_to_graphql_folder
 
     # region authentication
@@ -17,7 +29,7 @@ class ApiUser:
     def sign_in(self, app_id):
         variables = {
             'username': self.username,
-            'password': self.__password,
+            'password': self.password,
             'appId': app_id
         }
         graphql_response = self.__execute_graphql_query(
@@ -41,7 +53,7 @@ class ApiUser:
     def set_password(self, change_password_id):
         variables = {
             'changePasswordId': change_password_id,
-            'password': self.__password
+            'password': self.password
         }
         graphql_response = self.__execute_graphql_query(
             query_name='set_password', variables=variables)
