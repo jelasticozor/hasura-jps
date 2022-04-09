@@ -28,12 +28,8 @@ public static class AppSetup
                 try
                 {
                     var input = await InputHandling.ExtractActionRequestPayloadFrom<SignInInput>(http);
-                    var (signInOutput, refreshToken) = await handler.Handle(input);
-                    await http.Response.WriteAsJsonAsync(signInOutput);
-                    http.Response.Cookies.Append(
-                        "refresh-token",
-                        refreshToken,
-                        new CookieOptions { Expires = DateTimeOffset.Now.AddDays(1), MaxAge = TimeSpan.FromDays(1) });
+                    var output = await handler.Handle(input);
+                    await http.Response.WriteAsJsonAsync(output);
                 }
                 catch (HasuraFunctionException ex)
                 {

@@ -26,6 +26,7 @@ type Mutation {
 }
 
 type sign_in_response {
+  refresh_token: String!
   token: String!
   user_id: uuid!
 }

@@ -13,6 +13,7 @@ public class MapperProfile : Profile
             .ForMember(dest => dest.password, opt => opt.MapFrom(src => src.Password));
 
         this.CreateMap<LoginResponse, SignInOutput>()
+            .ForMember(dest => dest.RefreshToken, opt => opt.MapFrom(src => src.refreshToken))
             .ForMember(dest => dest.Token, opt => opt.MapFrom(src => src.token))
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.user.id.GetValueOrDefault()));
     }

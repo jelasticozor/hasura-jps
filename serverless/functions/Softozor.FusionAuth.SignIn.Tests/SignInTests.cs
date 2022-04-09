@@ -115,43 +115,11 @@ public class SignInTests
         var validInput = new SignInInput("username", "password", Guid.NewGuid());
 
         // Act
-        var (actualOutput, _) = await this.sut.Handle(validInput);
+        var actualOutput = await this.sut.Handle(validInput);
 
         // Assert
-        var expectedOutput = new SignInOutput(expectedToken, expectedUserId);
+        var expectedOutput = new SignInOutput(expectedRefreshToken, expectedToken, expectedUserId);
         actualOutput.Should().BeEquivalentTo(expectedOutput);
-    }
-
-    [Fact]
-    public async Task ShouldReturnProtectedRefreshTokenInCookieUponSuccess()
-    {
-        // Arrange
-        const string expectedRefreshToken = "refresh-token";
-        const string expectedToken = "token";
-        var expectedUserId = Guid.NewGuid();
-        var successResponseStub = new LoginResponse
-        {
-            refreshToken = expectedRefreshToken, token = expectedToken, user = new User { id = expectedUserId }
-        };
-        var clientResponseStub = new ClientResponse<LoginResponse>
-        {
-            statusCode = 200, successResponse = successResponseStub
-        };
-        var dataProtectorMock = Mock.Get(this.dataProtector);
-        dataProtectorMock.Setup(protector => protector.Protect(It.IsAny<byte[]>())).Returns<byte[]>(token => token);
-        clientResponseStub.WasSuccessful().Should().BeTrue();
-
-        var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
-
-        var validInput = new SignInInput("username", "password", Guid.NewGuid());
-
-        // Act
-        var (_, actualProtectedRefreshToken) = await this.sut.Handle(validInput);
-
-        // Assert
-        var expectedProtectedRefreshToken = this.dataProtector.Protect(expectedRefreshToken);
-        actualProtectedRefreshToken.Should().NotBe(expectedRefreshToken).And.Be(expectedProtectedRefreshToken);
     }
 
     [Fact]

@@ -31,7 +31,7 @@ public class SignInHandler
         this.mapper = mapper;
     }
 
-    public async Task<(SignInOutput, string)> Handle(SignInInput input)
+    public async Task<SignInOutput> Handle(SignInInput input)
     {
         var request = this.mapper.Map<SignInInput, LoginRequest>(input);
 
@@ -57,8 +57,6 @@ public class SignInHandler
                 StatusCodes.Status401Unauthorized);
         }
 
-        var protectedRefreshToken = this.protector.Protect(response.successResponse.refreshToken);
-
-        return (this.mapper.Map<LoginResponse, SignInOutput>(response.successResponse), protectedRefreshToken);
+        return this.mapper.Map<LoginResponse, SignInOutput>(response.successResponse);
     }
 }

@@ -32,7 +32,12 @@ public static class BuilderSetup
                 out var logsAggregatorPort))
         {
             configuration.WriteTo.Graylog(
-                new GraylogSinkOptions { HostnameOrAddress = logsAggregatorHost, Port = logsAggregatorPort, TransportType = TransportType.Udp });
+                new GraylogSinkOptions
+                {
+                    HostnameOrAddress = logsAggregatorHost,
+                    Port = logsAggregatorPort,
+                    TransportType = TransportType.Udp
+                });
         }
 
         var logger = configuration.CreateLogger();

@@ -11,11 +11,6 @@ settings:
       inputType: password
       type: string
       required: true
-    - name: dataProtectionSecretKey
-      caption: Data Protection Secret Key
-      inputType: password
-      type: string
-      required: true
     - name: authUrl
       caption: Auth URL
       type: string
@@ -89,7 +84,6 @@ actions:
     - cmd[faas]:
         - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
-        - faas-cli secret create data-protection-secret --from-literal "${settings.dataProtectionSecretKey}"
         - wget -q ${baseUrl}/serverless/functions/fusionauth.yml
         - faas-cli deploy -f fusionauth.yml
   deployMailhogFunctions:

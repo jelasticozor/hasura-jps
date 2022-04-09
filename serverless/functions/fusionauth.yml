@@ -14,7 +14,6 @@ functions:
       LOGS_AGGREGATOR_PORT: ${LOGS_AGGREGATOR_PORT}
     secrets:
       - auth-secret
-      - data-protection-secret
   sign-up:
     lang: dotnet-hasura
     handler: ./Softozor.FusionAuth.SignUp

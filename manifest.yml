@@ -135,7 +135,6 @@ globals:
   # auth
   AUTH_PORT: 9011
   AUTH_ADMIN_PASSWORD: ${fn.password(20)}
-  DATA_PROTECTION_SECRET_KEY: ${fn.password(40)}
   ALMIGHTY_API_KEY: ${fn.password(40)}
   SERVERLESS_API_KEY: ${fn.password(40)}
   JWT_KEY_ALGORITHM: RS256
@@ -231,7 +230,6 @@ actions:
         settings:
           authApiKey: ${globals.SERVERLESS_API_KEY}
           authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
-          dataProtectionSecretKey: ${globals.DATA_PROTECTION_SECRET_KEY}
           fncTag: ${settings.fncTag}
           clusterType: ${settings.clusterType}
           mailServerHost: ${globals.MAIL_SERVER_HOST}
@@ -323,5 +321,4 @@ success:
     **Faas Admin User**: ${globals.FAAS_USER}  
     **Faas Admin Password**: ${globals.FAAS_PASSWORD}  
     **Auth Almighty API Key**: ${globals.ALMIGHTY_API_KEY}  
-    **Auth Serverless API Key**: ${globals.SERVERLESS_API_KEY}  
-    **Data Protection Secret Key**: ${globals.DATA_PROTECTION_SECRET_KEY}
+    **Auth Serverless API Key**: ${globals.SERVERLESS_API_KEY}
