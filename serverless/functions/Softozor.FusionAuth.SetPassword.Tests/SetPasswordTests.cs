@@ -20,16 +20,15 @@ public class SetPasswordTests
     public SetPasswordTests()
     {
         var authClient = new FusionAuthAsyncClient();
-        var logger = Mock.Of<ILogger<SetPasswordHandler>>();
         var mapper = CreateMapper();
-        this.sut = new SetPasswordHandler(authClient, logger, mapper);
+        this.sut = new SetPasswordHandler(authClient, mapper);
     }
 
     [Fact]
     public async Task WhenHandlingValidChangePasswordIdAndNonEmptyPasswordItShouldNotThrow()
     {
         // Arrange
-        var validInput = new SetPasswordInput(FusionAuthAsyncClient.SuccessChangePasswordId, ValidPassword);
+        var validInput = new SetPasswordInput("success-change-password-id", ValidPassword);
 
         // Act
         Func<Task> act = async () => await this.sut.Handle(validInput);
@@ -45,7 +44,7 @@ public class SetPasswordTests
         string emptyOrWhitespacePassword)
     {
         // Arrange
-        var input = new SetPasswordInput(FusionAuthAsyncClient.SuccessChangePasswordId, emptyOrWhitespacePassword);
+        var input = new SetPasswordInput("success-change-password-id", emptyOrWhitespacePassword);
 
         // Act
         Func<Task> act = async () => await this.sut.Handle(input);
@@ -73,6 +72,7 @@ public class SetPasswordTests
     private static IMapper CreateMapper()
     {
         var config = new MapperConfiguration(cfg => { cfg.AddProfile<MapperProfile>(); });
+        config.AssertConfigurationIsValid();
         return config.CreateMapper();
     }
 }

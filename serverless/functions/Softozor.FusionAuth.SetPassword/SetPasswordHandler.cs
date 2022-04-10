@@ -4,21 +4,17 @@ using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
 using io.fusionauth.domain.api.user;
-using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling;
 
 public class SetPasswordHandler
 {
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly ILogger<SetPasswordHandler> logger;
-
     private readonly IMapper mapper;
 
-    public SetPasswordHandler(IFusionAuthAsyncClient authClient, ILogger<SetPasswordHandler> logger, IMapper mapper)
+    public SetPasswordHandler(IFusionAuthAsyncClient authClient, IMapper mapper)
     {
         this.authClient = authClient;
-        this.logger = logger;
         this.mapper = mapper;
     }
 
@@ -35,7 +31,5 @@ public class SetPasswordHandler
                 response.statusCode,
                 response.exception);
         }
-
-        this.logger.LogInformation("Successfully set password");
     }
 }

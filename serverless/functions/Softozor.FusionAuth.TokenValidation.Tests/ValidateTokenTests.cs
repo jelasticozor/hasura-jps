@@ -82,6 +82,7 @@ public class ValidateTokenTests
     private static IMapper CreateMapper()
     {
         var config = new MapperConfiguration(cfg => { cfg.AddProfile<MapperProfile>(); });
+        config.AssertConfigurationIsValid();
         return config.CreateMapper();
     }
 

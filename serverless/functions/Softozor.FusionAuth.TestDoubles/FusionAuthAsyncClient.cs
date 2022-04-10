@@ -19,8 +19,6 @@ using io.fusionauth.domain.provider;
 
 public class FusionAuthAsyncClient : IFusionAuthAsyncClient
 {
-    public const string SuccessChangePasswordId = "success-change-password-id";
-
     public Task<ClientResponse<ChangePasswordResponse>> ChangePasswordAsync(
         string changePasswordId,
         ChangePasswordRequest request)
@@ -46,6 +44,31 @@ public class FusionAuthAsyncClient : IFusionAuthAsyncClient
         var failureResponse = new ClientResponse<ChangePasswordResponse>
         {
             statusCode = 404, exception = new Exception("could not find user from change password id")
+        };
+        return Task.FromResult(failureResponse);
+    }
+
+    public Task<ClientResponse<LoginResponse>> LoginAsync(LoginRequest request)
+    {
+        if (request.loginId == "valid-username" && request.password == "valid-password" &&
+            request.applicationId == Guid.Parse("60926f3c-1d89-46f4-8b5b-bd61408936e4"))
+        {
+            var successResponse = new ClientResponse<LoginResponse>
+            {
+                statusCode = 200,
+                successResponse = new LoginResponse
+                {
+                    refreshToken = "the-refresh-token",
+                    token = "the-access-token",
+                    user = new User { id = Guid.Parse("50238f6a-f57b-4a9a-8032-c4d2a39e8936") }
+                }
+            };
+            return Task.FromResult(successResponse);
+        }
+
+        var failureResponse = new ClientResponse<LoginResponse>
+        {
+            statusCode = 404, exception = new Exception("the user was not found or the password was incorrect.")
         };
         return Task.FromResult(failureResponse);
     }
@@ -582,11 +605,6 @@ public class FusionAuthAsyncClient : IFusionAuthAsyncClient
         Guid? applicationId,
         string encodedJWT,
         string refreshToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ClientResponse<LoginResponse>> LoginAsync(LoginRequest request)
     {
         throw new NotImplementedException();
     }

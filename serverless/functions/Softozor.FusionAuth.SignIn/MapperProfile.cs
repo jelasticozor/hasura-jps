@@ -10,7 +10,14 @@ public class MapperProfile : Profile
         this.CreateMap<SignInInput, LoginRequest>()
             .ForMember(dest => dest.applicationId, opt => opt.MapFrom(src => src.AppId))
             .ForMember(dest => dest.loginId, opt => opt.MapFrom(src => src.Username))
-            .ForMember(dest => dest.password, opt => opt.MapFrom(src => src.Password));
+            .ForMember(dest => dest.password, opt => opt.MapFrom(src => src.Password))
+            .ForMember(dest => dest.oneTimePassword, opt => opt.Ignore())
+            .ForMember(dest => dest.twoFactorTrustId, opt => opt.Ignore())
+            .ForMember(dest => dest.eventInfo, opt => opt.Ignore())
+            .ForMember(dest => dest.ipAddress, opt => opt.Ignore())
+            .ForMember(dest => dest.metaData, opt => opt.Ignore())
+            .ForMember(dest => dest.newDevice, opt => opt.Ignore())
+            .ForMember(dest => dest.noJWT, opt => opt.Ignore());
 
         this.CreateMap<LoginResponse, SignInOutput>()
             .ForMember(dest => dest.RefreshToken, opt => opt.MapFrom(src => src.refreshToken))
