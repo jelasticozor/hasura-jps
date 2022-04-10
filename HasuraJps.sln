@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softozor.FusionAuth.SetPass
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softozor.FusionAuth.SignUp.Tests", "serverless\functions\Softozor.FusionAuth.SignUp.Tests\Softozor.FusionAuth.SignUp.Tests.csproj", "{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softozor.FusionAuth.TestDoubles", "serverless\functions\Softozor.FusionAuth.TestDoubles\Softozor.FusionAuth.TestDoubles.csproj", "{36704537-BA49-45AD-B591-E58BAA73A468}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36704537-BA49-45AD-B591-E58BAA73A468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36704537-BA49-45AD-B591-E58BAA73A468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36704537-BA49-45AD-B591-E58BAA73A468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36704537-BA49-45AD-B591-E58BAA73A468}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +81,7 @@ Global
 		{BD96BBF5-29B0-4717-ACAF-BD86C435F1EB} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
 		{0610A1E8-069B-431E-94F1-26D294D0C2D1} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
 		{D7834972-D01D-4B91-A6A3-0D9B62E7A7A3} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
+		{36704537-BA49-45AD-B591-E58BAA73A468} = {4CF7788A-B5F5-41B7-BD17-9D81E2DAF198}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE5E768A-ACB5-4B49-A123-859E9ED6C96E}

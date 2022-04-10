@@ -8,7 +8,6 @@ using HasuraFunction;
 using io.fusionauth;
 using io.fusionauth.domain;
 using io.fusionauth.domain.api;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Softozor.HasuraHandling;
@@ -18,17 +17,14 @@ public class SignInTests
 {
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly IDataProtector dataProtector;
-
     private readonly SignInHandler sut;
 
     public SignInTests()
     {
         this.authClient = Mock.Of<IFusionAuthAsyncClient>();
-        this.dataProtector = Mock.Of<IDataProtector>();
         var logger = Mock.Of<ILogger<SignInHandler>>();
         var mapper = CreateMapper();
-        this.sut = new SignInHandler(this.dataProtector, this.authClient, logger, mapper);
+        this.sut = new SignInHandler(this.authClient, logger, mapper);
     }
 
     [Fact]
@@ -120,33 +116,6 @@ public class SignInTests
         // Assert
         var expectedOutput = new SignInOutput(expectedRefreshToken, expectedToken, expectedUserId);
         actualOutput.Should().BeEquivalentTo(expectedOutput);
-    }
-
-    [Fact]
-    public async Task ShouldThrowWhenRefreshTokenIsNull()
-    {
-        // Arrange
-        var successResponseStub = new LoginResponse
-        {
-            refreshToken = null, token = "token", user = new User { id = Guid.NewGuid() }
-        };
-        var clientResponseStub = new ClientResponse<LoginResponse>
-        {
-            statusCode = 200, successResponse = successResponseStub
-        };
-        clientResponseStub.WasSuccessful().Should().BeTrue();
-
-        var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.LoginAsync(It.IsAny<LoginRequest>())).ReturnsAsync(clientResponseStub);
-
-        var validInput = new SignInInput("username", "password", Guid.NewGuid());
-
-        // Act
-        Func<Task> act = async () => await this.sut.Handle(validInput);
-
-        // Assert
-        var exception = await act.Should().ThrowAsync<HasuraFunctionException>();
-        exception.Which.ErrorCode.Should().Be(401);
     }
 
     private static IMapper CreateMapper()

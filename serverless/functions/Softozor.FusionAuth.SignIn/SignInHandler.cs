@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
 using io.fusionauth.domain.api;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling;
@@ -17,15 +16,8 @@ public class SignInHandler
 
     private readonly IMapper mapper;
 
-    private readonly IDataProtector protector;
-
-    public SignInHandler(
-        IDataProtector protector,
-        IFusionAuthAsyncClient authClient,
-        ILogger<SignInHandler> logger,
-        IMapper mapper)
+    public SignInHandler(IFusionAuthAsyncClient authClient, ILogger<SignInHandler> logger, IMapper mapper)
     {
-        this.protector = protector;
         this.authClient = authClient;
         this.logger = logger;
         this.mapper = mapper;
