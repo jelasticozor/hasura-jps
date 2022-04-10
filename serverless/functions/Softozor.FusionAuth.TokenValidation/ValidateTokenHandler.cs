@@ -4,21 +4,17 @@ using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
 using io.fusionauth.domain.api.jwt;
-using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling;
 
 public class ValidateTokenHandler
 {
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly ILogger<ValidateTokenHandler> logger;
-
     private readonly IMapper mapper;
 
-    public ValidateTokenHandler(IFusionAuthAsyncClient authClient, ILogger<ValidateTokenHandler> logger, IMapper mapper)
+    public ValidateTokenHandler(IFusionAuthAsyncClient authClient, IMapper mapper)
     {
         this.authClient = authClient;
-        this.logger = logger;
         this.mapper = mapper;
     }
 
@@ -35,8 +31,6 @@ public class ValidateTokenHandler
                 response.statusCode,
                 response.exception);
         }
-
-        this.logger.LogInformation("Token {Token} is valid", token);
 
         return this.mapper.Map<ValidateResponse, ValidateTokenOutput>(response.successResponse);
     }

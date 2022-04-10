@@ -4,21 +4,17 @@ using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
 using io.fusionauth.domain.api.user;
-using Microsoft.Extensions.Logging;
 using Softozor.HasuraHandling;
 
 public class SignUpHandler
 {
     private readonly IFusionAuthAsyncClient authClient;
 
-    private readonly ILogger<SignUpHandler> logger;
-
     private readonly IMapper mapper;
 
-    public SignUpHandler(IFusionAuthAsyncClient authClient, ILogger<SignUpHandler> logger, IMapper mapper)
+    public SignUpHandler(IFusionAuthAsyncClient authClient, IMapper mapper)
     {
         this.authClient = authClient;
-        this.logger = logger;
         this.mapper = mapper;
     }
 
@@ -35,11 +31,6 @@ public class SignUpHandler
                 response.statusCode,
                 response.exception);
         }
-
-        this.logger.LogInformation(
-            "Successful signup for user {Email} on application {AppId}",
-            input.Email,
-            input.AppId);
 
         return this.mapper.Map<RegistrationResponse, SignUpOutput>(response.successResponse);
     }

@@ -5,12 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
 using HasuraFunction;
-using io.fusionauth;
-using io.fusionauth.domain;
-using io.fusionauth.domain.api;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Softozor.FusionAuth.TestDoubles;
 using Softozor.HasuraHandling;
 using Xunit;
@@ -30,7 +24,10 @@ public class SignInTests
     public async Task WhenSignInWithValidCredentialsItShouldReturnSuccessOutput()
     {
         // Arrange
-        var validInput = new SignInInput("valid-username", "valid-password", Guid.Parse("60926f3c-1d89-46f4-8b5b-bd61408936e4"));
+        var validInput = new SignInInput(
+            "valid-username",
+            "valid-password",
+            Guid.Parse("60926f3c-1d89-46f4-8b5b-bd61408936e4"));
 
         // Act
         var actualOutput = await this.sut.Handle(validInput);

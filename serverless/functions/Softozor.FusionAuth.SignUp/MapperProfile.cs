@@ -9,8 +9,12 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        // TODO: can this be made in a simpler way?
         this.CreateMap<SignUpInput, RegistrationRequest>()
+            .ForMember(dest => dest.skipVerification, opt => opt.Ignore())
+            .ForMember(dest => dest.disableDomainBlock, opt => opt.Ignore())
+            .ForMember(dest => dest.generateAuthenticationToken, opt => opt.Ignore())
+            .ForMember(dest => dest.skipRegistrationVerification, opt => opt.Ignore())
+            .ForMember(dest => dest.eventInfo, opt => opt.Ignore())
             .ForMember(dest => dest.sendSetPasswordEmail, opt => opt.MapFrom(_ => true))
             .ForMember(dest => dest.user, opt => opt.MapFrom(src => new User { email = src.Email.Address }))
             .ForMember(

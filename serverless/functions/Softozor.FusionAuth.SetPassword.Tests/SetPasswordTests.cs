@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
 using HasuraFunction;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Softozor.FusionAuth.TestDoubles;
 using Softozor.HasuraHandling;
 using Xunit;

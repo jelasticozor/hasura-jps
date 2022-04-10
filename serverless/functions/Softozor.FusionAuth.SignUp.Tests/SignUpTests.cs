@@ -9,7 +9,6 @@ using HasuraFunction;
 using io.fusionauth;
 using io.fusionauth.domain;
 using io.fusionauth.domain.api.user;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Softozor.HasuraHandling;
 using Xunit;
@@ -23,9 +22,8 @@ public class SignUpTests
     public SignUpTests()
     {
         this.authClient = Mock.Of<IFusionAuthAsyncClient>();
-        var logger = Mock.Of<ILogger<SignUpHandler>>();
         var mapper = CreateMapper();
-        this.sut = new SignUpHandler(this.authClient, logger, mapper);
+        this.sut = new SignUpHandler(this.authClient, mapper);
     }
 
     [Fact]

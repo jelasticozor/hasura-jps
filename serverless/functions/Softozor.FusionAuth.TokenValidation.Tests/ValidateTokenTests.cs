@@ -8,7 +8,6 @@ using HasuraFunction;
 using io.fusionauth;
 using io.fusionauth.domain.api.jwt;
 using io.fusionauth.jwt.domain;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Softozor.HasuraHandling;
 using Xunit;
@@ -24,9 +23,8 @@ public class ValidateTokenTests
     public ValidateTokenTests()
     {
         this.authClient = Mock.Of<IFusionAuthAsyncClient>();
-        var logger = Mock.Of<ILogger<ValidateTokenHandler>>();
         var mapper = CreateMapper();
-        this.sut = new ValidateTokenHandler(this.authClient, logger, mapper);
+        this.sut = new ValidateTokenHandler(this.authClient, mapper);
     }
 
     [Fact]
