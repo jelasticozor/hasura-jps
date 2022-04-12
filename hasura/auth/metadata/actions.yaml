@@ -29,6 +29,5 @@ custom_types:
   objects:
   - name: sign_in_response
   - name: sign_up_response
-  - name: set_password_response
-  - name: validate_token_response
+  - name: void_response
   scalars: []

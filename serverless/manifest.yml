@@ -80,7 +80,6 @@ actions:
             nodeGroup: faas
             vars:
               AUTH_URL: ${settings.authUrl}
-              HASURA_CLAIMS_NAMESPACE: https://hasura.io/jwt/claims
     - cmd[faas]:
         - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"

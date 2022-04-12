@@ -2,7 +2,6 @@ namespace Softozor.FusionAuth.TokenValidation.Tests;
 
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
 using FluentAssertions;
 using HasuraFunction;
 using io.fusionauth;
@@ -14,77 +13,62 @@ using Xunit;
 
 public class ValidateTokenTests
 {
-    private const string HasuraClaimsNamespace = "https://hasura.io/jwt/claims";
+    private readonly BearerTokenAuthorizationHeader validInput = new BearerTokenAuthorizationHeader("valid-token");
 
-    private readonly IFusionAuthAsyncClient authClient;
+    private readonly BearerTokenAuthorizationHeader invalidInput =
+        new BearerTokenAuthorizationHeader("invalid-token");
 
     private readonly ValidateTokenHandler sut;
 
     public ValidateTokenTests()
     {
-        this.authClient = Mock.Of<IFusionAuthAsyncClient>();
-        var mapper = CreateMapper();
-        this.sut = new ValidateTokenHandler(this.authClient, mapper);
+        var authClient = this.CreateFusionAuthClientStub();
+        this.sut = new ValidateTokenHandler(authClient);
     }
 
     [Fact]
-    public async Task ShouldThrowErrorUponFailure()
+    public async Task WhenHandleValidJwtItShouldNotThrow()
     {
         // Arrange
-        const int expectedStatusCode = 400;
-        var expectedException = Mock.Of<Exception>();
-        var clientResponseStub = new ClientResponse<ValidateResponse>
-        {
-            statusCode = expectedStatusCode, exception = expectedException
-        };
-        clientResponseStub.WasSuccessful().Should().BeFalse();
-        var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.ValidateJWTAsync(It.IsAny<string>())).ReturnsAsync(clientResponseStub);
 
         // Act
-        const string token = "my-invalid-token";
-        var input = new BearerTokenAuthorizationHeader(token);
-        Func<Task> act = async () => await this.sut.Handle(input);
+        Func<Task> act = async () => await this.sut.Handle(this.validInput);
+
+        // Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task WhenHandleInvalidJwtItShouldThrow()
+    {
+        // Arrange
+
+        // Act
+        Func<Task> act = async () => await this.sut.Handle(this.invalidInput);
 
         // Assert
         var actualException = await act.Should().ThrowAsync<HasuraFunctionException>();
-        actualException.Which.ErrorCode.Should().Be(expectedStatusCode);
-        actualException.Which.InnerException.Should().Be(expectedException);
+        actualException.Which.ErrorCode.Should().Be(401);
     }
 
-    [Fact]
-    public async Task ShouldReturnUserIdUponSuccess()
+    private IFusionAuthAsyncClient CreateFusionAuthClientStub()
     {
-        // Arrange
-        Environment.SetEnvironmentVariable("HASURA_CLAIMS_NAMESPACE", HasuraClaimsNamespace);
-        var userId = Guid.NewGuid();
-        var successResponseStub = new ValidateResponse { jwt = CreateJwt(userId) };
-        var clientResponseStub = new ClientResponse<ValidateResponse>
+        var stub = new Mock<IFusionAuthAsyncClient>();
+
+        stub.Setup(client => client.ValidateJWTAsync(It.Is<string>(token => token == this.validInput.Token))).ReturnsAsync(new ClientResponse<ValidateResponse>
         {
-            statusCode = 200, successResponse = successResponseStub
-        };
-        clientResponseStub.WasSuccessful().Should().BeTrue();
-        var authClientStub = Mock.Get(this.authClient);
-        authClientStub.Setup(client => client.ValidateJWTAsync(It.IsAny<string>())).ReturnsAsync(clientResponseStub);
+            statusCode = 200, successResponse = new ValidateResponse { jwt = CreateJwt() }
+        });
 
-        // Act
-        const string token = "my-valid-token";
-        var input = new BearerTokenAuthorizationHeader(token);
-        var actualOutput = await this.sut.Handle(input);
+        stub.Setup(client => client.ValidateJWTAsync(It.Is<string>(token => token == this.invalidInput.Token))).ReturnsAsync(new ClientResponse<ValidateResponse>
+        {
+            statusCode = 401, exception = new Exception("the access token is invalid")
+        });
 
-        // Assert
-        var expectedOutput = new ValidateTokenOutput(userId);
-        actualOutput.Should().BeEquivalentTo(expectedOutput);
+        return stub.Object;
     }
 
-    private static IMapper CreateMapper()
-    {
-        var config = new MapperConfiguration(cfg => { cfg.AddProfile<MapperProfile>(); });
-        config.AssertConfigurationIsValid();
-        return config.CreateMapper();
-    }
-
-    private static JWT CreateJwt(Guid userId)
+    private static JWT CreateJwt()
     {
         var jwt = new JWT
         {
@@ -93,9 +77,6 @@ public class ValidateTokenTests
             iat = DateTimeOffset.FromUnixTimeSeconds(1591428460),
             iss = "company.com",
             sub = Guid.NewGuid().ToString(),
-            [HasuraClaimsNamespace] =
-                "{\"x-hasura-allowed-roles\": [\"rex\"], \"x-hasura-default-role\": \"rex\", \"x-hasura-user-id\": \"" +
-                userId + "\"}"
         };
 
         return jwt;

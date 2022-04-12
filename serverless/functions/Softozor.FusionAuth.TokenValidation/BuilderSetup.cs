@@ -16,7 +16,7 @@ public static class BuilderSetup
     {
         ConfigureLogger(builder);
 
-        builder.Services.AddConfigurationManagement().AddAutoMapper(typeof(BuilderSetup)).AddFusionAuthClient();
+        builder.Services.AddConfigurationManagement().AddFusionAuthClient();
 
         builder.Services.AddTransient<ValidateTokenHandler, ValidateTokenHandler>();
     }

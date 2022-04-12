@@ -29,7 +29,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Softozor.FusionAuth.TestDoubles\Softozor.FusionAuth.TestDoubles.csproj"/>
         <ProjectReference Include="..\Softozor.FusionAuth.TokenValidation\Softozor.FusionAuth.TokenValidation.csproj"/>
     </ItemGroup>
 

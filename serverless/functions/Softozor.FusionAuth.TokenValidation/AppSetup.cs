@@ -31,8 +31,8 @@ public static class AppSetup
                 try
                 {
                     var input = ExtractInput(http);
-                    var output = await handler.Handle(input);
-                    await http.Response.WriteAsJsonAsync(output);
+                    await handler.Handle(input);
+                    await http.Response.WriteAsJsonAsync(new ValidateTokenOutput(true));
                 }
                 catch (HasuraFunctionException ex)
                 {

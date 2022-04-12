@@ -31,7 +31,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Softozor.FusionAuth.SignIn\Softozor.FusionAuth.SignIn.csproj"/>
-        <ProjectReference Include="..\Softozor.FusionAuth.TestDoubles\Softozor.FusionAuth.TestDoubles.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
