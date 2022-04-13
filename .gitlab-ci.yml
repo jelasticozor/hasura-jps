@@ -2,6 +2,7 @@ stages:
   - setup
   - prepare-faas
   - test
+  - stryke
   - publish-docker
   - review
   - report
@@ -30,6 +31,20 @@ variables:
     - IMG_TAG=${CI_COMMIT_SHORT_SHA} faas-cli push -f ./${FAAS_CONFIG}.yml
     - IMG_TAG=latest faas-cli build -f ./${FAAS_CONFIG}.yml
     - IMG_TAG=latest faas-cli push -f ./${FAAS_CONFIG}.yml
+
+.stryke-dotnet-tests: &stryke-dotnet-tests
+  stage: stryke
+  image: mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64
+  before_script:
+    - dotnet nuget add source "${CI_API_V4_URL}/projects/198/packages/nuget/index.json" --name ${PACKAGE_SOURCE_NAME}
+    - dotnet tool restore
+  script:
+    - cd serverless/functions/${TEST_PROJECT_NAME}
+    - dotnet stryker
+  artifacts:  
+    paths:
+      - serverless/functions/*/StrykerOutput/*/*.html
+      - serverless/functions/*/StrykerOutput/*/*.json
 
 start runners:
   stage: setup
@@ -72,6 +87,46 @@ dotnet-tests:
   only:
     changes:
       - serverless/functions/**/*
+
+stryke-set-password-tests:
+  <<: *stryke-dotnet-tests
+  variables:
+    PROJECT_NAME: Softozor.FusionAuth.SetPassword
+    TEST_PROJECT_NAME: Softozor.FusionAuth.SetPassword.Tests
+  only:
+    changes:
+      - serverless/functions/Softozor.FusionAuth.SetPassword/*
+      - serverless/functions/Softozor.FusionAuth.SetPassword.Tests/*
+
+stryke-sign-in-tests:
+  <<: *stryke-dotnet-tests
+  variables:
+    PROJECT_NAME: Softozor.FusionAuth.SignIn
+    TEST_PROJECT_NAME: Softozor.FusionAuth.SignIn.Tests
+  only:
+    changes:
+      - serverless/functions/Softozor.FusionAuth.SignIn/*
+      - serverless/functions/Softozor.FusionAuth.SignIn.Tests/*
+
+stryke-sign-up-tests:
+  <<: *stryke-dotnet-tests
+  variables:
+    PROJECT_NAME: Softozor.FusionAuth.SignUp
+    TEST_PROJECT_NAME: Softozor.FusionAuth.SignUp.Tests
+  only:
+    changes:
+      - serverless/functions/Softozor.FusionAuth.SignUp/*
+      - serverless/functions/Softozor.FusionAuth.SignUp.Tests/*
+
+stryke-token-validation-tests:
+  <<: *stryke-dotnet-tests
+  variables:
+    PROJECT_NAME: Softozor.FusionAuth.TokenValidation
+    TEST_PROJECT_NAME: Softozor.FusionAuth.TokenValidation.Tests
+  only:
+    changes:
+      - serverless/functions/Softozor.FusionAuth.TokenValidation/*
+      - serverless/functions/Softozor.FusionAuth.TokenValidation.Tests/*
 
 publish-graphql-engine-image:
   stage: publish-docker
