@@ -8,7 +8,6 @@ functions:
     image: softozor/check-env:latest
     secrets:
       - auth-secret
-      - data-protection-secret
 configuration:
   templates:
     - name: node-hasura

@@ -25,7 +25,6 @@ Feature: Development Hasura environment
     And the delete-all-emails function is ready
     And the delete-email function is ready
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
-    And the faas functions find the 'Data Protection Secret Key' in the 'data-protection-secret'
 
   Scenario: The database meets the relevant preconditions
 
