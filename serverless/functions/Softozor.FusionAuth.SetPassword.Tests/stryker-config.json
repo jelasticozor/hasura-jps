@@ -1,5 +1,6 @@
 {
   "stryker-config": {
+    "mutation-level": "Advanced",
     "reporters": [
       "html",
       "json"

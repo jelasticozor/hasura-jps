@@ -43,8 +43,8 @@ variables:
     - dotnet stryker
   artifacts:  
     paths:
-      - serverless/functions/*/StrykerOutput/*/*.html
-      - serverless/functions/*/StrykerOutput/*/*.json
+      - serverless/functions/*/StrykerOutput/*/reports/*.html
+      - serverless/functions/*/StrykerOutput/*/reports/*.json
 
 start runners:
   stage: setup
