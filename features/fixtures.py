@@ -3,6 +3,8 @@ import random
 
 from behave import fixture
 from jelastic_client import JelasticClientFactory
+from jelastic_client.core import JelasticClientException
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 from test_utils import get_new_random_env_name
 from test_utils.manifest_data import get_manifest_data
 
@@ -124,6 +126,10 @@ def get_mail_server_definition(env_info, smtp_settings):
     return mail_server_definition
 
 
+@retry(reraise=True,
+       retry=retry_if_exception_type(JelasticClientException),
+       stop=stop_after_attempt(3),
+       wait=wait_fixed(60))
 def create_jelastic_environment(context, settings):
     control_client = context.jelastic_clients_factory.create_control_client()
     context.current_env_name = context.cluster_type + "-" + get_new_random_env_name(
