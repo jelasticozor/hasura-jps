@@ -214,7 +214,7 @@ actions:
             MAIL_SERVER_PORT: 1025
             MAIL_SERVER_USERNAME: ""
             MAIL_SERVER_PASSWORD: ""
-            MAIL_SERVER_SSL: "False"
+            MAIL_SERVER_SSL: "false"
             MAIL_SERVER_SUCCESS_TEXT: "**Mailhog UI**: [${nodes.mail.master.url}](${nodes.mail.master.url})  "
     - else:
         - setGlobals:
@@ -222,7 +222,7 @@ actions:
             MAIL_SERVER_PORT: ${settings.mailServerPort}
             MAIL_SERVER_USERNAME: ${settings.mailServerUsername}
             MAIL_SERVER_PASSWORD: ${settings.mailServerPassword}
-            MAIL_SERVER_SSL: "True"
+            MAIL_SERVER_SSL: "true"
             MAIL_SERVER_SUCCESS_TEXT: ""
   installFaas:
     - install:
