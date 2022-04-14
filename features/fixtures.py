@@ -341,11 +341,9 @@ def expose_mailhog_api(context):
 @fixture
 def external_mail_server(context):
     external_mail_server = use_composite_fixture_with(context, [
-        fixture_call_params(external_mail_server_environment,
-                            name="external_mail_server_environment"),
-        fixture_call_params(setup_external_mail_smtp_in_fusionauth,
-                            name="setup_external_mail_smtp_in_fusionauth"),
-        fixture_call_params(expose_mailhog_api, name="expose_mailhog_api"),
+        fixture_call_params(external_mail_server_environment),
+        fixture_call_params(setup_external_mail_smtp_in_fusionauth),
+        fixture_call_params(expose_mailhog_api),
     ])
     return external_mail_server
 
