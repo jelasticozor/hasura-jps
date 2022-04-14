@@ -286,7 +286,7 @@ def external_mail_server(context):
     control_client = context.jelastic_clients_factory.create_control_client()
     env_name = "mail-server" + "-" + get_new_random_env_name(
         control_client, context.commit_sha, context.worker_id)
-    context.env_names.append(context.env_name)
+    context.env_names.append(env_name)
     manifest = os.path.join(
         context.project_root_folder, 'features', 'data', 'jelastic', 'external-mail-server.yml')
     jps_client = context.jelastic_clients_factory.create_jps_client()
