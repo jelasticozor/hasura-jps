@@ -2,6 +2,7 @@ import os
 import random
 
 from behave import fixture
+from behave.fixture import use_composite_fixture_with, fixture_call_params
 from jelastic_client import JelasticClientFactory
 from jelastic_client.core import JelasticClientException
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
@@ -282,7 +283,7 @@ def remove_applications(context):
 
 
 @fixture
-def external_mail_server(context):
+def external_mail_server_environment(context):
     control_client = context.jelastic_clients_factory.create_control_client()
     env_name = "mail-server" + "-" + get_new_random_env_name(
         control_client, context.commit_sha, context.worker_id)
@@ -309,7 +310,48 @@ def external_mail_server(context):
 
 
 @fixture
-def clean_up_undeleted_environments(context):
+def setup_external_mail_smtp_in_fusionauth(context):
+    jps_client = context.jelastic_clients_factory.create_jps_client()
+    settings = {
+        'almightyApiKey': context.manifest_data['Auth Almighty API Key'],
+        'mailServerHost': context.current_mail_server['ip'],
+        'mailServerPort': context.current_mail_server['port'],
+        'mailServerUsername': context.current_mail_server['username'],
+        'mailServerPassword': context.current_mail_server['password'],
+        'mailServerEnableSsl': False
+    }
+    manifest = os.path.join(
+        context.project_root_folder, 'fusionauth', 'update-smtp.yml')
+    jps_client.install_from_file(
+        manifest, context.current_env_name, settings=settings)
+
+
+@fixture
+def expose_mailhog_api(context):
+    jps_client = context.jelastic_clients_factory.create_jps_client()
+    settings = {
+        'mailServerHost': context.current_mail_server['ip'],
+    }
+    manifest = os.path.join(
+        context.project_root_folder, 'mailhog', 'expose-api.yml')
+    jps_client.install_from_file(
+        manifest, context.current_env_name, settings=settings)
+
+
+@fixture
+def external_mail_server(context):
+    external_mail_server = use_composite_fixture_with(context, [
+        fixture_call_params(external_mail_server_environment,
+                            name="external_mail_server_environment"),
+        fixture_call_params(setup_external_mail_smtp_in_fusionauth,
+                            name="setup_external_mail_smtp_in_fusionauth"),
+        fixture_call_params(expose_mailhog_api, name="expose_mailhog_api"),
+    ])
+    return external_mail_server
+
+
+@fixture
+def clean_up_not_deleted_environments(context):
     context.env_names = []
     yield context.env_names
     for env_name in context.env_names:
