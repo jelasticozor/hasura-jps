@@ -1,5 +1,5 @@
 @production
-@fixture.jelastic-env
+@fixture.test-env
 @fixture.api-developer
 Feature: Production Hasura environment
 

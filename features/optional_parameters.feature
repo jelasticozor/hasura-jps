@@ -1,4 +1,4 @@
-@fixture.jelastic-env-with-automatic-settings
+@fixture.test-env-with-automatic-settings
 @fixture.api-developer
 Feature: Optional manifest parameters
 

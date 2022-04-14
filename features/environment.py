@@ -28,8 +28,6 @@ def before_all(context):
     use_fixture(hasura_admin_secret, context)
     use_fixture(graphql_engine_image, context)
     use_fixture(clean_up_not_deleted_environments, context)
-    if context.cluster_type == 'prod':
-        use_fixture(external_mail_server, context)
 
 
 def before_scenario(context, scenario):

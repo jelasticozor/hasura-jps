@@ -349,6 +349,19 @@ def external_mail_server(context):
 
 
 @fixture
+def test_environment(context):
+    fixtures = [
+        fixture_call_params(jelastic_environment),
+    ]
+
+    if context.cluster_type == 'prod':
+        fixtures.append(fixture_call_params(external_mail_server))
+
+    test_environment = use_composite_fixture_with(context, fixtures)
+    return test_environment
+
+
+@fixture
 def clean_up_not_deleted_environments(context):
     context.env_names = []
     yield context.env_names
@@ -357,8 +370,8 @@ def clean_up_not_deleted_environments(context):
 
 
 fixtures_registry = {
-    'jelastic-env': jelastic_environment,
-    'jelastic-env-with-automatic-settings': jelastic_environment_with_automatic_settings,
+    'test-env': test_environment,
+    'test-env-with-automatic-settings': jelastic_environment_with_automatic_settings,
     'api-developer': api_developer,
     'api-user': api_user,
 }
