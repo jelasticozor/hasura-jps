@@ -7,9 +7,18 @@ def get_default_tenant_id(client):
     response = client.retrieve_tenants()
     assert response.was_successful()
 
+    if response.success_response is None:
+        raise RuntimeError('no tenants')
+
     tenants = response.success_response['tenants']
-    default_tenant = [
-        tenant for tenant in tenants if tenant['name'] == 'Default'][0]
+
+    default_tenants = [
+        tenant for tenant in tenants if tenant['name'] == 'Default']
+
+    if len(default_tenants) != 1:
+        raise RuntimeError('no single default tenant')
+
+    default_tenant = default_tenants[0]
 
     return default_tenant['id']
 
@@ -22,11 +31,14 @@ def main(tenant_id, hostname, port, username, password, enable_ssl):
                 'port': port,
                 'username': username,
                 'password': password,
-                'security': 'SSL' if enable_ssl == 'True' else 'NONE',
+                'security': 'SSL' if enable_ssl == 'true' else 'NONE',
             }
         }
     }
-    client.update_tenant(tenant_id, request)
+    response = client.update_tenant(tenant_id, request)
+    if not response.was_successful():
+        raise RuntimeError(
+            f'unable to update tenant with id {tenant_id} (status {response.status})')
 
 
 if __name__ == '__main__':
