@@ -33,3 +33,4 @@ def before_all(context):
 
 def before_scenario(context, scenario):
     use_fixture(remove_applications, context)
+    use_fixture(clean_up_undeleted_environments, context)

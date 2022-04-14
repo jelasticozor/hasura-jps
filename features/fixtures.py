@@ -134,6 +134,7 @@ def create_jelastic_environment(context, settings):
     control_client = context.jelastic_clients_factory.create_control_client()
     context.current_env_name = context.cluster_type + "-" + get_new_random_env_name(
         control_client, context.commit_sha, context.worker_id)
+    context.env_names.append(context.current_env_name)
     main_manifest = os.path.join(
         context.project_root_folder, 'manifest.yml')
     jps_client = context.jelastic_clients_factory.create_jps_client()
@@ -156,12 +157,11 @@ def create_jelastic_environment(context, settings):
     return context.current_env_name
 
 
-def delete_current_jelastic_environment(context):
+def delete_jelastic_environment(context, env_name):
     control_client = context.jelastic_clients_factory.create_control_client()
-    env_info = control_client.get_env_info(
-        context.current_env_name)
+    env_info = control_client.get_env_info(env_name)
     if env_info.exists():
-        control_client.delete_env(context.current_env_name)
+        control_client.delete_env(env_name)
 
 
 def get_mail_server_settings(context):
@@ -200,7 +200,7 @@ def jelastic_environment(context):
         settings.update(settings_prod)
     yield create_jelastic_environment(
         context, settings)
-    delete_current_jelastic_environment(context)
+    delete_jelastic_environment(context, context.current_env_name)
 
 
 @fixture
@@ -227,7 +227,7 @@ def jelastic_environment_with_automatic_settings(context):
         settings.update(settings_prod)
     yield create_jelastic_environment(
         context, settings)
-    delete_current_jelastic_environment(context)
+    delete_jelastic_environment(context, context.current_env_name)
 
 
 @fixture
@@ -286,6 +286,7 @@ def external_mail_server(context):
     control_client = context.jelastic_clients_factory.create_control_client()
     env_name = "mail-server" + "-" + get_new_random_env_name(
         control_client, context.commit_sha, context.worker_id)
+    context.env_names.append(context.env_name)
     manifest = os.path.join(
         context.project_root_folder, 'features', 'data', 'jelastic', 'external-mail-server.yml')
     jps_client = context.jelastic_clients_factory.create_jps_client()
@@ -305,6 +306,14 @@ def external_mail_server(context):
     env_info = control_client.get_env_info(env_name)
     if env_info.exists():
         control_client.delete_env(env_name)
+
+
+@fixture
+def clean_up_undeleted_environments(context):
+    context.env_names = []
+    yield context.env_names
+    for env_name in context.env_names:
+        delete_jelastic_environment(context, env_name)
 
 
 fixtures_registry = {
