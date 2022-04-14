@@ -21,15 +21,6 @@ settings:
       caption: Docker tag
       type: string
       required: true
-    - name: clusterType
-      type: string
-      required: true
-    - type: spacer
-      caption: Mail Server
-    - name: mailServerHost
-      caption: Host
-      type: string
-      required: true
     - type: spacer
       caption: Logs Aggregation
     - name: logsAggregatorHost
@@ -39,17 +30,12 @@ settings:
       caption: Port
       type: string
 
-globals:
-  MAIL_SERVER_API_PORT: 8025
-
 onInstall:
   - installEngine
   - waitUntilEngineIsUp
   - pullTemplatesForFunctionDeployment
   - setCommonEnvVars
   - deployAuthFunctions
-  - if ("${settings.clusterType}" == "dev"):
-      - deployMailhogFunctions
 
 actions:
   installEngine:
@@ -85,18 +71,6 @@ actions:
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
         - wget -q ${baseUrl}/serverless/functions/fusionauth.yml
         - faas-cli deploy -f fusionauth.yml
-  deployMailhogFunctions:
-    - api:
-        - method: environment.control.AddContainerEnvVars
-          params:
-            nodeGroup: faas
-            vars:
-              MAIL_SERVER_HOST: ${settings.mailServerHost}
-              MAIL_SERVER_API_PORT: ${globals.MAIL_SERVER_API_PORT}
-    - cmd[faas]:
-        - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
-        - wget -q ${baseUrl}/serverless/functions/mailhog.yml
-        - faas-cli deploy -f mailhog.yml
 
 description: |
   We install faasd, a lightweight & portable faas engine.

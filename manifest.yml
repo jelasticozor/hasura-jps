@@ -183,6 +183,8 @@ onInstall:
   - installHasura
   # the load balancer uses hasura
   - installLoadBalancer
+  - if ("${settings.clusterType}" == "dev"):
+      - exposeMailhogApi
 
 actions:
   computeOptionalParams:
@@ -231,8 +233,6 @@ actions:
           authApiKey: ${globals.SERVERLESS_API_KEY}
           authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
           fncTag: ${settings.fncTag}
-          clusterType: ${settings.clusterType}
-          mailServerHost: ${globals.MAIL_SERVER_HOST}
           logsAggregatorHost: ${globals.GRAYLOG_HOSTNAME}
           logsAggregatorPort: ${globals.GRAYLOG_PORT}
     - api:
@@ -300,6 +300,11 @@ actions:
           fromName: ${settings.authIssuer}
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
           fusionauthVersion: ${settings.fusionauthVersion}
+  exposeMailhogApi:
+    - install:
+        jps: mailhog/expose-api.yml
+        settings:
+          mailServerHost: ${globals.MAIL_SERVER_HOST}
 
 success:
   text: |

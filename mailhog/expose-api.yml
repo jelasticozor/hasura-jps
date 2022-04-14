@@ -1,0 +1,41 @@
+type: update
+name: Expose Mailhog API
+baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
+
+settings:
+  fields:
+    - name: mailServerHost
+      caption: Host
+      type: string
+      required: true
+
+globals:
+  MAIL_SERVER_API_PORT: 8025
+
+onInstall:
+  - setupMailhogActions
+  - deployMailhogFunctions
+
+actions:
+  setupMailhogActions:
+    - cmd[cp]:
+        - wget ${baseUrl}/mailhog/actions.graphql -O actions.graphql
+        - cat actions.graphql >> /hasura-metadata/actions.graphql
+    - cmd[cp]:
+        - wget ${baseUrl}/mailhog/setup_actions.py -O setup_actions.py
+        - python3 ./setup_actions.py --actions-yaml /hasura-metadata/actions.yaml
+  deployMailhogFunctions:
+    - cmd[faas]:
+        - faas-cli template pull
+        - faas-cli template pull https://gitlab.hidora.com/softozor/faas-templates.git
+    - api:
+        - method: environment.control.AddContainerEnvVars
+          params:
+            nodeGroup: faas
+            vars:
+              MAIL_SERVER_HOST: ${settings.mailServerHost}
+              MAIL_SERVER_API_PORT: ${globals.MAIL_SERVER_API_PORT}
+    - cmd[faas]:
+        - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
+        - wget -q ${baseUrl}/serverless/functions/mailhog.yml
+        - faas-cli deploy -f mailhog.yml
