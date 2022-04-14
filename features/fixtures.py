@@ -310,23 +310,6 @@ def external_mail_server_environment(context):
 
 
 @fixture
-def setup_external_mail_smtp_in_fusionauth(context):
-    jps_client = context.jelastic_clients_factory.create_jps_client()
-    settings = {
-        'almightyApiKey': context.manifest_data['Auth Almighty API Key'],
-        'mailServerHost': context.current_mail_server['ip'],
-        'mailServerPort': context.current_mail_server['port'],
-        'mailServerUsername': context.current_mail_server['username'],
-        'mailServerPassword': context.current_mail_server['password'],
-        'mailServerEnableSsl': False
-    }
-    manifest = os.path.join(
-        context.project_root_folder, 'fusionauth', 'update-smtp.yml')
-    jps_client.install_from_file(
-        manifest, context.current_env_name, settings=settings)
-
-
-@fixture
 def expose_mailhog_api(context):
     jps_client = context.jelastic_clients_factory.create_jps_client()
     settings = {
@@ -339,24 +322,13 @@ def expose_mailhog_api(context):
 
 
 @fixture
-def external_mail_server(context):
-    external_mail_server = use_composite_fixture_with(context, [
-        fixture_call_params(external_mail_server_environment),
-        fixture_call_params(setup_external_mail_smtp_in_fusionauth),
-        fixture_call_params(expose_mailhog_api),
-    ])
-    return external_mail_server
-
-
-@fixture
 def test_environment(context):
-    fixtures = [
-        fixture_call_params(jelastic_environment),
-    ]
-
+    fixtures = []
     if context.cluster_type == 'prod':
-        fixtures.append(fixture_call_params(external_mail_server))
-
+        fixtures.append(fixture_call_params(external_mail_server_environment))
+    fixtures.append(fixture_call_params(jelastic_environment))
+    if context.cluster_type == 'prod':
+        fixtures.append(fixture_call_params(expose_mailhog_api))
     test_environment = use_composite_fixture_with(context, fixtures)
     return test_environment
 
