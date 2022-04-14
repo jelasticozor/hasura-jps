@@ -24,12 +24,10 @@ settings:
     - name: mailServerUsername
       caption: Username
       type: string
-      required: true
     - name: mailServerPassword
       caption: Password
       type: string
       inputType: password
-      required: true
     - name: mailServerEnableSsl
       caption: Enable SSL
       type: toggle

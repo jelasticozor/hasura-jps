@@ -42,7 +42,7 @@ if __name__ == '__main__':
     parser.add_argument('--mail-server-password',
                         default='', type=str, action='store')
     parser.add_argument('--mail-server-enable-ssl',
-                        choices=('True', 'False'), action='store')
+                        choices=('true', 'false'), action='store')
 
     args = parser.parse_args()
 

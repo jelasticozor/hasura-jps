@@ -35,7 +35,7 @@ def main(args):
         data['variables']['mailServerPort'] = args.mail_server_port
         data['variables']['mailServerUsername'] = args.mail_server_username
         data['variables']['mailServerPassword'] = args.mail_server_password
-        data['variables']['mailServerSecurity'] = 'SSL' if args.mail_server_enable_ssl == 'True' else 'NONE'
+        data['variables']['mailServerSecurity'] = 'SSL' if args.mail_server_enable_ssl == 'true' else 'NONE'
         data['variables']['fromEmail'] = args.from_email
         data['variables']['fromName'] = args.from_name
         if args.cors_allowed_origins:
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('--mail-server-password',
                         default='', type=str, action='store')
     parser.add_argument('--mail-server-enable-ssl',
-                        choices=('True', 'False'), action='store')
+                        choices=('true', 'false'), action='store')
     parser.add_argument('--from-name', required=True, type=str, action='store')
     parser.add_argument('--from-email', required=True,
                         type=str, action='store')
