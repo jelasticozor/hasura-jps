@@ -37,6 +37,10 @@ settings:
       inputType: password
       type: string
       required: true
+    - name: fusionauthVersion
+      caption: Fusionauth version
+      type: string
+      required: true
     - type: spacer
       caption: Hasura
     - name: hasuraClaimsNamespace
@@ -96,10 +100,6 @@ settings:
       required: true
     - name: fromName
       caption: From Name
-      type: string
-      required: true
-    - name: fusionauthVersion
-      caption: Fusionauth version
       type: string
       required: true
 
