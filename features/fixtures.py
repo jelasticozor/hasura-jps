@@ -114,7 +114,7 @@ def graylog_port(context):
     return context.graylog_port
 
 
-def get_mail_server_definition(env_info, smtp_settings):
+def get_mail_server_definition(env_info):
     mail_server_nodes = env_info.get_nodes(node_group='mail')
     assert len(mail_server_nodes) == 1, \
         f'expected environment {env_info.env_name()} to have a node group \'mail\''
@@ -123,7 +123,6 @@ def get_mail_server_definition(env_info, smtp_settings):
         'ip': mail_server_node.int_ip,
         'port': 1025,
     }
-    mail_server_definition.update(smtp_settings)
     return mail_server_definition
 
 
@@ -149,12 +148,8 @@ def create_jelastic_environment(context, settings):
         f'environment {context.current_env_name} is not running'
     context.manifest_data = get_manifest_data(success_text)
     if context.cluster_type == 'dev':
-        smtp_settings = {
-            'username': '',
-            'password': ''
-        }
         context.current_mail_server = get_mail_server_definition(
-            context.current_env_info, smtp_settings)
+            context.current_env_info)
     return context.current_env_name
 
 
@@ -169,8 +164,8 @@ def get_mail_server_settings(context):
     settings = {
         'mailServerHost': context.current_mail_server['ip'],
         'mailServerPort': context.current_mail_server['port'],
-        'mailServerUsername': context.current_mail_server['username'],
-        'mailServerPassword': context.current_mail_server['password'],
+        'mailServerUsername': '',
+        'mailServerPassword': '',
         'mailServerEnableSsl': False
     }
     return settings
@@ -291,19 +286,14 @@ def external_mail_server_environment(context):
     manifest = os.path.join(
         context.project_root_folder, 'features', 'data', 'jelastic', 'external-mail-server.yml')
     jps_client = context.jelastic_clients_factory.create_jps_client()
-    settings = {
-        # our mailhog functions implementations do not support usage of username / password
-        'username': '',
-        'password': ''
-    }
     print(
-        f'installing environment {env_name} on region {context.jelastic_region} with settings: {settings}')
+        f'installing environment {env_name} on region {context.jelastic_region}')
     jps_client.install_from_file(
-        manifest, env_name, settings=settings, region=context.jelastic_region)
+        manifest, env_name, region=context.jelastic_region)
     env_info = control_client.get_env_info(env_name)
     assert env_info.is_running()
     context.current_mail_server = get_mail_server_definition(
-        env_info, settings)
+        env_info)
     yield context.current_mail_server
     env_info = control_client.get_env_info(env_name)
     if env_info.exists():
