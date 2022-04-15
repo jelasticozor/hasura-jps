@@ -22,6 +22,7 @@ Feature: Identity and Access Management
     When she signs in the application
     Then she gets an error that the user was not found or the password was incorrect
 
+  @current  
   @fixture.api-user
   Scenario Outline: Sign in as registered user with one single role
 
@@ -35,7 +36,7 @@ Feature: Identity and Access Management
     Examples:
       | user role    |
       | default-role |
-      | other-role   |
+#      | other-role   |
 
   # TODO: test with email argument that is not an email --> should fail
 

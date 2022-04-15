@@ -201,7 +201,7 @@ def jelastic_environment(context):
         settings.update(settings_prod)
     yield create_jelastic_environment(
         context, settings)
-    delete_jelastic_environment(context, context.current_env_name)
+    # delete_jelastic_environment(context, context.current_env_name)
 
 
 @fixture
@@ -305,9 +305,9 @@ def external_mail_server_environment(context):
     context.current_mail_server = get_mail_server_definition(
         env_info, settings)
     yield context.current_mail_server
-    env_info = control_client.get_env_info(env_name)
-    if env_info.exists():
-        control_client.delete_env(env_name)
+    # env_info = control_client.get_env_info(env_name)
+    # if env_info.exists():
+    #     control_client.delete_env(env_name)
 
 
 @fixture
@@ -351,8 +351,8 @@ def test_environment_with_automatic_settings(context):
 def clean_up_not_deleted_environments(context):
     context.env_names = []
     yield context.env_names
-    for env_name in context.env_names:
-        delete_jelastic_environment(context, env_name)
+    # for env_name in context.env_names:
+    #     delete_jelastic_environment(context, env_name)
 
 
 fixtures_registry = {

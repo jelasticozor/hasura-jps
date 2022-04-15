@@ -205,35 +205,35 @@ publish-mailhog-functions:
   # build everytime because we deploy the function images with tag
   # set to commit sha, therefore the images must exist
 
-acceptance test dev:
-  stage: review
-  # TODO: simplify this image
-  image: ${TEST_IMAGE_NAME}:latest
-  script:
-    - |
-      behave --junit --junit-directory ./features/test-reports --tags="not @wip and not @production" \
-        -D jelastic-region="${JELASTIC_REGION}" \
-        -D project-root-folder="${CI_PROJECT_DIR}" \
-        -D api-url="${JELASTIC_API_URL}" \
-        -D api-token="${JELASTIC_ACCESS_TOKEN}" \
-        -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
-        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
-        -D cluster-type="dev" \
-        -D graylog-host="${GRAYLOG_HOST}" \
-        -D graylog-port="${GRAYLOG_PORT}"
-  artifacts:
-    reports:
-      junit:
-        - ./features/test-reports/*.xml
-    paths:
-      - ./features/test-reports/*.xml
+#acceptance test dev:
+#  stage: review
+#  # TODO: simplify this image
+#  image: ${TEST_IMAGE_NAME}:latest
+#  script:
+#    - |
+#      behave --junit --junit-directory ./features/test-reports --tags="not @wip and not @production" \
+#        -D jelastic-region="${JELASTIC_REGION}" \
+#        -D project-root-folder="${CI_PROJECT_DIR}" \
+#        -D api-url="${JELASTIC_API_URL}" \
+#        -D api-token="${JELASTIC_ACCESS_TOKEN}" \
+#        -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
+#        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
+#        -D cluster-type="dev" \
+#        -D graylog-host="${GRAYLOG_HOST}" \
+#        -D graylog-port="${GRAYLOG_PORT}"
+#  artifacts:
+#    reports:
+#      junit:
+#        - ./features/test-reports/*.xml
+#    paths:
+#      - ./features/test-reports/*.xml
 
 acceptance test production:
   stage: review
   image: ${TEST_IMAGE_NAME}:latest
   script:
     - |
-      behave --junit --junit-directory ./features/test-reports --tags="not @wip and not @development" \
+      behave --junit --junit-directory ./features/test-reports --tags="@current" \
         -D jelastic-region="${JELASTIC_REGION}" \
         -D project-root-folder="${CI_PROJECT_DIR}" \
         -D api-url="${JELASTIC_API_URL}" \
