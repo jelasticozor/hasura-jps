@@ -114,7 +114,7 @@ def graylog_port(context):
     return context.graylog_port
 
 
-def get_mail_server_definition(env_info, smtp_settings={}):
+def get_mail_server_definition(env_info):
     mail_server_nodes = env_info.get_nodes(node_group='mail')
     assert len(mail_server_nodes) == 1, \
         f'expected environment {env_info.env_name()} to have a node group \'mail\''
@@ -123,7 +123,6 @@ def get_mail_server_definition(env_info, smtp_settings={}):
         'ip': mail_server_node.int_ip,
         'port': 1025,
     }
-    mail_server_definition.update(smtp_settings)
     return mail_server_definition
 
 
@@ -149,12 +148,8 @@ def create_jelastic_environment(context, settings):
         f'environment {context.current_env_name} is not running'
     context.manifest_data = get_manifest_data(success_text)
     if context.cluster_type == 'dev':
-        smtp_settings = {
-            'username': '',
-            'password': ''
-        }
         context.current_mail_server = get_mail_server_definition(
-            context.current_env_info, smtp_settings)
+            context.current_env_info)
     return context.current_env_name
 
 
@@ -169,8 +164,8 @@ def get_mail_server_settings(context):
     settings = {
         'mailServerHost': context.current_mail_server['ip'],
         'mailServerPort': context.current_mail_server['port'],
-        'mailServerUsername': context.current_mail_server['username'],
-        'mailServerPassword': context.current_mail_server['password'],
+        'mailServerUsername': '',
+        'mailServerPassword': '',
         'mailServerEnableSsl': False
     }
     return settings
