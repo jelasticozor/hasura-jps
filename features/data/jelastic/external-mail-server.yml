@@ -1,21 +1,6 @@
 type: install
 name: External Mail Server for Production Tests
 
-settings:
-  fields:
-    - name: username
-      caption: Username
-      type: string
-      required: true
-    - name: password
-      caption: Password
-      type: string
-      inputType: password
-      required: true
-
-globals:
-  PASSWORD_FILE: /etc/pwd
-
 nodes:
   - displayName: Mailhog
     count: 1
@@ -23,10 +8,3 @@ nodes:
     nodeGroup: mail
     nodeType: docker
     image: mailhog/mailhog:latest
-    env:
-      MH_AUTH_FILE: ${globals.PASSWORD_FILE}
-
-onInstall:
-  - cmd [mail]:
-      - echo "${settings.username}:$(MailHog bcrypt ${settings.password})" > ${globals.PASSWORD_FILE}
-  - restartContainers[mail]
