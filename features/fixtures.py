@@ -292,8 +292,9 @@ def external_mail_server_environment(context):
         context.project_root_folder, 'features', 'data', 'jelastic', 'external-mail-server.yml')
     jps_client = context.jelastic_clients_factory.create_jps_client()
     settings = {
-        'username': 'smtp-user',
-        'password': 'smtp-password'
+        # our mailhog functions implementations do not support usage of username / password
+        'username': '',
+        'password': ''
     }
     print(
         f'installing environment {env_name} on region {context.jelastic_region} with settings: {settings}')
@@ -334,6 +335,19 @@ def test_environment(context):
 
 
 @fixture
+def test_environment_with_automatic_settings(context):
+    fixtures = []
+    if context.cluster_type == 'prod':
+        fixtures.append(fixture_call_params(external_mail_server_environment))
+    fixtures.append(fixture_call_params(
+        jelastic_environment_with_automatic_settings))
+    if context.cluster_type == 'prod':
+        fixtures.append(fixture_call_params(expose_mailhog_api))
+    test_environment = use_composite_fixture_with(context, fixtures)
+    return test_environment
+
+
+@fixture
 def clean_up_not_deleted_environments(context):
     context.env_names = []
     yield context.env_names
@@ -343,7 +357,7 @@ def clean_up_not_deleted_environments(context):
 
 fixtures_registry = {
     'test-env': test_environment,
-    'test-env-with-automatic-settings': jelastic_environment_with_automatic_settings,
+    'test-env-with-automatic-settings': test_environment_with_automatic_settings,
     'api-developer': api_developer,
     'api-user': api_user,
 }

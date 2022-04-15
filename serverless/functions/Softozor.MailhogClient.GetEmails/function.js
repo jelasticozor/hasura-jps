@@ -14,6 +14,11 @@ exports.function = async input => {
 
 const doGetMessages = async (start, limit) => {
   const result = await mailhog.messages(start, limit)
+
+  if(result.items == undefined) {
+    throw new createError.BadRequest('no email items')
+  }
+
   result.items = result.items.map(item => {
     return {
       attachments: item.attachments,
