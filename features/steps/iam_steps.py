@@ -60,12 +60,6 @@ def step_impl(context):
         f'expected no error, got {graphql_response.payload}'
 
 
-@then("she has a cookie with a refresh token")
-def step_impl(context):
-    assert 'refresh-token' in context.current_graphql_response.cookies.keys(), \
-        f'expected refresh-token key in cookies, got {context.current_graphql_response.cookies.keys()}'
-
-
 @then("it contains the role '{role}'")
 def step_impl(context, role):
     # sample token:

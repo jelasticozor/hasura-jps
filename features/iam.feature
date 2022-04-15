@@ -31,8 +31,6 @@ Feature: Identity and Access Management
     When she signs in the application
     Then her JWT is valid
     And it contains the role '<user role>'
-    # TODO: this does not seem to be supported by hasura --> give the refresh token in the graphql response body
-    # And she has a cookie with a refresh token
 
     Examples:
       | user role    |
