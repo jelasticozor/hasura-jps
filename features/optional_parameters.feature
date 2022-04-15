@@ -1,3 +1,4 @@
+@development
 @fixture.test-env-with-automatic-settings
 @fixture.api-developer
 Feature: Optional manifest parameters
