@@ -55,7 +55,14 @@ def step_impl(context, role):
         role, context.current_app_id)
 
 
-@then("she gets that the user was not found or the password was incorrect")
+@when("she sets her password again")
+def step_impl(context):
+    context.current_graphql_response = context.api_user.set_password(
+        context.current_change_password_id)
+
+
+@then("she gets notified that the user was not found")
+@then("she gets notified that the user was not found or the password was incorrect")
 def step_impl(context):
     payload = context.current_graphql_response.payload
     assert 'errors' in payload, \
@@ -107,7 +114,7 @@ def step_impl(context, role):
         f'expected {decoded_jwt} to contain role {role}'
 
 
-@then("she gets the bad request error")
+@then("she gets notified with the bad request error")
 def step_impl(context):
     payload = context.current_graphql_response.payload
     assert 'errors' in payload, \
@@ -119,7 +126,7 @@ def step_impl(context):
     assert expected_error == payload['errors'][0]['message']
 
 
-@then("she gets that it was not possible to sign her up")
+@then("she gets notified with a bad request error")
 def step_impl(context):
     payload = context.current_graphql_response.payload
     assert 'errors' in payload, \
