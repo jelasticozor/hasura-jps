@@ -1,5 +1,6 @@
 namespace HasuraFunction;
 
+using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
@@ -27,7 +28,11 @@ public class SignInHandler
         if (!response.WasSuccessful())
         {
             throw new HasuraFunctionException(
-                $"Unable to sign user {input.Username} on application {input.AppId}",
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Unable to sign user {0} on application {1}",
+                    input.Username,
+                    input.AppId),
                 response.statusCode,
                 response.exception);
         }

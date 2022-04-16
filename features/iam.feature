@@ -20,12 +20,12 @@ Feature: Identity and Access Management
 
     Given the api user has no account on the application
     When she signs in the application
-    Then she gets an error that the user was not found or the password was incorrect
+    Then she gets that the user was not found or the password was incorrect
 
   @fixture.api-user
   Scenario Outline: Sign in as registered user with one single role
 
-    Given the api user has signed up on the application with role <user role>
+    Given the api user has signed up on the application with role '<user role>'
     And she has received the email to set up her password
     And she has set her password
     When she signs in the application
@@ -37,9 +37,27 @@ Feature: Identity and Access Management
       | default-role |
       | other-role   |
 
-  # TODO: test with email argument that is not an email --> should fail
+  @fixture.api-user
+  Scenario Outline: Sign up with wrongly formatted email fails
 
-  # TODO: test 1 sign up with role that does not exist on application --> should fail
+    Given an api user with email '<email>'
+    When she signs up on the application with role 'default-role'
+    Then she gets the bad request error
+    """
+    Input email is not an email
+    """
+
+    Examples:
+      | email        |
+      | my-username  |
+      | my-username@ |
+
+
+  @fixture.api-user
+  Scenario: Sign up with role that does not exist
+
+    When the api user signs up on the application with role 'non-existent-role'
+    Then she gets that it was not possible to sign her up
 
   # TODO: test 2 sign up with same user on same app with same role --> should fail
 

@@ -9,7 +9,7 @@ def step_impl(context):
     assert context.api_user.user_id is None
 
 
-@given("the api user has signed up on the application with role {role}")
+@given("the api user has signed up on the application with role '{role}'")
 def step_impl(context, role):
     graphql_response = context.api_user.sign_up(
         role, context.current_app_id)
@@ -37,13 +37,25 @@ def step_impl(context):
     context.current_change_password_id = match.group(1)
 
 
+@given("an api user with email '{email}'")
+def step_impl(context, email):
+    context.api_user.username = email
+
+
 @when("she signs in the application")
 def step_impl(context):
     context.current_graphql_response = context.api_user.sign_in(
         context.current_app_id)
 
 
-@then("she gets an error that the user was not found or the password was incorrect")
+@when("the api user signs up on the application with role '{role}'")
+@when("she signs up on the application with role '{role}'")
+def step_impl(context, role):
+    context.current_graphql_response = context.api_user.sign_up(
+        role, context.current_app_id)
+
+
+@then("she gets that the user was not found or the password was incorrect")
 def step_impl(context):
     payload = context.current_graphql_response.payload
     assert 'errors' in payload, \
@@ -88,8 +100,30 @@ def step_impl(context, role):
     #     }
     # }
     decoded_jwt = jwt.decode(context.api_user.jwt, options={
-                             "verify_signature": False})
+        "verify_signature": False})
     assert role in decoded_jwt['roles'], \
         f'expected {decoded_jwt} to contain role {role}'
     assert role in decoded_jwt['https://hasura.io/jwt/claims']['x-hasura-allowed-roles'], \
         f'expected {decoded_jwt} to contain role {role}'
+
+
+@then("she gets the bad request error")
+def step_impl(context):
+    payload = context.current_graphql_response.payload
+    assert 'errors' in payload, \
+        f'expected errors in graphql response, got none: {payload}'
+    actual_status_code = int(payload['errors'][0]['extensions']['code'])
+    assert 400 == actual_status_code, \
+        f'expected status code 400, got {actual_status_code}'
+    expected_error = context.text
+    assert expected_error == payload['errors'][0]['message']
+
+
+@then("she gets that it was not possible to sign her up")
+def step_impl(context):
+    payload = context.current_graphql_response.payload
+    assert 'errors' in payload, \
+        f'expected errors in graphql response, got none: {payload}'
+    actual_status_code = int(payload['errors'][0]['extensions']['code'])
+    assert 400 == actual_status_code, \
+        f'expected status code 400, got {actual_status_code}'
