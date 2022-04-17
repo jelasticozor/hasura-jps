@@ -20,7 +20,9 @@ Feature: Development Hasura environment
   Scenario: The IAM functions are well-defined
 
     Then the sign-in function is ready
-    And the validate-token function is ready
+    And the validate-token function is ready 
+    And the sign-up function is ready
+    And the set-password function is ready 
     And the get-emails function is ready
     And the delete-all-emails function is ready
     And the delete-email function is ready
