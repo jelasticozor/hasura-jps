@@ -41,7 +41,7 @@ class ApiUser:
     def sign_up(self, role, app_id):
         variables = {
             'email': self.username,
-            'role': role,
+            'roles': roles,
             'appId': app_id
         }
         graphql_response = self.__execute_graphql_query(
