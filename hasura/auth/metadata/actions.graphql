@@ -13,7 +13,7 @@ type Query {
 type Mutation {
   sign_up(
     email: String!
-    role: String!
+    roles: [String!]!
     app_id: uuid!
   ): sign_up_response
 }

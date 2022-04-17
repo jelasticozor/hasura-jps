@@ -19,16 +19,16 @@ Feature: Identity and Access Management
   The error codes provided by fusionauth are documented [here](https://fusionauth.io/docs/v1/tech/apis/login#authenticate-a-user).
 
     Given the api user has no account on the application
-    When she signs in the application
+    When she signs in
     Then she gets notified that the user was not found or the password was incorrect
 
   @fixture.api-user
   Scenario Outline: Sign in as registered user with one single role
 
     Given the api user has signed up on the application with role '<user role>'
-    And she has received the email to set up her password
-    And she has set her password
-    When she signs in the application
+    And she has received the email to set up her password with a one-time token
+    And she has set her password with that token
+    When she signs in
     Then her JWT is valid
     And it contains the role '<user role>'
 
@@ -36,6 +36,16 @@ Feature: Identity and Access Management
       | user role    |
       | default-role |
       | other-role   |
+
+  @fixture.api-user
+  Scenario: Sign in as registered user with multiple roles
+
+    Given the api user has signed up on the application with all available roles
+    And she has received the email to set up her password with a one-time token
+    And she has set her password with that token
+    When she signs in
+    Then her JWT is valid
+    And it contains all the roles in the application
 
   @fixture.api-user
   Scenario Outline: Sign up with wrongly formatted email fails
@@ -51,6 +61,8 @@ Feature: Identity and Access Management
       | email        |
       | my-username  |
       | my-username@ |
+      | domain.com   |
+      | @domain.com  |
 
 
   @fixture.api-user
@@ -70,9 +82,9 @@ Feature: Identity and Access Management
   Scenario: The token to set the password is a one-time token
 
     Given the api user has signed up on the application with role 'default-role'
-    And she has received the email to set up her password
-    And she has set her password
-    When she sets her password again
+    And she has received the email to set up her password with a one-time token
+    And she has set her password with that token
+    When she sets her password with that token again
     Then she gets notified that the user was not found
 
   # TODO: test 2 sign up with same user on same app with different roles

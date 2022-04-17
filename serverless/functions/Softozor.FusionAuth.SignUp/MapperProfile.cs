@@ -1,6 +1,7 @@
 namespace HasuraFunction;
 
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using io.fusionauth.domain;
 using io.fusionauth.domain.api.user;
@@ -20,7 +21,7 @@ public class MapperProfile : Profile
             .ForMember(
                 dest => dest.registration,
                 opt => opt.MapFrom(
-                    src => new UserRegistration { applicationId = src.AppId, roles = new List<string> { src.Role } }));
+                    src => new UserRegistration { applicationId = src.AppId, roles = src.Roles.ToList() }));
 
         this.CreateMap<RegistrationResponse, SignUpOutput>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.user.id));

@@ -12,13 +12,22 @@ def step_impl(context):
 @given("the api user has signed up on the application with role '{role}'")
 def step_impl(context, role):
     graphql_response = context.api_user.sign_up(
-        role, context.current_app_id)
+        [role], context.current_app_id)
     assert 'errors' not in graphql_response.payload, \
         f'expected no error, got {graphql_response.payload}'
     assert context.api_user.user_id is not None
 
 
-@given("she has set her password")
+@given("the api user has signed up on the application with all available roles")
+def step_impl(context):
+    graphql_response = context.api_user.sign_up(
+        context.expected_role_names, context.current_app_id)
+    assert 'errors' not in graphql_response.payload, \
+        f'expected no error, got {graphql_response.payload}'
+    assert context.api_user.user_id is not None
+
+
+@given("she has set her password with that token")
 def step_impl(context):
     graphql_response = context.api_user.set_password(
         context.current_change_password_id)
@@ -26,7 +35,7 @@ def step_impl(context):
         f'expected no error, got {graphql_response.payload}'
 
 
-@given("she has received the email to set up her password")
+@given("she has received the email to set up her password with a one-time token")
 def step_impl(context):
     email = context.api_developer.get_email_to_setup_password_for_user(
         context.api_user.username)
@@ -42,7 +51,7 @@ def step_impl(context, email):
     context.api_user.username = email
 
 
-@when("she signs in the application")
+@when("she signs in")
 def step_impl(context):
     context.current_graphql_response = context.api_user.sign_in(
         context.current_app_id)
@@ -52,10 +61,10 @@ def step_impl(context):
 @when("she signs up on the application with role '{role}'")
 def step_impl(context, role):
     context.current_graphql_response = context.api_user.sign_up(
-        role, context.current_app_id)
+        [role], context.current_app_id)
 
 
-@when("she sets her password again")
+@when("she sets her password with that token again")
 def step_impl(context):
     context.current_graphql_response = context.api_user.set_password(
         context.current_change_password_id)
@@ -112,6 +121,16 @@ def step_impl(context, role):
         f'expected {decoded_jwt} to contain role {role}'
     assert role in decoded_jwt['https://hasura.io/jwt/claims']['x-hasura-allowed-roles'], \
         f'expected {decoded_jwt} to contain role {role}'
+
+
+@step("it contains all the roles in the application")
+def step_impl(context):
+    decoded_jwt = jwt.decode(context.api_user.jwt, options={
+        "verify_signature": False})
+    actual_role_names = set(decoded_jwt['roles'])
+    expected_role_names = set(context.expected_role_names)
+    assert expected_role_names == actual_role_names, \
+        f'expected {decoded_jwt} to contain all roles {expected_role_names}, got {actual_role_names} instead'
 
 
 @then("she gets notified with the bad request error")

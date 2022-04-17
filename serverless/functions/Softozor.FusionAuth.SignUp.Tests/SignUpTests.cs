@@ -1,6 +1,8 @@
 namespace Softozor.FusionAuth.SignUp.Tests;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,12 +19,12 @@ public class SignUpTests
 {
     private readonly SignUpInput validInput = new SignUpInput(
         new MailAddress("valid-user@example.com"),
-        "valid-user-role",
+        new List<string>{"valid-user-role"},
         Guid.Parse("b7b4b5dc-587f-48fd-bd02-ea395cd98b1e"));
 
     private readonly SignUpInput invalidInput = new SignUpInput(
         new MailAddress("invalid-user@example.com"),
-        "invalid-user-role",
+        new List<string>{"invalid-user-role"},
         Guid.Parse("26ba7627-9384-4b88-becc-1b12ef5bc9db"));
 
     private readonly Guid userId = Guid.Parse("6c7554ca-6212-439f-b00d-d623013bae03");
@@ -90,7 +92,7 @@ public class SignUpTests
     {
         return Match.Create<RegistrationRequest>(rq => rq.user.email == input.Email.Address &&
                rq.registration.applicationId == input.AppId && rq.registration.roles.Count == 1 &&
-               rq.registration.roles.Contains(input.Role) && rq.sendSetPasswordEmail == true);
+               rq.registration.roles.SequenceEqual(input.Roles) && rq.sendSetPasswordEmail == true);
     }
 
     private static IMapper CreateMapper()

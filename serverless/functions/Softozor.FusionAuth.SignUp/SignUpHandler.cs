@@ -1,5 +1,6 @@
 namespace HasuraFunction;
 
+using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
@@ -27,7 +28,12 @@ public class SignUpHandler
         if (!response.WasSuccessful())
         {
             throw new HasuraFunctionException(
-                $"Unable to sign up user {input.Email} on application {input.AppId} with role {input.Role}",
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Unable to sign up user {0} on application {1} with role {2}",
+                    input.Email,
+                    input.AppId,
+                    input.Roles),
                 response.statusCode,
                 response.exception);
         }
