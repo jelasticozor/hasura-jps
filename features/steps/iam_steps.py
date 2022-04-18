@@ -37,8 +37,10 @@ def step_impl(context):
 
 @given("she has received the email to set up her password with a one-time token")
 def step_impl(context):
-    email = context.api_developer.get_email_to_setup_password_for_user(
+    email = context.api_developer.read_and_forget_email_to_setup_password_for_user(
         context.api_user.username)
+    assert email is not None, \
+        f'expected email, got None'
     email_body = email['body']
     match = re.search('<p>changePasswordId=(.+)</p>', email_body)
     assert match, \
@@ -153,3 +155,21 @@ def step_impl(context):
     actual_status_code = int(payload['errors'][0]['extensions']['code'])
     assert 400 == actual_status_code, \
         f'expected status code 400, got {actual_status_code}'
+
+
+@then("she receives no email to set up her password")
+def step_impl(context):
+    email = context.api_developer.read_and_forget_email_to_setup_password_for_user(
+        context.api_user.username)
+    assert email is None, \
+        f'expected no email, got {email}'
+
+
+@then("it contains the roles")
+def step_impl(context):
+    expected_role_names = set(row['user role'] for row in context.table)
+    decoded_jwt = jwt.decode(context.api_user.jwt, options={
+        "verify_signature": False})
+    actual_role_names = set(decoded_jwt['roles'])
+    assert expected_role_names == actual_role_names, \
+        f'expected {decoded_jwt} to contain all roles {expected_role_names}, got {actual_role_names} instead'
