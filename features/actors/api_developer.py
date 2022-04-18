@@ -387,16 +387,26 @@ class ApiDeveloper:
             f'expected no errors, got {graphql_response.payload}'
         return graphql_response.payload['data']
 
-    def get_email_to_setup_password_for_user(self, username, timeout_in_sec=60, period_in_sec=1):
+    def delete_email(self, email_id):
+        graphql_response = self.__execute_graphql_query(
+            query_name='delete_email', variables={'id': email_id})
+        assert 'errors' not in graphql_response.payload, \
+            f'expected no errors, got {graphql_response.payload}'
+
+    def read_and_forget_email_to_setup_password_for_user(self, username, timeout_in_sec=60, period_in_sec=1):
         def test_get_emails(developer):
             return 1 == len(developer.__get_emails_to_setup_password_for_user(username)) > 0
 
-        assert fail_after_timeout(
-            lambda: test_get_emails(self), timeout_in_sec, period_in_sec) is True
+        found_email = fail_after_timeout(
+            lambda: test_get_emails(self), timeout_in_sec, period_in_sec)
+        if not found_email:
+            return None
 
         emails_to_setup_password = self.__get_emails_to_setup_password_for_user(
             username)
-        return emails_to_setup_password[0]
+        email_to_setup_password = emails_to_setup_password[0]
+        self.delete_email(email_to_setup_password['id'])
+        return email_to_setup_password
 
     def __get_emails_to_setup_password_for_user(self, username):
         all_emails = self.get_emails()['get_emails']['items']
