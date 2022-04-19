@@ -57,12 +57,14 @@ onInstall:
 
 actions:
   installEngine:
+    # TODO: we should not install the engine like this, because we kind of use systemd in a docker container
     - cmd[faas]:
         - git clone https://github.com/openfaas/faasd
         - cd faasd
         - ./hack/install.sh
   waitUntilEngineIsUp:
     - cmd[faas]:
+        # TODO: use execCmdByGroup
         - while ! nc -z localhost 8080 ; do sleep 1 ; done
   pullTemplatesForFunctionDeployment:
     - cmd[faas]:

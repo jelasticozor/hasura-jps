@@ -1,5 +1,6 @@
 namespace HasuraFunction;
 
+using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
 using io.fusionauth;
@@ -27,7 +28,10 @@ public class SetPasswordHandler
         if (!response.WasSuccessful())
         {
             throw new HasuraFunctionException(
-                $"Unable to set password with change password id {input.ChangePasswordId}",
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Unable to set password with change password id {0}",
+                    input.ChangePasswordId),
                 response.statusCode,
                 response.exception);
         }

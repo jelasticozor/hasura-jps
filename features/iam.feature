@@ -64,18 +64,10 @@ Feature: Identity and Access Management
       | domain.com   |
       | @domain.com  |
 
-
   @fixture.api-user
   Scenario: Sign up with role that does not exist
 
     When the api user signs up on the application with role 'non-existent-role'
-    Then she gets notified with a bad request error
-
-  @fixture.api-user
-  Scenario: Sign up with role that does not exist
-
-    Given the api user has signed up on the application with role 'default-role'
-    When she signs up on the application with role 'default-role'
     Then she gets notified with a bad request error
 
   @fixture.api-user
@@ -87,6 +79,18 @@ Feature: Identity and Access Management
     When she sets her password with that token again
     Then she gets notified that the user was not found
 
-  # TODO: test 2 sign up with same user on same app with different roles
-  #   --> should succeed, the function should grab the userId if it exists
-  #   --> should not send set password email
+  @fixture.api-user
+  Scenario: Sign up twice with same role
+
+    Given the api user has signed up on the application with role 'default-role'
+    When she signs up on the application with role 'default-role'
+    Then she gets notified with a bad request error  
+
+  @fixture.api-user
+  Scenario: Sign up twice with different roles
+
+    Given the api user has signed up on the application with role 'default-role'
+    And she has received the email to set up her password with a one-time token
+    And she has set her password with that token
+    When she signs up on the application with role 'other-role'
+    Then she gets notified with a bad request error  
