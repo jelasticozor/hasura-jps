@@ -38,7 +38,7 @@ class ApiUser:
             self.jwt = graphql_response.payload['data']['sign_in']['token']
         return graphql_response
 
-    def sign_up(self, role, app_id):
+    def sign_up(self, roles, app_id):
         variables = {
             'email': self.username,
             'roles': roles,
