@@ -1,5 +1,5 @@
 mutation DeleteEmail($id: String!) {
-  delete_email(id: String!) {
+  delete_email(id: $id) {
     id
   }
 }
