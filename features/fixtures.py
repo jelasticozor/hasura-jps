@@ -205,8 +205,8 @@ def jelastic_environment(context):
         'graylogServerHost': context.graylog_host,
         'graylogServerPort': context.graylog_port,
         'useAnonymousDockerHubAccount': False,
-        'dockerHubRegistryUser': context.docker_hub_registry_user,
-        'dockerHubRegistryPassword': context.docker_hub_registry_password
+        'dockerHubUser': context.docker_hub_registry_user,
+        'dockerHubPassword': context.docker_hub_registry_password
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
@@ -235,8 +235,8 @@ def jelastic_environment_with_automatic_settings(context):
         'graylogServerHost': context.graylog_host,
         'graylogServerPort': context.graylog_port,
         'useAnonymousDockerHubAccount': False,
-        'dockerHubRegistryUser': context.docker_hub_registry_user,
-        'dockerHubRegistryPassword': context.docker_hub_registry_password
+        'dockerHubUser': context.docker_hub_registry_user,
+        'dockerHubPassword': context.docker_hub_registry_password
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
