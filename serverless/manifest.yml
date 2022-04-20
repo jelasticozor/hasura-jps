@@ -29,24 +29,6 @@ settings:
     - name: logsAggregatorPort
       caption: Port
       type: string
-    - type: spacer
-      caption: Docker Hub
-    - name: useAnonymousDockerHubAccount
-      type: toggle
-      caption: Use Anonymous Docker Hub
-      value: true
-      hidden: false
-      showIf:
-        false:
-          - name: dockerHubUser
-            caption: Username
-            type: string
-            required: true
-          - name: dockerHubPassword
-            caption: Password
-            type: string
-            inputType: password
-            required: true
 
 onInstall:
   - installEngine
@@ -81,8 +63,6 @@ actions:
             vars:
               AUTH_URL: ${settings.authUrl}
     - cmd[faas]:
-        - if (!${settings.useAnonymousDockerHubAccount}):
-          - docker login -u ${settings.dockerHubUser} -p ${settings.dockerHubPassword}
         - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
         - cd /faas-template

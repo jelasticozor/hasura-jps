@@ -111,24 +111,6 @@ settings:
             caption: Port
             type: string
             required: true
-    - type: spacer
-      caption: Docker Hub
-    - name: useAnonymousDockerHubAccount
-      type: toggle
-      caption: Use Anonymous Docker Hub
-      value: true
-      hidden: false
-      showIf:
-        false:
-          - name: dockerHubUser
-            caption: Username
-            type: string
-            required: true
-          - name: dockerHubPassword
-            caption: Password
-            type: string
-            inputType: password
-            required: true
 
 globals:
   # postgres
@@ -213,10 +195,6 @@ actions:
             host: ${settings.useExternalGraylog} ? "${settings.graylogServerHost}" : "",
             port: ${settings.useExternalGraylog} ? "${settings.graylogServerPort}" : "",
           },
-          dockerHub: {
-            user: ${settings.useAnonymousDockerHubAccount} ? "" : "${settings.dockerHubUser}",
-            password: ${settings.useAnonymousDockerHubAccount} ? "" : "${settings.dockerHubPassword}",
-          }
         };
     - setGlobals:
         USER_EMAIL: ${response.email}
@@ -225,9 +203,6 @@ actions:
         EXTERNAL_DOMAINS: ${response.externalDomains}
         GRAYLOG_HOSTNAME: ${response.graylog.host}
         GRAYLOG_PORT: ${response.graylog.port}
-        USE_ANONYMOUS_DOCKER_HUB: ${settings.useAnonymousDockerHubAccount}
-        DOCKER_HUB_USER: ${response.dockerHub.user}
-        DOCKER_HUB_PASSWORD: ${response.dockerHub.password}
   installMailServer:
     - if ("${settings.clusterType}" == "dev"):
         - install:
@@ -256,9 +231,6 @@ actions:
           fncTag: ${settings.hasuraJpsCommitShortSha}
           logsAggregatorHost: ${globals.GRAYLOG_HOSTNAME}
           logsAggregatorPort: ${globals.GRAYLOG_PORT}
-          useAnonymousDockerHub: ${globals.USE_ANONYMOUS_DOCKER_HUB}
-          dockerHubUser: ${globals.DOCKER_HUB_USER}
-          dockerHubPassword: ${globals.DOCKER_HUB_PASSWORD}
     - api:
         - method: environment.file.Read
           params:

@@ -21,7 +21,7 @@ ARG CONTAINERD_VER
 ARG FAASD_VERSION
 
 COPY --from=pull-templates /usr/local/bin/faas-cli /usr/local/bin/faas-cli
-COPY --from=pull-templates /root/template /faas-template
+COPY --from=pull-templates /root/template /faas-template/template
 
 # cf. https://github.com/openfaas/faasd/blob/master/hack/install.sh
 # install_required_packages

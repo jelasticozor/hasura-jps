@@ -107,20 +107,6 @@ def graylog_port(context):
     return context.graylog_port
 
 
-@fixture
-def docker_hub_registry_user(context):
-    userdata = context.config.userdata
-    context.docker_hub_registry_user = userdata['docker-hub-registry-user']
-    return context.docker_hub_registry_user
-
-
-@fixture
-def docker_hub_registry_password(context):
-    userdata = context.config.userdata
-    context.docker_hub_registry_password = userdata['docker-hub-registry-password']
-    return context.docker_hub_registry_password
-
-
 def get_mail_server_definition(env_info):
     mail_server_nodes = env_info.get_nodes(node_group='mail')
     assert len(mail_server_nodes) == 1, \
@@ -196,9 +182,6 @@ def jelastic_environment(context):
         'useExternalGraylog': True,
         'graylogServerHost': context.graylog_host,
         'graylogServerPort': context.graylog_port,
-        'useAnonymousDockerHubAccount': False,
-        'dockerHubUser': context.docker_hub_registry_user,
-        'dockerHubPassword': context.docker_hub_registry_password
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
@@ -225,9 +208,6 @@ def jelastic_environment_with_automatic_settings(context):
         'useExternalGraylog': True,
         'graylogServerHost': context.graylog_host,
         'graylogServerPort': context.graylog_port,
-        'useAnonymousDockerHubAccount': False,
-        'dockerHubUser': context.docker_hub_registry_user,
-        'dockerHubPassword': context.docker_hub_registry_password
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
