@@ -51,7 +51,6 @@ settings:
 onInstall:
   - installEngine
   - waitUntilEngineIsUp
-  - pullTemplatesForFunctionDeployment
   - setCommonEnvVars
   - deployAuthFunctions
 
@@ -65,10 +64,6 @@ actions:
     - cmd[faas]:
         # TODO: use execCmdByGroup
         - while ! nc -z localhost 8080 ; do sleep 1 ; done
-  pullTemplatesForFunctionDeployment:
-    - cmd[faas]:
-        - faas-cli template pull
-        - faas-cli template pull https://gitlab.hidora.com/softozor/faas-templates.git
   setCommonEnvVars:
     - api:
         - method: environment.control.AddContainerEnvVars
@@ -90,6 +85,7 @@ actions:
           - docker login -u ${settings.dockerHubUser} -p ${settings.dockerHubPassword}
         - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
+        - cd /faas-template
         - wget -q ${baseUrl}/serverless/functions/fusionauth.yml
         - faas-cli deploy -f fusionauth.yml
 

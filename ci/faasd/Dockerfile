@@ -1,3 +1,17 @@
+FROM ubuntu:20.04 AS pull-templates
+
+ARG FAAS_CLI_VERSION
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /root
+
+RUN apt update && apt install -y git curl \
+    && curl -sSL https://github.com/openfaas/faas-cli/releases/download/${FAAS_CLI_VERSION}/faas-cli --output /usr/local/bin/faas-cli \
+    && chmod u+x /usr/local/bin/faas-cli \
+    && faas-cli template pull \
+    && faas-cli template pull https://gitlab.hidora.com/softozor/faas-templates.git
+
 FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -5,7 +19,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG CNI_VERSION
 ARG CONTAINERD_VER
 ARG FAASD_VERSION
-ARG FAAS_CLI_VERSION
+
+COPY --from=pull-templates /usr/local/bin/faas-cli /usr/local/bin/faas-cli
+COPY --from=pull-templates /root/template /faas-template
 
 # cf. https://github.com/openfaas/faasd/blob/master/hack/install.sh
 # install_required_packages
@@ -20,12 +36,9 @@ RUN apt update && apt install -y openssh-server curl runc bridge-utils iptables 
     && systemctl unmask containerd || : \
     && curl -SLfs https://raw.githubusercontent.com/containerd/containerd/v${CONTAINERD_VER}/containerd.service --output /etc/systemd/system/containerd.service \
     && systemctl enable containerd \
-    # install_faas_cli
-    && curl -sSL https://github.com/openfaas/faas-cli/releases/download/${FAAS_CLI_VERSION}/faas-cli --output /usr/local/bin/faas-cli \
-    && chmod u+x /usr/local/bin/faas-cli \
     # install_faasd
-    && curl -fSLs "https://github.com/openfaas/faasd/releases/download/${FAASD_VERSION}/faasd" --output "/usr/local/bin/faasd" \
-    && chmod a+x "/usr/local/bin/faasd" \
+    && curl -fSLs https://github.com/openfaas/faasd/releases/download/${FAASD_VERSION}/faasd --output /usr/local/bin/faasd \
+    && chmod a+x /usr/local/bin/faasd \
     && mkdir -p /faasd-installation/hack  \
     && curl -fSLs https://raw.githubusercontent.com/openfaas/faasd/${FAASD_VERSION}/docker-compose.yaml --output /faasd-installation/docker-compose.yaml \
     && curl -fSLs https://raw.githubusercontent.com/openfaas/faasd/${FAASD_VERSION}/prometheus.yml --output /faasd-installation/prometheus.yml \
