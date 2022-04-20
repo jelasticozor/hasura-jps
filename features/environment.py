@@ -26,7 +26,6 @@ def before_all(context):
     use_fixture(fusionauth_admin_email, context)
     use_fixture(fusionauth_issuer, context)
     use_fixture(path_to_serverless_test_configuration, context)
-    use_fixture(fusionauth_version, context)
     use_fixture(hasura_admin_secret, context)
     use_fixture(graphql_engine_image, context)
     use_fixture(clean_up_not_deleted_environments, context)

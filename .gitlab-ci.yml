@@ -175,10 +175,25 @@ publish-faas-image:
     - docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest
     - *docker-push
   only:
-    refs:
-      - master
     changes:
-      - ci/ubuntu/Dockerfile
+      - ci/ubuntu/*
+
+publish-fusionauth-app-image:
+  stage: publish-docker
+  image: docker:latest
+  variables:
+    DOCKER_IMAGE: softozor/fusionauth-app
+    DOCKERFILE_FOLDER: ./ci/fusionauth-app
+  before_script:
+    - *docker-login
+  script:
+    - |
+      docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest \
+        --build-arg FUSIONAUTH_VERSION=${FUSIONAUTH_VERSION}
+    - *docker-push
+  only:
+    changes:
+      - ci/fusionauth-app/*
 
 publish-test-faas-functions:
   <<: *publish-faas-functions
@@ -217,7 +232,6 @@ acceptance test dev:
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
-        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
         -D cluster-type="dev" \
         -D graylog-host="${GRAYLOG_HOST}" \
         -D graylog-port="${GRAYLOG_PORT}" \
@@ -241,7 +255,6 @@ acceptance test production:
         -D api-url="${JELASTIC_API_URL}" \
         -D api-token="${JELASTIC_ACCESS_TOKEN}" \
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
-        -D fusionauth-version="${FUSIONAUTH_VERSION}" \
         -D cluster-type="prod" \
         -D graylog-host="${GRAYLOG_HOST}" \
         -D graylog-port="${GRAYLOG_PORT}" \

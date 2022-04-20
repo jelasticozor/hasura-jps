@@ -5,6 +5,12 @@ baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 settings:
   fields:
     - type: spacer
+      caption: Hasura Jps Version
+    - name: hasuraJpsCommitShortSha
+      caption: Docker Tag
+      type: string
+      default: latest
+    - type: spacer
       caption: Cluster Type
     - type: radio-fieldset
       name: clusterType
@@ -59,10 +65,6 @@ settings:
           required: true
     - type: spacer
       caption: Auth
-    - name: fusionauthVersion
-      caption: Fusionauth version
-      type: string
-      default: 1.32.1
     - name: useJelasticEmailAsAuthAdminEmail
       type: toggle
       caption: Use Jelastic Email
@@ -78,12 +80,6 @@ settings:
       caption: JWT issuer
       type: string
       default: your-company.com
-    - type: spacer
-      caption: Faas
-    - name: fncTag
-      caption: Faas Functions Image tag
-      type: string
-      default: latest
     - type: spacer
       caption: SSL
     - name: useDefaultExternalDomain
@@ -187,7 +183,7 @@ nodes:
   cloudlets: 32
   nodeGroup: auth
   nodeType: docker
-  image: fusionauth/fusionauth-app:${settings.fusionauthVersion}
+  image: softozor/fusionauth-app:${settings.hasuraJpsCommitShortSha}
 skipNodeEmails: true
 
 onInstall:
@@ -257,7 +253,7 @@ actions:
         settings:
           authApiKey: ${globals.SERVERLESS_API_KEY}
           authUrl: http://${nodes.auth.master.intIP}:${globals.AUTH_PORT}
-          fncTag: ${settings.fncTag}
+          fncTag: ${settings.hasuraJpsCommitShortSha}
           logsAggregatorHost: ${globals.GRAYLOG_HOSTNAME}
           logsAggregatorPort: ${globals.GRAYLOG_PORT}
           useAnonymousDockerHub: ${globals.USE_ANONYMOUS_DOCKER_HUB}
@@ -327,7 +323,6 @@ actions:
           fromEmail: no-reply@${settings.authIssuer}
           fromName: ${settings.authIssuer}
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
-          fusionauthVersion: ${settings.fusionauthVersion}
   exposeMailhogApi:
     - install:
         jps: mailhog/expose-api.yml
