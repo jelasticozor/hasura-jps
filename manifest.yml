@@ -163,7 +163,7 @@ nodes:
   cloudlets: 16
   nodeGroup: faas
   nodeType: docker
-  image: softozor/ubuntu-git:latest
+  image: softozor/faasd:${settings.hasuraJpsCommitShortSha}
 - displayName: database
   count: 2
   fixedCloudlets: 3

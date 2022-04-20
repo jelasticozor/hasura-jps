@@ -163,20 +163,25 @@ publish-feature-test-image:
     changes:
       - ci/feature-tests/*
 
-publish-faas-image:
+publish-faasd-image:
   stage: publish-docker
   image: docker:latest
   variables:
-    DOCKER_IMAGE: softozor/ubuntu-git
-    DOCKERFILE_FOLDER: ./ci/ubuntu
+    DOCKER_IMAGE: softozor/faasd
+    DOCKERFILE_FOLDER: ./ci/faasd
   before_script:
     - *docker-login
   script:
-    - docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest
+    - |
+      docker build $DOCKERFILE_FOLDER -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE:latest \
+        --build-arg CNI_VERSION=v0.9.1 \
+        --build-arg CONTAINERD_VER=1.6.2 \
+        --build-arg FAAS_CLI_VERSION=${FAAS_CLI_VERSION} \
+        --build-arg FAASD_VERSION=${FAASD_VERSION}
     - *docker-push
   only:
     changes:
-      - ci/ubuntu/*
+      - ci/faasd/*
 
 publish-fusionauth-app-image:
   stage: publish-docker
