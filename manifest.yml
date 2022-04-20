@@ -94,7 +94,7 @@ settings:
             type: string
             vtype: domainlist
             required: true
-    - type: space
+    - type: spacer
       caption: Logs aggregation
     - name: useExternalGraylog
       type: toggle
