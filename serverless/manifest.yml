@@ -43,9 +43,12 @@ actions:
         cd /faasd-installation
         /usr/local/bin/faasd install
   waitUntilEngineIsUp:
-    - cmd[faas]:
-        # TODO: use execCmdByGroup
-        - while ! nc -z localhost 8080 ; do sleep 1 ; done
+    - api:
+        - method: environment.control.ExecCmdByGroup
+          params:
+            nodeGroup: faas
+            commandList:
+              - command: while ! nc -z localhost 8080 ; do sleep 1 ; done
   setCommonEnvVars:
     - api:
         - method: environment.control.AddContainerEnvVars
@@ -56,18 +59,22 @@ actions:
               LOGS_AGGREGATOR_HOST: ${settings.logsAggregatorHost}
               LOGS_AGGREGATOR_PORT: ${settings.logsAggregatorPort}
   deployAuthFunctions:
+    - cmd[faas]:
+        - cd /faas-template
+        - wget -q ${baseUrl}/serverless/functions/fusionauth.yml
     - api:
         - method: environment.control.AddContainerEnvVars
           params:
             nodeGroup: faas
             vars:
               AUTH_URL: ${settings.authUrl}
-    - cmd[faas]:
-        - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
-        - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
-        - cd /faas-template
-        - wget -q ${baseUrl}/serverless/functions/fusionauth.yml
-        - faas-cli deploy -f fusionauth.yml
+        - method: environment.control.ExecCmdByGroup
+          params:
+            nodeGroup: faas
+            commandList:
+              - command: cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
+              - command: faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
+              - command: cd /faas-template && faas-cli deploy -f fusionauth.yml
 
 description: |
   We install faasd, a lightweight & portable faas engine.

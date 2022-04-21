@@ -25,6 +25,9 @@ actions:
         - wget ${baseUrl}/mailhog/setup_actions.py -O setup_actions.py
         - python3 ./setup_actions.py --actions-yaml /hasura-metadata/actions.yaml
   deployMailhogFunctions:
+    - cmd[faas]:
+        - cd /faas-template
+        - wget -q ${baseUrl}/serverless/functions/mailhog.yml
     - api:
         - method: environment.control.AddContainerEnvVars
           params:
@@ -32,8 +35,9 @@ actions:
             vars:
               MAIL_SERVER_HOST: ${settings.mailServerHost}
               MAIL_SERVER_API_PORT: ${globals.MAIL_SERVER_API_PORT}
-    - cmd[faas]:
-        - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
-        - cd /faas-template
-        - wget -q ${baseUrl}/serverless/functions/mailhog.yml
-        - faas-cli deploy -f mailhog.yml
+        - method: environment.control.ExecCmdByGroup
+          params:
+            nodeGroup: faas
+            commandList:
+              - command: cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
+              - command: cd /faas-template && faas-cli deploy -f mailhog.yml
