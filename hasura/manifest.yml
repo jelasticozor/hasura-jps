@@ -4,11 +4,6 @@ baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 
 settings:
   fields:
-    - type: space
-      caption: General
-    - name: clusterType
-      type: string
-      required: true
     - type: spacer
       caption: Faas
     - name: faasHostname
@@ -45,11 +40,6 @@ settings:
       required: true
     - type: spacer
       caption: Auth
-    - name: authAlmightyApiKey
-      caption: Almighty API Key
-      type: string
-      inputType: password
-      required: true
     - name: authPort
       caption: Auth Port
       type: string

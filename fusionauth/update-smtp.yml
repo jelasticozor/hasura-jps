@@ -40,11 +40,16 @@ actions:
   updateSmtpParams:
     - cmd[auth]:
         - wget --quiet ${baseUrl}/fusionauth/update_smtp.py -O update_smtp.py
-    - cmd[auth]: |-
-        python3 update_smtp.py --api-url "http://localhost:9011" \
-            --api-key ${settings.almightyApiKey} \
-            --mail-server-host ${settings.mailServerHost} \
-            --mail-server-port ${settings.mailServerPort} \
-            --mail-server-username="${settings.mailServerUsername}" \
-            --mail-server-password="${settings.mailServerPassword}" \
-            --mail-server-enable-ssl="${settings.mailServerEnableSsl}"
+    - api:
+        - method: environment.control.ExecCmdByGroup
+          params:
+            nodeGroup: auth
+            commandList:
+              - command: |-
+                  python3 update_smtp.py --api-url "http://localhost:9011" \
+                      --api-key ${settings.almightyApiKey} \
+                      --mail-server-host ${settings.mailServerHost} \
+                      --mail-server-port ${settings.mailServerPort} \
+                      --mail-server-username="${settings.mailServerUsername}" \
+                      --mail-server-password="${settings.mailServerPassword}" \
+                      --mail-server-enable-ssl="${settings.mailServerEnableSsl}"

@@ -249,7 +249,6 @@ actions:
     - install:
         jps: hasura/manifest.yml
         settings:
-          clusterType: ${settings.clusterType}
           dbAdminUsername: ${globals.DB_ADMIN_USERNAME}
           dbAdminPassword: ${nodes.sqldb.password}
           dbUsername: ${globals.DB_USERNAME}
@@ -262,7 +261,6 @@ actions:
           faasHostname: ${nodes.faas.master.intIP}
           faasPort: ${globals.FAAS_PORT}
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
-          authAlmightyApiKey: ${globals.ALMIGHTY_API_KEY}
           authPort: ${globals.AUTH_PORT}
           authIssuer: ${settings.authIssuer}
           jwtKeyAlgorithm: ${globals.JWT_KEY_ALGORITHM}

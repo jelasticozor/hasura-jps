@@ -30,10 +30,15 @@ actions:
   updateUserMgmtActionsPermissions:
     - cmd[auth]:
         - wget ${baseUrl}/fusionauth/get_application_roles_to_keep.py -O get_application_roles_to_keep.py
-    - cmd[auth]: |-
-        python3 ./get_application_roles_to_keep.py --api-url "http://localhost:9011" \
-          --api-key "${settings.almightyApiKey}" \
-          --app-id "${settings.appId}"
+    - api:
+        - method: environment.control.ExecCmdByGroup
+          params:
+            nodeGroup: auth
+            commandList:
+              - command: |-
+                  python3 ./get_application_roles_to_keep.py --api-url "http://localhost:9011" \
+                    --api-key "${settings.almightyApiKey}" \
+                    --app-id "${settings.appId}"
     - setGlobals:
         ROLES_TO_KEEP: ${response.out}
     - cmd[cp]:
@@ -84,7 +89,12 @@ actions:
   removeApplicationFromIamService:
     - cmd[auth]:
         - wget ${baseUrl}/fusionauth/remove_application.py -O remove_application.py
-    - cmd[auth]: |-
-        python3 ./remove_application.py --api-url "http://localhost:9011" \
-          --api-key "${settings.almightyApiKey}" \
-          --app-id "${settings.appId}"
+    - api:
+        - method: environment.control.ExecCmdByGroup
+          params:
+            nodeGroup: auth
+            commandList:
+              - command: |-
+                  python3 ./remove_application.py --api-url "http://localhost:9011" \
+                    --api-key "${settings.almightyApiKey}" \
+                    --app-id "${settings.appId}"
