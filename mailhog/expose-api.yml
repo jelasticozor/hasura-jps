@@ -8,6 +8,10 @@ settings:
       caption: Host
       type: string
       required: true
+    - name: fncTag
+      caption: Docker tag
+      type: string
+      required: true
 
 globals:
   MAIL_SERVER_API_PORT: 8025
@@ -29,15 +33,10 @@ actions:
         - cd /faas-template
         - wget -q ${baseUrl}/serverless/functions/mailhog.yml
     - api:
-        - method: environment.control.AddContainerEnvVars
-          params:
-            nodeGroup: faas
-            vars:
-              MAIL_SERVER_HOST: ${settings.mailServerHost}
-              MAIL_SERVER_API_PORT: ${globals.MAIL_SERVER_API_PORT}
         - method: environment.control.ExecCmdByGroup
           params:
             nodeGroup: faas
             commandList:
               - command: cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
-              - command: cd /faas-template && faas-cli deploy -f mailhog.yml
+              - command: cd /faas-template
+              - command: IMG_TAG=${settings.fncTag} MAIL_SERVER_HOST=${settings.mailServerHost} MAIL_SERVER_API_PORT=${globals.MAIL_SERVER_API_PORT} faas-cli deploy -f mailhog.yml

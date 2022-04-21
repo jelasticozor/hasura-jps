@@ -296,6 +296,7 @@ def expose_mailhog_api(context):
     jps_client = context.jelastic_clients_factory.create_jps_client()
     settings = {
         'mailServerHost': context.current_mail_server['ip'],
+        'fncTag': context.commit_sha
     }
     manifest = os.path.join(
         context.project_root_folder, 'mailhog', 'expose-api.yml')

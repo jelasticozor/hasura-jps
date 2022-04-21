@@ -298,6 +298,7 @@ actions:
         jps: mailhog/expose-api.yml
         settings:
           mailServerHost: ${globals.MAIL_SERVER_HOST}
+          fncTag: ${settings.hasuraJpsCommitShortSha}
 
 success:
   text: |
