@@ -1,0 +1,6 @@
+query RefreshJwt($refreshToken: String!) {
+  refresh_jwt(refresh_token: $refreshToken) {
+    refresh_token
+    token
+  }
+}

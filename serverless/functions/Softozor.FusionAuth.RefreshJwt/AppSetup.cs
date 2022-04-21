@@ -24,15 +24,16 @@ public static class AppSetup
 
         app.MapPost(
             "/",
-            async (HttpContext http, ILoggerFactory loggerFactory, ValidateTokenHandler handler) =>
+            async (HttpContext http, ILoggerFactory loggerFactory, RefreshJwtHandler handler) =>
             {
                 var logger = loggerFactory.CreateLogger("root");
 
                 try
                 {
                     var token = ExtractJwt(http);
-                    await handler.Handle(token);
-                    await http.Response.WriteAsJsonAsync(new ValidateTokenOutput(true));
+                    var input = await InputHandling.ExtractActionRequestPayloadFrom<RefreshJwtInput>(http);
+                    var output = await handler.Handle(input, token);
+                    await http.Response.WriteAsJsonAsync(output);
                 }
                 catch (HasuraFunctionException ex)
                 {
@@ -51,6 +52,7 @@ public static class AppSetup
             });
     }
 
+    // TODO: factor this method out to the HasuraHandling nuget package! + use it in TokenValidation!
     private static string ExtractJwt(HttpContext http)
     {
         var authorization = http.Request.Headers["Authorization"].FirstOrDefault();

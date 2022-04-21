@@ -25,6 +25,12 @@ type Mutation {
   ): void_response
 }
 
+type Query {
+  refresh_jwt(
+    refresh_token: String!
+  ): refresh_jwt_response
+}
+
 type sign_in_response {
   refresh_token: String!
   token: String!
@@ -33,6 +39,11 @@ type sign_in_response {
 
 type sign_up_response {
   user_id: uuid!
+}
+
+type refresh_jwt_response {
+  refresh_token: String!
+  token: String!
 }
 
 type void_response {

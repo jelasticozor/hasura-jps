@@ -23,11 +23,17 @@ actions:
     kind: synchronous
     handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/validate-token
     forward_client_headers: true
+- name: refresh_jwt
+  definition:
+    kind: synchronous
+    handler: http://{{FAAS_HOSTNAME}}:{{FAAS_PORT}}/function/refresh-jwt
+    forward_client_headers: true
 custom_types:
   enums: []
   input_objects: []
   objects:
   - name: sign_in_response
   - name: sign_up_response
+  - name: refresh_jwt_response
   - name: void_response
   scalars: []

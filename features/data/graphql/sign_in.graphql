@@ -1,5 +1,6 @@
 query SignIn($username: String!, $password: String!, $appId: uuid!) {
   sign_in(username: $username, password: $password, app_id: $appId) {
     token
+    refresh_token
   }
 }

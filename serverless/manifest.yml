@@ -32,7 +32,6 @@ settings:
 
 onInstall:
   - installEngine
-  - waitUntilEngineIsUp
   - deployAuthFunctions
 
 actions:
@@ -41,13 +40,6 @@ actions:
         systemctl start containerd
         cd /faasd-installation
         /usr/local/bin/faasd install
-  waitUntilEngineIsUp:
-    - api:
-        - method: environment.control.ExecCmdByGroup
-          params:
-            nodeGroup: faas
-            commandList:
-              - command: while ! nc -z localhost 8080 ; do sleep 1 ; done
   deployAuthFunctions:
     - cmd[faas]:
         - cd /faas-template
@@ -57,6 +49,7 @@ actions:
           params:
             nodeGroup: faas
             commandList:
+              - command: while ! nc -z localhost 8080 ; do sleep 1 ; done
               - command: cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
               - command: faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
               - command: cd /faas-template

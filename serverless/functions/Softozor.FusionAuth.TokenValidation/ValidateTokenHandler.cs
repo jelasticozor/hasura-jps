@@ -14,14 +14,14 @@ public class ValidateTokenHandler
         this.authClient = authClient;
     }
 
-    public async Task Handle(BearerTokenAuthorizationHeader input)
+    public async Task Handle(string token)
     {
-        var response = await this.authClient.ValidateJWTAsync(input.Token);
+        var response = await this.authClient.ValidateJWTAsync(token);
 
         if (!response.WasSuccessful())
         {
             throw new HasuraFunctionException(
-                string.Format(CultureInfo.InvariantCulture, "Unable to validate token {0}", input.Token),
+                string.Format(CultureInfo.InvariantCulture, "Unable to validate token {0}", token),
                 response.statusCode,
                 response.exception);
         }

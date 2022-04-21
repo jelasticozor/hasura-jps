@@ -19,6 +19,7 @@ class ApiUser:
     def __init__(self, endpoint, path_to_graphql_folder):
         self.user_id = None
         self.jwt = None
+        self.refresh_token = None
         self.__client = GraphQLClient(endpoint)
         self.username = create_random_email()
         self.password = create_random_password()
@@ -35,7 +36,9 @@ class ApiUser:
         graphql_response = self.__execute_graphql_query(
             query_name='sign_in', variables=variables)
         if 'errors' not in graphql_response.payload:
-            self.jwt = graphql_response.payload['data']['sign_in']['token']
+            payload = graphql_response.payload['data']['sign_in']
+            self.jwt = payload['token']
+            self.refresh_token = payload['refresh_token']
         return graphql_response
 
     def sign_up(self, roles, app_id):
@@ -62,6 +65,18 @@ class ApiUser:
     def validate_token(self):
         graphql_response = self.__execute_graphql_query(
             query_name='validate_token')
+        return graphql_response
+
+    def refresh_jwt(self):
+        variables = {
+            'refreshToken': self.refresh_token
+        }
+        graphql_response = self.__execute_graphql_query(
+            query_name='refresh_jwt', variables=variables)
+        if 'errors' not in graphql_response.payload:
+            payload = graphql_response.payload['data']['refresh_jwt']
+            self.jwt = payload['token']
+            self.refresh_token = payload['refresh_token']
         return graphql_response
 
     # endregion

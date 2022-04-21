@@ -37,6 +37,7 @@ actions:
           params:
             nodeGroup: faas
             commandList:
+              - command: while ! nc -z localhost 8080 ; do sleep 1 ; done
               - command: cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
               - command: cd /faas-template
               - command: IMG_TAG=${settings.fncTag} MAIL_SERVER_HOST=${settings.mailServerHost} MAIL_SERVER_API_PORT=${globals.MAIL_SERVER_API_PORT} faas-cli deploy -f mailhog.yml

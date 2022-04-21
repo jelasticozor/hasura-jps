@@ -29,7 +29,7 @@ Feature: Identity and Access Management
     And she has received the email to set up her password with a one-time token
     And she has set her password with that token
     When she signs in
-    Then her JWT is valid
+    Then her access token is valid
     And it contains the role '<user role>'
 
     Examples:
@@ -44,7 +44,7 @@ Feature: Identity and Access Management
     And she has received the email to set up her password with a one-time token
     And she has set her password with that token
     When she signs in
-    Then her JWT is valid
+    Then her access token is valid
     And it contains all the roles in the application
 
   @fixture.api-user
@@ -93,4 +93,35 @@ Feature: Identity and Access Management
     And she has received the email to set up her password with a one-time token
     And she has set her password with that token
     When she signs up on the application with role 'other-role'
-    Then she gets notified with a bad request error  
+    Then she gets notified with a bad request error
+
+  @fixture.api-user
+  Scenario: Valid access token can be refreshed with valid refresh token
+
+    Given the api user has a valid account on the application with role 'default-role'
+    And she has signed in
+    When she refreshes her access token with her valid refresh token
+    Then she gets a new access token
+    And a new refresh token
+
+  @fixture.api-user
+  Scenario: Valid access token cannot be refreshed with invalid refresh token
+
+    Given the api user has a valid account on the application with role 'default-role'
+    And she has signed in
+    When she refreshes her access token with an invalid refresh token
+    Then she gets notified with the bad request error
+    """
+    Unable to refresh JWT
+    """
+
+  @fixture.api-user
+  Scenario: Invalid access token cannot be refreshed with valid refresh token
+
+    Given the api user has a valid account on the application with role 'default-role'
+    And she has signed in
+    When she refreshes an invalid access token with her valid refresh token
+    Then she gets notified with the bad request error
+    """
+    Unable to refresh JWT
+    """

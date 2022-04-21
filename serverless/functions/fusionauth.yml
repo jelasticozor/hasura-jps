@@ -50,6 +50,18 @@ functions:
       LOGS_AGGREGATOR_PORT: ${LOGS_AGGREGATOR_PORT}
     secrets:
       - auth-secret
+  refresh-jwt:
+    lang: dotnet-hasura
+    handler: ./Softozor.FusionAuth.RefreshJwt
+    image: softozor/fusionauth-refresh-jwt-fn:${IMG_TAG:-latest}
+    build_args:
+      FUNCTION_NAME: Softozor.FusionAuth.RefreshJwt
+    environment:
+      AUTH_URL: ${AUTH_URL:-http://fusionauth:9011}
+      LOGS_AGGREGATOR_HOST: ${LOGS_AGGREGATOR_HOST}
+      LOGS_AGGREGATOR_PORT: ${LOGS_AGGREGATOR_PORT}
+    secrets:
+      - auth-secret
 configuration:
   templates:
     - name: dotnet-hasura

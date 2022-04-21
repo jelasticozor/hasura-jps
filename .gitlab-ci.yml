@@ -118,7 +118,7 @@ stryke-sign-up-tests:
       - serverless/functions/Softozor.FusionAuth.SignUp/*
       - serverless/functions/Softozor.FusionAuth.SignUp.Tests/*
 
-stryke-token-validation-tests:
+stryke-validate-token-tests:
   <<: *stryke-dotnet-tests
   variables:
     PROJECT_NAME: Softozor.FusionAuth.TokenValidation
@@ -127,6 +127,16 @@ stryke-token-validation-tests:
     changes:
       - serverless/functions/Softozor.FusionAuth.TokenValidation/*
       - serverless/functions/Softozor.FusionAuth.TokenValidation.Tests/*
+
+stryke-refresh-jwt-tests:
+  <<: *stryke-dotnet-tests
+  variables:
+    PROJECT_NAME: Softozor.FusionAuth.RefreshJwt
+    TEST_PROJECT_NAME: Softozor.FusionAuth.RefreshJwt.Tests
+  only:
+    changes:
+      - serverless/functions/Softozor.FusionAuth.RefreshJwt/*
+      - serverless/functions/Softozor.FusionAuth.RefreshJwt.Tests/*
 
 publish-graphql-engine-image:
   stage: publish-docker
@@ -221,7 +231,6 @@ publish-mailhog-functions:
 
 acceptance test dev:
   stage: review
-  # TODO: simplify this image
   image: ${TEST_IMAGE_NAME}:latest
   script:
     - |

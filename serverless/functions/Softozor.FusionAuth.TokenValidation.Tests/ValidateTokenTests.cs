@@ -13,10 +13,9 @@ using Xunit;
 
 public class ValidateTokenTests
 {
-    private readonly BearerTokenAuthorizationHeader validInput = new BearerTokenAuthorizationHeader("valid-token");
+    private const string ValidToken = "valid-token";
 
-    private readonly BearerTokenAuthorizationHeader invalidInput =
-        new BearerTokenAuthorizationHeader("invalid-token");
+    private const string InvalidToken = "invalid-token";
 
     private readonly ValidateTokenHandler sut;
 
@@ -32,7 +31,7 @@ public class ValidateTokenTests
         // Arrange
 
         // Act
-        Func<Task> act = async () => await this.sut.Handle(this.validInput);
+        Func<Task> act = async () => await this.sut.Handle(ValidToken);
 
         // Assert
         await act.Should().NotThrowAsync();
@@ -44,7 +43,7 @@ public class ValidateTokenTests
         // Arrange
 
         // Act
-        Func<Task> act = async () => await this.sut.Handle(this.invalidInput);
+        Func<Task> act = async () => await this.sut.Handle(InvalidToken);
 
         // Assert
         var actualException = await act.Should().ThrowAsync<HasuraFunctionException>();
@@ -55,12 +54,12 @@ public class ValidateTokenTests
     {
         var stub = new Mock<IFusionAuthAsyncClient>();
 
-        stub.Setup(client => client.ValidateJWTAsync(It.Is<string>(token => token == this.validInput.Token))).ReturnsAsync(new ClientResponse<ValidateResponse>
+        stub.Setup(client => client.ValidateJWTAsync(It.Is<string>(token => token == ValidToken))).ReturnsAsync(new ClientResponse<ValidateResponse>
         {
             statusCode = 200, successResponse = new ValidateResponse { jwt = CreateJwt() }
         });
 
-        stub.Setup(client => client.ValidateJWTAsync(It.Is<string>(token => token == this.invalidInput.Token))).ReturnsAsync(new ClientResponse<ValidateResponse>
+        stub.Setup(client => client.ValidateJWTAsync(It.Is<string>(token => token == InvalidToken))).ReturnsAsync(new ClientResponse<ValidateResponse>
         {
             statusCode = 401, exception = new Exception("the access token is invalid")
         });
