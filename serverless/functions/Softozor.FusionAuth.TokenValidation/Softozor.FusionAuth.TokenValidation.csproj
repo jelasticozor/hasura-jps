@@ -37,7 +37,7 @@
         <PackageReference Include="Serilog.Exceptions" Version="8.1.0" />
         <PackageReference Include="Serilog.Sinks.Graylog" Version="2.3.0" />
         <PackageReference Include="Softozor.FusionAuth" Version="1.0.2" />
-        <PackageReference Include="Softozor.HasuraHandling" Version="2.0.3" />
+        <PackageReference Include="Softozor.HasuraHandling" Version="2.0.4" />
     </ItemGroup>
 
 </Project>

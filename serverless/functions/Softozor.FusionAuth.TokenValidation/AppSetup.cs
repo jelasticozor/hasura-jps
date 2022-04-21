@@ -11,8 +11,6 @@ using Softozor.HasuraHandling;
 
 public static class AppSetup
 {
-    private const string DefaultAccessTokenAuthHeaderPrefix = "Bearer";
-
     [SuppressMessage(
         "Design",
         "CA1031: Do not catch general exception types",
@@ -30,7 +28,7 @@ public static class AppSetup
 
                 try
                 {
-                    var token = ExtractJwt(http);
+                    var token = InputHandling.ExtractJwt(http);
                     await handler.Handle(token);
                     await http.Response.WriteAsJsonAsync(new ValidateTokenOutput(true));
                 }
@@ -49,28 +47,5 @@ public static class AppSetup
                     Log.CloseAndFlush();
                 }
             });
-    }
-
-    private static string ExtractJwt(HttpContext http)
-    {
-        var authorization = http.Request.Headers["Authorization"].FirstOrDefault();
-
-        if (string.IsNullOrWhiteSpace(authorization))
-        {
-            throw new HasuraFunctionException(
-                "The request contains no authorization header",
-                StatusCodes.Status400BadRequest);
-        }
-
-        if (!authorization.StartsWith(DefaultAccessTokenAuthHeaderPrefix, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new HasuraFunctionException(
-                "The authorization header does not contain a Bearer token",
-                StatusCodes.Status400BadRequest);
-        }
-
-        var token = authorization.Substring(DefaultAccessTokenAuthHeaderPrefix.Length).Trim();
-
-        return token;
     }
 }
