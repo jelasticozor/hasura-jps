@@ -38,6 +38,7 @@ actions:
   installEngine:
     - cmd[faas]:
         - systemctl start containerd
+        - cd /faasd-installation
         - /usr/local/bin/faasd install
   deployAuthFunctions:
     - cmd[faas]:
