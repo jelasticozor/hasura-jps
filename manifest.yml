@@ -177,10 +177,10 @@ onInstall:
   - installFaas
   # hasura uses the faas engine
   - installHasura
-  # the load balancer uses hasura
-  - installLoadBalancer
   - if ("${settings.clusterType}" == "dev"):
       - exposeMailhogApi
+  # the load balancer uses hasura
+  - installLoadBalancer
 
 actions:
   computeOptionalParams:

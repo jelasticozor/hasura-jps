@@ -5,11 +5,11 @@ baseUrl: https://gitlab.hidora.com/softozor/hasura-jps/-/raw/master
 settings:
   fields:
     - name: mailServerHost
-      caption: Host
+      caption: Mail Server Host
       type: string
       required: true
     - name: fncTag
-      caption: Docker tag
+      caption: Docker Functions Tag
       type: string
       required: true
 
@@ -30,8 +30,7 @@ actions:
         - python3 ./setup_actions.py --actions-yaml /hasura-metadata/actions.yaml
   deployMailhogFunctions:
     - cmd[faas]:
-        - cd /faas-template
-        - wget -q ${baseUrl}/serverless/functions/mailhog.yml
+        - wget -q ${baseUrl}/serverless/functions/mailhog.yml -O /faas-template/mailhog.yml
     - api:
         - method: environment.control.ExecCmdByGroup
           params:

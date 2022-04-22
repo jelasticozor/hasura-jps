@@ -292,6 +292,10 @@ def external_mail_server_environment(context):
 
 
 @fixture
+@retry(reraise=True,
+       retry=retry_if_exception_type(JelasticClientException),
+       stop=stop_after_attempt(3),
+       wait=wait_fixed(60))
 def expose_mailhog_api(context):
     jps_client = context.jelastic_clients_factory.create_jps_client()
     settings = {

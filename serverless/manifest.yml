@@ -36,14 +36,12 @@ onInstall:
 
 actions:
   installEngine:
-    - cmd[faas]: |-
-        systemctl start containerd
-        cd /faasd-installation
-        /usr/local/bin/faasd install
+    - cmd[faas]:
+        - systemctl start containerd
+        - /usr/local/bin/faasd install
   deployAuthFunctions:
     - cmd[faas]:
-        - cd /faas-template
-        - wget -q ${baseUrl}/serverless/functions/fusionauth.yml
+        - wget -q ${baseUrl}/serverless/functions/fusionauth.yml -O /faas-template/fusionauth.yml
     - api:
         - method: environment.control.ExecCmdByGroup
           params:
