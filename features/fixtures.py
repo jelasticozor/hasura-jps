@@ -304,6 +304,8 @@ def expose_mailhog_api(context):
     }
     manifest = os.path.join(
         context.project_root_folder, 'features', 'data', 'jelastic', 'expose-mailhog-api.yml')
+    print(
+        f'exposing mailhog api on environment {context.current_env_name} with settings {settings}')
     jps_client.install_from_file(
         manifest, context.current_env_name, settings=settings)
 
