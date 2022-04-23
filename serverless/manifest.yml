@@ -39,7 +39,7 @@ settings:
           caption: Production cluster
         - value: dev
           caption: Development cluster
-        default: prod
+      default: prod
     - name: mailServerHost
       caption: Host
       type: string
