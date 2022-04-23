@@ -177,8 +177,6 @@ onInstall:
   - installFaas
   # hasura uses the faas engine
   - installHasura
-  - if ("${settings.clusterType}" == "dev"):
-      - exposeMailhogApi
   # the load balancer uses hasura
   - installLoadBalancer
 
@@ -231,6 +229,8 @@ actions:
           fncTag: ${settings.hasuraJpsCommitShortSha}
           logsAggregatorHost: ${globals.GRAYLOG_HOSTNAME}
           logsAggregatorPort: ${globals.GRAYLOG_PORT}
+          clusterType: ${settings.clusterType}
+          mailServerHost: ${globals.MAIL_SERVER_HOST}
     - api:
         - method: environment.file.Read
           params:
@@ -264,6 +264,7 @@ actions:
           authPort: ${globals.AUTH_PORT}
           authIssuer: ${settings.authIssuer}
           jwtKeyAlgorithm: ${globals.JWT_KEY_ALGORITHM}
+          clusterType: ${settings.clusterType}
   installLoadBalancer:
     - install:
         jps: bl/manifest.yml
@@ -293,12 +294,6 @@ actions:
           fromEmail: no-reply@${settings.authIssuer}
           fromName: ${settings.authIssuer}
           hasuraClaimsNamespace: ${globals.HASURA_CLAIMS_NAMESPACE}
-  exposeMailhogApi:
-    - install:
-        jps: mailhog/expose-api.yml
-        settings:
-          mailServerHost: ${globals.MAIL_SERVER_HOST}
-          fncTag: ${settings.hasuraJpsCommitShortSha}
 
 success:
   text: |

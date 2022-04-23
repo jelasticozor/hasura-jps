@@ -303,7 +303,7 @@ def expose_mailhog_api(context):
         'fncTag': context.commit_sha
     }
     manifest = os.path.join(
-        context.project_root_folder, 'mailhog', 'expose-api.yml')
+        context.project_root_folder, 'features', 'data', 'jelastic', 'expose-mailhog-api.yml')
     jps_client.install_from_file(
         manifest, context.current_env_name, settings=settings)
 

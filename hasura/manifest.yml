@@ -75,13 +75,32 @@ settings:
       caption: Claims Namespace
       type: string
       default: https://hasura.io/jwt/claims
+    - type: spacer
+      caption: Mailhog
+    - name: clusterType
+      caption: Cluster Type
+      type: radio-fieldset
+      values:
+        - value: prod
+          caption: Production cluster
+        - value: dev
+          caption: Development cluster
+        default: prod
 
 onInstall:
   - setupDatabase
   - setupAppContainer
+  - if ("${settings.clusterType}" == "dev"):
+      - setupMailhogActions
   - restartContainers[cp]
 
 actions:
+  setupMailhogActions:
+    - cmd[cp]:
+        - wget ${baseUrl}/mailhog/actions.graphql -O actions.graphql
+        - cat actions.graphql >> /hasura-metadata/actions.graphql
+        - wget ${baseUrl}/mailhog/setup_actions.py -O setup_actions.py
+        - python3 ./setup_actions.py --actions-yaml /hasura-metadata/actions.yaml
   setupDatabase:
     - cmd[${nodes.sqldb.master.id}]:
         - export PGPASSWORD=${settings.dbAdminPassword}

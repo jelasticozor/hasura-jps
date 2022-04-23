@@ -25,7 +25,6 @@ actions:
     - cmd[cp]:
         - wget ${baseUrl}/mailhog/actions.graphql -O actions.graphql
         - cat actions.graphql >> /hasura-metadata/actions.graphql
-    - cmd[cp]:
         - wget ${baseUrl}/mailhog/setup_actions.py -O setup_actions.py
         - python3 ./setup_actions.py --actions-yaml /hasura-metadata/actions.yaml
   deployMailhogFunctions:
