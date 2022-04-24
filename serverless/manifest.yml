@@ -65,6 +65,7 @@ actions:
         - cmd[faas]:
             - wget -q ${baseUrl}/serverless/functions/mailhog.yml -O /faas-template/mailhog.yml
     - cmd[faas]:
+        - timeout 60 sh -c 'until nc -z localhost 8080; do sleep 1; done'
         - cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
         - cd /faas-template
