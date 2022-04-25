@@ -2,7 +2,7 @@ import argparse
 
 import yaml
 
-non_anonymous_actions = ['validate_token', 'refresh-jwt']
+non_anonymous_actions = ['validate_token', 'refresh_jwt']
 
 
 class NoAliasDumper(yaml.SafeDumper):
