@@ -25,6 +25,7 @@ Feature: Production Hasura environment
     And the validate-token function is ready
     And the sign-up function is ready
     And the set-password function is ready
+    And the refresh-jwt function is ready
     And the faas functions find the 'Auth Serverless API Key' in the 'auth-secret'
 
   Scenario: The database meets the relevant preconditions
