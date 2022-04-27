@@ -33,6 +33,7 @@ Feature: Create applications
     And the roles are granted permission to execute the following user management actions
       | action         |
       | validate_token |
+      | refresh_jwt    |
     But they are not granted permission to execute the following user management actions
       | action       |
       | sign_in      |
@@ -55,6 +56,7 @@ Feature: Create applications
     And the roles are granted permission to execute the following user management actions
       | action         |
       | validate_token |
+      | refresh_jwt    |
     But they are not granted permission to execute the following user management actions
       | action       |
       | sign_in      |
@@ -77,6 +79,7 @@ Feature: Create applications
     And the roles are granted permission to execute the following user management actions
       | action         |
       | validate_token |
+      | refresh_jwt    |
     But they are not granted permission to execute the following user management actions
       | action       |
       | sign_in      |
