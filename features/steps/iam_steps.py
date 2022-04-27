@@ -180,7 +180,8 @@ def step_impl(context):
     assert 400 == actual_status_code, \
         f'expected status code 400, got {actual_status_code}'
     expected_error = context.text
-    assert expected_error == payload['errors'][0]['message']
+    assert expected_error == payload['errors'][0]['message'], \
+        f'expected error {expected_error}, got {payload["errors"][0]["message"]}'
 
 
 @then("she gets notified with a bad request error")
@@ -199,7 +200,8 @@ def step_impl(context):
     assert 'errors' not in payload, \
         f'expected no error, got {payload}'
     refresh_jwt_payload = payload['data']['refresh_jwt']
-    assert context.original_access_token != refresh_jwt_payload['token']
+    assert context.original_access_token != refresh_jwt_payload['token'], \
+        f'expected original access token {context.original_access_token} to be different from new access token {refresh_jwt_payload["token"]}'
 
 
 @then("a new refresh token")
@@ -208,4 +210,5 @@ def step_impl(context):
     assert 'errors' not in payload, \
         f'expected no error, got {payload}'
     refresh_jwt_payload = payload['data']['refresh_jwt']
-    assert context.original_refresh_token != refresh_jwt_payload['refresh_token']
+    assert context.original_refresh_token != refresh_jwt_payload['refresh_token'], \
+        f'expected {context.original_refresh_token} to be different from {refresh_jwt_payload["refresh_token"]}'

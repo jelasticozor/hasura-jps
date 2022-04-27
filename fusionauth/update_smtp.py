@@ -37,20 +37,11 @@ def main(tenant_id, hostname, port, username, password, enable_ssl, api_url, api
             }
         }
     }
-    # TODO: no idea why this is not working:
-    # response = client.update_tenant(tenant_id, request)
-    # if not response.was_successful():
-    #     raise RuntimeError(
-    #         f'unable to update tenant with id {tenant_id} (status {response.status})')
 
-    # this is a work-around:
-    headers = {'content-type': 'application/json', 'authorization': api_key}
-    response = requests.patch(
-        f'{api_url}/api/tenant/{tenant_id}', data=json.dumps(request), headers=headers)
-
-    if response.status_code != 200:
+    response = client.patch_tenant(tenant_id, request)
+    if not response.was_successful():
         raise RuntimeError(
-            f'unable to update tenant with id {tenant_id} (status {response.status})')
+            f'unable to patch tenant with id {tenant_id} (status {response.status})')
 
 
 if __name__ == '__main__':
