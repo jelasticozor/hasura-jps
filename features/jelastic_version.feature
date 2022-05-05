@@ -6,4 +6,4 @@ Feature: Compatibility with current Jelastic version
 
   Scenario: Current Jelastic version
 
-    Then the current Jelastic version is 6.1.3
+    Then the current Jelastic version is 7.0.3
