@@ -98,11 +98,17 @@ Feature: Identity and Access Management
   @fixture.api-user
   Scenario: Valid access token can be refreshed with valid refresh token
 
+    The access token is refreshed upon calling the jwt refresh query. The
+    refresh token is not refreshed, because it is not a one-time use token,
+    as implemented [here](https://gitlab.hidora.com/softozor/hasura-jps/-/blob/master/fusionauth/create_application.py#L37).
+    Instead, it has a token time to live in minutes, and as long as this time
+    has not gone by, the refresh token will remain the same.
+
     Given the api user has a valid account on the application with role 'default-role'
     And she has signed in
     When she refreshes her access token with her valid refresh token
     Then she gets a new access token
-    And a new refresh token
+    But the same refresh token
 
   @fixture.api-user
   Scenario: Valid access token cannot be refreshed with invalid refresh token

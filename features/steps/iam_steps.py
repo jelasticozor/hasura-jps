@@ -204,11 +204,11 @@ def step_impl(context):
         f'expected original access token {context.original_access_token} to be different from new access token {refresh_jwt_payload["token"]}'
 
 
-@then("a new refresh token")
+@then("the same refresh token")
 def step_impl(context):
     payload = context.current_graphql_response.payload
     assert 'errors' not in payload, \
         f'expected no error, got {payload}'
     refresh_jwt_payload = payload['data']['refresh_jwt']
-    assert context.original_refresh_token != refresh_jwt_payload['refresh_token'], \
-        f'expected {context.original_refresh_token} to be different from {refresh_jwt_payload["refresh_token"]}'
+    assert context.original_refresh_token == refresh_jwt_payload['refresh_token'], \
+        f'expected new refresh token {refresh_jwt_payload["refresh_token"]} to be the same as the original {context.original_refresh_token}'
