@@ -300,7 +300,7 @@ class ApiDeveloper:
         })
         manifest_data = get_manifest_data(success_text)
         app_id = manifest_data['AppId']
-        assert self.hasura_is_up()
+        assert self.hasura_is_up(timeout_in_sec=900)
         return app_id
 
     def delete_application(self, app_id):
