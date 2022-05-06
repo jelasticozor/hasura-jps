@@ -212,3 +212,13 @@ def step_impl(context):
     refresh_jwt_payload = payload['data']['refresh_jwt']
     assert context.original_refresh_token == refresh_jwt_payload['refresh_token'], \
         f'expected new refresh token {refresh_jwt_payload["refresh_token"]} to be the same as the original {context.original_refresh_token}'
+
+
+@then("she gets notified of the access token invalidity")
+def step_impl(context):
+    payload = context.current_graphql_response.payload
+    assert 'errors' in payload, \
+        f'expected errors in graphql response, got none: {payload}'
+    actual_error_code = int(payload['errors'][0]['extensions']['code'])
+    assert 'invalid-jwt' == actual_error_code, \
+        f'expected error code to be \'invalid-jwt\', got \'{actual_error_code}\''

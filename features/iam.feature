@@ -45,10 +45,7 @@ Feature: Identity and Access Management
     Given the api user has a valid account on the application with role 'default-role'
     And she has signed in
     When she refreshes an invalid access token with her valid refresh token
-    Then she gets notified with the bad request error
-    """
-    Unable to refresh JWT
-    """
+    Then she gets notified of the access token invalidity
 
 
   @fixture.api-user
