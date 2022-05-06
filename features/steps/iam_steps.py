@@ -219,6 +219,6 @@ def step_impl(context):
     payload = context.current_graphql_response.payload
     assert 'errors' in payload, \
         f'expected errors in graphql response, got none: {payload}'
-    actual_error_code = int(payload['errors'][0]['extensions']['code'])
+    actual_error_code = payload['errors'][0]['extensions']['code']
     assert 'invalid-jwt' == actual_error_code, \
         f'expected error code to be \'invalid-jwt\', got \'{actual_error_code}\''
