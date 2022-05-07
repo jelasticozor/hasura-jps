@@ -1,5 +1,6 @@
 @fixture.test-env
 @fixture.api-developer
+@fixture.test-application  
 Feature: Identity and Access Management
 
   As an API developer,
@@ -8,45 +9,10 @@ Feature: Identity and Access Management
 
   Background: There exists an application
 
-    Given an application named 'my-app' has been added with roles
+    Given application 'my-app' with roles
       | role         |
       | default-role |
       | other-role   |
-
-  @fixture.api-user
-  Scenario: Valid access token can be refreshed with valid refresh token
-
-    The access token is refreshed upon calling the jwt refresh query. The
-    refresh token is not refreshed, because it is not a one-time use token,
-    as implemented [here](https://gitlab.hidora.com/softozor/hasura-jps/-/blob/master/fusionauth/create_application.py#L37).
-    Instead, it has a token time to live in minutes, and as long as this time
-    has not gone by, the refresh token will remain the same.
-
-    Given the api user has a valid account on the application with role 'default-role'
-    And she has signed in
-    When she refreshes her access token with her valid refresh token
-    Then she gets a new access token
-    But the same refresh token
-
-  @fixture.api-user
-  Scenario: Valid access token cannot be refreshed with invalid refresh token
-
-    Given the api user has a valid account on the application with role 'default-role'
-    And she has signed in
-    When she refreshes her access token with an invalid refresh token
-    Then she gets notified with the bad request error
-    """
-    Unable to refresh JWT
-    """
-
-  @fixture.api-user
-  Scenario: Invalid access token cannot be refreshed with valid refresh token
-
-    Given the api user has a valid account on the application with role 'default-role'
-    And she has signed in
-    When she refreshes an invalid access token with her valid refresh token
-    Then she gets notified of the access token invalidity
-
 
   @fixture.api-user
   Scenario: Sign in with invalid credentials
@@ -129,3 +95,37 @@ Feature: Identity and Access Management
     And she has set her password with that token
     When she signs up on the application with role 'other-role'
     Then she gets notified with a bad request error
+
+  @fixture.api-user
+  Scenario: Valid access token can be refreshed with valid refresh token
+
+    The access token is refreshed upon calling the jwt refresh query. The
+    refresh token is not refreshed, because it is not a one-time use token,
+    as implemented [here](https://gitlab.hidora.com/softozor/hasura-jps/-/blob/master/fusionauth/create_application.py#L37).
+    Instead, it has a token time to live in minutes, and as long as this time
+    has not gone by, the refresh token will remain the same.
+
+    Given the api user has a valid account on the application with role 'default-role'
+    And she has signed in
+    When she refreshes her access token with her valid refresh token
+    Then she gets a new access token
+    But the same refresh token
+
+  @fixture.api-user
+  Scenario: Valid access token cannot be refreshed with invalid refresh token
+
+    Given the api user has a valid account on the application with role 'default-role'
+    And she has signed in
+    When she refreshes her access token with an invalid refresh token
+    Then she gets notified with the bad request error
+    """
+    Unable to refresh JWT
+    """
+
+  @fixture.api-user
+  Scenario: Invalid access token cannot be refreshed with valid refresh token
+
+    Given the api user has a valid account on the application with role 'default-role'
+    And she has signed in
+    When she refreshes an invalid access token with her valid refresh token
+    Then she gets notified of the access token invalidity  

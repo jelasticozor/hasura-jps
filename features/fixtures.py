@@ -259,6 +259,17 @@ def api_user(context):
 
 
 @fixture
+def test_application(context):
+    app_name = 'my-app'
+    role_names = ['default_role', 'other_role']
+    context.current_app_id = context.api_developer.create_application(
+        app_name, role_names)
+    yield context.current_app_id
+    context.api_developer.delete_application(
+        context.current_app_id)
+
+
+@fixture
 def remove_applications(context):
     context.app_ids = []
     yield
@@ -348,4 +359,5 @@ fixtures_registry = {
     'test-env-with-automatic-settings': test_environment_with_automatic_settings,
     'api-developer': api_developer,
     'api-user': api_user,
+    'test-application': test_application
 }

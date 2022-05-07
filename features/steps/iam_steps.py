@@ -4,6 +4,19 @@ import jwt
 from behave import *
 
 
+@given("application '{app_name}' with roles")
+def step_impl(context, app_name):
+    expected_app_id = context.api_developer.get_application_id(app_name)
+    assert expected_app_id == context.current_app_id, \
+        f'expected application id {expected_app_id}, got {context.current_app_id}'
+    context.expected_role_names = [row['role'] for row in context.table]
+    actual_roles = context.api_developer.get_roles_from_application_with_name(
+        app_name)
+    actual_role_names = [role['name'] for role in actual_roles]
+    assert set(context.expected_role_names) == set(actual_role_names), \
+        f'expected {set(context.expected_role_names)}, got {set(actual_role_names)}'
+
+
 @given("the api user has no account on the application")
 def step_impl(context):
     assert context.api_user.user_id is None
