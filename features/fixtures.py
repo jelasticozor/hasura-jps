@@ -261,7 +261,7 @@ def api_user(context):
 @fixture
 def test_application(context):
     app_name = 'my-app'
-    role_names = ['default_role', 'other_role']
+    role_names = ['default-role', 'other-role']
     context.current_app_id = context.api_developer.create_application(
         app_name, role_names)
     yield context.current_app_id
