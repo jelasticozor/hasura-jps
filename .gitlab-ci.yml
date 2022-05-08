@@ -242,7 +242,9 @@ acceptance test dev:
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
         -D cluster-type="dev" \
         -D graylog-host="${GRAYLOG_HOST}" \
-        -D graylog-port="${GRAYLOG_PORT}"
+        -D graylog-port="${GRAYLOG_PORT}" \
+        -D dockerhub-username="$DOCKER_HUB_REGISTRY_USER" \
+        -D dockerhub-password="$DOCKER_HUB_REGISTRY_PASSWORD"
   artifacts:
     reports:
       junit:
@@ -263,7 +265,9 @@ acceptance test production:
         -D commit-sha="${CI_COMMIT_SHORT_SHA}" \
         -D cluster-type="prod" \
         -D graylog-host="${GRAYLOG_HOST}" \
-        -D graylog-port="${GRAYLOG_PORT}"
+        -D graylog-port="${GRAYLOG_PORT}" \
+        -D dockerhub-username="$DOCKER_HUB_REGISTRY_USER" \
+        -D dockerhub-password="$DOCKER_HUB_REGISTRY_PASSWORD"
   artifacts:
     reports:
       junit:

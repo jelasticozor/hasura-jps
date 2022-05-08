@@ -107,6 +107,20 @@ def graylog_port(context):
     return context.graylog_port
 
 
+@fixture
+def dockerhub_username(context):
+    userdata = context.config.userdata
+    context.dockerhub_username = userdata['dockerhub-username']
+    return context.dockerhub_username
+
+
+@fixture
+def dockerhub_password(context):
+    userdata = context.config.userdata
+    context.dockerhub_password = userdata['dockerhub-password']
+    return context.dockerhub_password
+
+
 def get_mail_server_definition(env_info):
     mail_server_nodes = env_info.get_nodes(node_group='mail')
     assert len(mail_server_nodes) == 1, \
@@ -182,6 +196,9 @@ def jelastic_environment(context):
         'useExternalGraylog': True,
         'graylogServerHost': context.graylog_host,
         'graylogServerPort': context.graylog_port,
+        'useDockerHubAccount': True,
+        'dockerHubUsername': context.dockerhub_username,
+        'dockerHubPassword': context.dockerhub_password,
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)
@@ -208,6 +225,9 @@ def jelastic_environment_with_automatic_settings(context):
         'useExternalGraylog': True,
         'graylogServerHost': context.graylog_host,
         'graylogServerPort': context.graylog_port,
+        'useDockerHubAccount': True,
+        'dockerHubUsername': context.dockerhub_username,
+        'dockerHubPassword': context.dockerhub_password,
     }
     if context.cluster_type == 'prod':
         settings_prod = get_mail_server_settings(context)

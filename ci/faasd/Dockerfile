@@ -1,8 +1,9 @@
-FROM ubuntu:20.04 AS pull-templates
+FROM ubuntu:20.04 AS build
 
 ARG FAAS_CLI_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DOCKERVERSION=20.10.9
 
 WORKDIR /root
 
@@ -10,7 +11,10 @@ RUN apt update && apt install -y git curl \
     && curl -sSL https://github.com/openfaas/faas-cli/releases/download/${FAAS_CLI_VERSION}/faas-cli --output /usr/local/bin/faas-cli \
     && chmod u+x /usr/local/bin/faas-cli \
     && faas-cli template pull \
-    && faas-cli template pull https://gitlab.hidora.com/softozor/faas-templates.git
+    && faas-cli template pull https://gitlab.hidora.com/softozor/faas-templates.git \
+    && curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKERVERSION}.tgz \
+    && tar xzvf docker-${DOCKERVERSION}.tgz --strip 1 -C /usr/local/bin docker/docker \
+    && chmod u+x /usr/local/bin/docker
 
 FROM ubuntu:20.04
 
@@ -20,8 +24,9 @@ ARG CNI_VERSION
 ARG CONTAINERD_VER
 ARG FAASD_VERSION
 
-COPY --from=pull-templates /usr/local/bin/faas-cli /usr/local/bin/faas-cli
-COPY --from=pull-templates /root/template /faas-template/template
+COPY --from=build /usr/local/bin/faas-cli /usr/local/bin/faas-cli
+COPY --from=build /root/template /faas-template/template
+COPY --from=build /usr/local/bin/docker /usr/local/bin/docker
 
 # cf. https://github.com/openfaas/faasd/blob/master/hack/install.sh
 # install_required_packages

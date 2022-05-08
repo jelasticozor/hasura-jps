@@ -18,6 +18,8 @@ def before_all(context):
     use_fixture(cluster_type, context)
     use_fixture(graylog_host, context)
     use_fixture(graylog_port, context)
+    use_fixture(dockerhub_username, context)
+    use_fixture(dockerhub_password, context)
     use_fixture(add_application_manifest_file, context)
     use_fixture(remove_application_manifest_file, context)
     use_fixture(jelastic_clients_factory, context)
