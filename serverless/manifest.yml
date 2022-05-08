@@ -44,6 +44,24 @@ settings:
       caption: Host
       type: string
       default: ""
+    - type: spacer
+      caption: Docker Hub
+    - name: useDockerHubAccount
+      type: toggle
+      caption: Use Docker Hub Account
+      value: false
+      hidden: false
+      showIf:
+        true:
+          - name: dockerHubUsername
+            caption: Username
+            type: string
+            required: true
+          - name: dockerHubPassword
+            caption: Password
+            type: string
+            inputType: password
+            required: true
 
 globals:
   MAIL_SERVER_API_PORT: 8025
@@ -68,6 +86,8 @@ actions:
         - timeout 300 sh -c 'until cat /var/lib/faasd/secrets/basic-auth-password | faas-cli login -u admin --password-stdin; do sleep 1; done'
         - faas-cli secret create auth-secret --from-literal "${settings.authApiKey}"
         - cd /faas-template
+        - if(${settings.useDockerHubAccount}):
+            - docker login -u ${settings.dockerHubUsername} -p ${settings.dockerHubPassword}
         - IMG_TAG=${settings.fncTag} AUTH_URL=${settings.authUrl} LOGS_AGGREGATOR_HOST=${settings.logsAggregatorHost} LOGS_AGGREGATOR_PORT=${settings.logsAggregatorPort} faas-cli deploy -f fusionauth.yml
     - if ("${settings.clusterType}" == "dev"):
         - cmd[faas]:

@@ -111,6 +111,24 @@ settings:
             caption: Port
             type: string
             required: true
+    - type: spacer
+      caption: Docker Hub
+    - name: useDockerHubAccount
+      type: toggle
+      caption: Use Docker Hub Account
+      value: false
+      hidden: false
+      showIf:
+        true:
+          - name: dockerHubUsername
+            caption: Username
+            type: string
+            required: true
+          - name: dockerHubPassword
+            caption: Password
+            type: string
+            inputType: password
+            required: true
 
 globals:
   # postgres
@@ -231,6 +249,9 @@ actions:
           logsAggregatorPort: ${globals.GRAYLOG_PORT}
           clusterType: ${settings.clusterType}
           mailServerHost: ${globals.MAIL_SERVER_HOST}
+          useDockerHubAccount: ${settings.useDockerHubAccount}
+          dockerHubUsername: ${settings.dockerHubUsername}
+          dockerHubPassword: ${settings.dockerHubPassword}
     - api:
         - method: environment.file.Read
           params:
