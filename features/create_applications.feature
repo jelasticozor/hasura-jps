@@ -2,8 +2,8 @@
 @fixture.api-developer
 Feature: Create applications
 
-  As an API developer,
-  I want to create new applications,
+  As an API developer,  
+  I want to create new applications,  
   so that clients can identify.
 
   An application is something a user can log into.
