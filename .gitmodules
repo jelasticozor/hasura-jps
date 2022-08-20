@@ -1,3 +1,3 @@
 [submodule "code-analysis"]
 	path = code-analysis
-	url = ../code-analysis.git
+	url = https://github.com/softozor/code-analysis.git
